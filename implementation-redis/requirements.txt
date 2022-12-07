@@ -1,3 +1,4 @@
-Flask
+Flask~=2.2.2
 Flask-WTF
-redis
+redis~=4.3.5
+WTForms~=3.0.1
