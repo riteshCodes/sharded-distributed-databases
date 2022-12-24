@@ -1,5 +1,4 @@
 import random
-
 import redis
 
 # redis/utils.py
@@ -10,30 +9,40 @@ try:
 except ImportError:
     HIREDIS_AVAILABLE = False
 
+from config import InfoTable, hash_func
+
+store = {}  # Look-up table (dict type) containing <Hashed_Keys(int)-Redis-URL(str)> pairs for each client
+
 
 class MWare:
+    """
+    Mware Class
+    """
 
-    def __init__(self, *, client_id: int, port_nr: int = 6379, site_count: int = 1, db_id: int = 0):
+    def __init__(self, *, client_id: int, site_count: int = 1):
         """
         init
         :param client_id:
         :param site_count: site_count = 1; default number of sites (single site)
-        :param db_id:
         """
-        # redis_instances = 1; default number of redis instance
+
         # redis database, config file: /etc/redis/6379.conf
-        self.pool = redis.ConnectionPool(host='localhost', port=port_nr, db=db_id, decode_responses=True)
-        self.redis_db = redis.StrictRedis(
-            connection_pool=self.pool)
+
+        self.table = InfoTable()
+        __table_sites = self.table.sites
+        # self.pool = []
+        self.redis_db = {}
+
+        for site in __table_sites:
+            self.redis_db[site] = redis.StrictRedis(
+                connection_pool=redis.ConnectionPool.from_url(site, decode_responses=True))
+            # TODO persistence to disk
+            for key in self.redis_db[site].scan_iter():
+                # store.setdefault(site, []).append(hash_func(data=key))
+                store[hash_func(data=key)] = site
+
+        self.table.init_info(data=store)
         self.client_id = client_id
-        self.db_id = db_id
-        self.site_count = site_count
-
-    def connect_db(self):
-        pass
-
-    def set_site(self, site_count):
-        self.site_count = site_count
 
     def get_all(self, *, hash_key_list: list = None):
         """
@@ -43,11 +52,18 @@ class MWare:
         """
         if hash_key_list is None:
             raise TypeError('None type passed as argument (hash_key_list=None)')
+
         res = []
         for hash_key in hash_key_list:
-            key = 'Client:' + str(self.client_id) + ':' + str(hash_key)
-            hash_values = self.redis_db.hgetall(key)
-            res.append(hash_values)
+            k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
+
+            try:
+                site_id = self.table.get_site(key=k)
+                hash_values = self.redis_db[site_id].hgetall(k)
+                res.append(hash_values)
+            except KeyError as err:
+                print(k, 'does not exist. Exception:', err)
+
         return res
 
     def get_fields(self, *, hash_key: int = None, field_list: list = None):
@@ -60,11 +76,17 @@ class MWare:
         if hash_key is None or field_list is None:
             raise TypeError('None type passed as argument')
         val = []
-        for field in field_list:
-            key = 'Client:' + str(self.client_id) + ':' + str(hash_key)
-            hash_values = self.redis_db.hget(key, field)
-            val.append(hash_values)
-        return val
+        k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
+
+        try:
+            site_id = self.table.get_site(key=k)
+            for field in field_list:
+                res = self.redis_db[site_id].hget(k, field)
+                val.append(res)
+            return val
+
+        except KeyError as err:
+            print(k, 'does not exist. Exception:', err)
 
     def set_to(self, *, hash_key=random.getrandbits(8), **mapping):
         """
@@ -75,8 +97,13 @@ class MWare:
         """
         if mapping is None:
             raise TypeError('None type passed as argument (mapping=None)')
-        key = 'Client:' + str(self.client_id) + ':' + str(hash_key)
-        self.redis_db.hset(key, mapping=mapping)
+
+        k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
+        self.table.set_site(key=k)
+        site_id = self.table.get_site(key=k)
+
+        self.redis_db[site_id].hset(k, mapping=mapping)
+
         return hash_key
 
     def set_multiple(self, hash_key_list: list = None, **mapping):
@@ -88,15 +115,18 @@ class MWare:
         """
         if hash_key_list is None or mapping is None:
             raise TypeError('None type passed as argument (mapping=None)')
-        key_list = []
+        # site_key_list = []
         for hash_key in hash_key_list:
             k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
-            key_list.append(k)
+            self.table.set_site(key=k)
+            site_id = self.table.get_site(key=k)
+            # site_key_list.append((site_id, k))
+            self.redis_db[site_id].hset(k, mapping=mapping)
 
-        with self.redis_db.pipeline() as pipe:
-            for key in key_list:
-                pipe.hset(key, mapping=mapping)
-            pipe.execute()
+        # with self.redis_db.pipeline() as pipe:
+        #     for v in site_key_list:
+        #         pipe.hset(key, mapping=mapping)
+        #     pipe.execute()
 
     def del_fields(self, *, hash_key: int = None, fields: list = None):
         """
@@ -108,11 +138,17 @@ class MWare:
         if hash_key is None or fields is None:
             raise TypeError('None type passed as argument.')
 
-        key = 'Client:' + str(self.client_id) + ':' + str(hash_key)
-        with self.redis_db.pipeline() as pipe:
-            for field in fields:
-                pipe.hdel(key, field)
-            pipe.execute()
+        k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
+        try:
+            site_id = self.table.get_site(key=k)
+            with self.redis_db[site_id].pipeline() as pipe:
+                pipe.watch(k)
+                pipe.multi()
+                for field in fields:
+                    pipe.hdel(k, field)
+                pipe.execute()
+        except KeyError as err:
+            print(k, 'does not exist. Exception:', err)
 
     def del_keys(self, *, hash_key_list: list = None):
         """
@@ -123,19 +159,27 @@ class MWare:
         if hash_key_list is None:
             raise TypeError('None type passed as argument (hash_key_list=None)')
 
-        key_list = []
         for hash_key in hash_key_list:
-            key = 'Client:' + str(self.client_id) + ':' + str(hash_key)
-            key_list.append(key)
+            k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
+            try:
+                site_id = self.table.get_site(key=k)
+                with self.redis_db[site_id].pipeline() as pipe:
+                    pipe.watch(k)
+                    pipe.multi()
+                    pipe.delete(k)
+                    pipe.execute()
+            except KeyError as err:
+                print(k, 'does not exist. Exception:', err)
 
-        self.redis_db.delete(*key_list)
+    # self.redis_db.delete(*key_list)
 
-    def flush_db(self):
+    def flush_all(self):
         """
-        flush_db
+        flush_all
         :return:
         """
-        self.redis_db.flushdb()
+        for site in self.table.sites:
+            self.redis_db[site].flushdb()
 
 
 if __name__ == '__main__':
