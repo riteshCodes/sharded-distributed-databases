@@ -30,7 +30,7 @@ class MWare:
 
         self.table = InfoTable()
         __table_sites = self.table.sites
-        # self.pool = []
+
         self.redis_db = {}
 
         for site in __table_sites:
@@ -46,9 +46,9 @@ class MWare:
 
     def get_all(self, *, hash_key_list: list = None):
         """
-        get_all
-        :param hash_key_list:
-        :return:
+        get_all retrieves all key-value pairs (data) from the given key_list in the database
+        :param hash_key_list: list of keys from which data is fetched
+        :return: mapping of the values as dict or KeyError: if the key is not present in the database
         """
         if hash_key_list is None:
             raise TypeError('None type passed as argument (hash_key_list=None)')
@@ -68,32 +68,28 @@ class MWare:
 
     def get_fields(self, *, hash_key: int = None, field_list: list = None):
         """
-        get_fields
-        :param hash_key:
-        :param field_list:
+        get_fields returns all the fields values from the given key in the database
+        :param hash_key: key from which data is fetched
+        :param field_list: fields of the keys from where data is fetched
         :return:
         """
         if hash_key is None or field_list is None:
             raise TypeError('None type passed as argument')
-        val = []
+
         k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
 
         try:
             site_id = self.table.get_site(key=k)
-            for field in field_list:
-                res = self.redis_db[site_id].hget(k, field)
-                val.append(res)
-            return val
-
+            return self.redis_db[site_id].hmget(k, field_list)
         except KeyError as err:
             print(k, 'does not exist. Exception:', err)
 
     def set_to(self, *, hash_key=random.getrandbits(8), **mapping):
         """
-        set_to
-        :param hash_key:
-        :param mapping:
-        :return:
+        set_to sets/updates the value to the given key in the database
+        :param hash_key: key where the mapping is stored
+        :param mapping: dict (key-value pairs) for storing the data
+        :return: hash-key stored in the database
         """
         if mapping is None:
             raise TypeError('None type passed as argument (mapping=None)')
@@ -108,10 +104,11 @@ class MWare:
 
     def set_multiple(self, hash_key_list: list = None, **mapping):
         """
-        set_multiple
-        :param hash_key_list:
-        :param mapping:
-        :return:
+        set_multiple sets values (as mapping/dict) to multiple given keys in the database. If the keys are not
+        present in the database, new keys are created
+        :param hash_key_list: list of keys, where the mapping is added/updated
+        :param mapping: dict as key-value pair
+        :return: None
         """
         if hash_key_list is None or mapping is None:
             raise TypeError('None type passed as argument (mapping=None)')
@@ -130,10 +127,10 @@ class MWare:
 
     def del_fields(self, *, hash_key: int = None, fields: list = None):
         """
-        del_fields
-        :param hash_key:
-        :param fields:
-        :return:
+        del_fields deletes the fields of the passed key from the database
+        :param hash_key: key from the key-value pair
+        :param fields: fields from the key to delete
+        :return: None: if successful, KeyError: if the key to delete is not present in the database
         """
         if hash_key is None or fields is None:
             raise TypeError('None type passed as argument.')
@@ -152,9 +149,9 @@ class MWare:
 
     def del_keys(self, *, hash_key_list: list = None):
         """
-        del_keys
-        :param hash_key_list:
-        :return:
+        del_keys deletes all given key list from the database
+        :param hash_key_list: key list to delete
+        :return: None: if successful, KeyError: if the key to delete is not present in the database
         """
         if hash_key_list is None:
             raise TypeError('None type passed as argument (hash_key_list=None)')
@@ -175,11 +172,21 @@ class MWare:
 
     def flush_all(self):
         """
-        flush_all
-        :return:
+        flush_all wipes all data of all database instances
+        :return: None
         """
         for site in self.table.sites:
             self.redis_db[site].flushdb()
+
+    def key_space_inf(self):
+        """
+        key_space_inf returns the total number of keys present in each site
+        :return: key-value pairs (dict) with key as site and value as total number of keys present
+        """
+        inf = {}
+        for site_id in self.table.sites:
+            inf[site_id] = self.redis_db[site_id].dbsize()
+        return inf
 
 
 if __name__ == '__main__':

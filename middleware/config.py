@@ -27,6 +27,11 @@ class InfoTable:
         InfoTable.info = data
 
     def get_site(self, *, key: str):
+        """
+        get_site
+        :param key:
+        :return:
+        """
         hash_key = hash_func(data=key.encode())
         # return self.info[hash_key]
         if hash_key in self.info.keys():
@@ -35,6 +40,11 @@ class InfoTable:
             raise KeyError("KeyError")
 
     def set_site(self, *, key: str):
+        """
+        set_site
+        :param key:
+        :return:
+        """
         hash_key = hash_func(data=key.encode())
         site_index = sharding.jump_sharding(shard_key=hash_key, num_shards=len(self.sites))
         self.info[hash_key] = self.sites[site_index]
