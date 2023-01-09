@@ -60,7 +60,7 @@ coverage.xml
 *.mo
 *.pot
 
-# Django stuff:
+# Django:
 *.log
 local_settings.py
 db.sqlite3
@@ -132,3 +132,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# IDE settings
+.idea/
