@@ -20,7 +20,12 @@ class InfoTable:
     info = {}  # Look-up table (dict type) containing <Hashed_Keys(int)-Redis-URL(str)> pairs
 
     def __init__(self):
-        self.sites = ["redis://localhost:6379/0", "redis://localhost:6380/0"]
+        # self.sites = ["redis://localhost:6379/0", "redis://localhost:6380/0"]
+        # Precondition: all the servers must be up and running redis
+        # Redis server v=6.0.16
+        # self.sites = ["redis://10.0.2.82:6379/0", "redis://10.0.2.83:6379/0"]
+        self.sites = ["redis://:sharding-ddms@10.0.2.82:6379/0", "redis://:sharding-ddms@10.0.2.83:6379/0",
+                      "redis://:sharding-ddms@10.0.2.84:6379/0", "redis://:sharding-ddms@10.0.2.85:6379/0"]
 
     @staticmethod
     def init_info(*, data: dict):
