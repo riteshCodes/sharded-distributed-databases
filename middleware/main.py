@@ -102,7 +102,7 @@ class MWare:
 
         return hash_key
 
-    def set_multiple(self, hash_key_list: list = None, **mapping):
+    def st_multiple(self, hash_key_list: list = None, **mapping):
         """
         set_multiple sets values (as mapping/dict) to multiple given keys in the database. If the keys are not
         present in the database, new keys are created
@@ -110,9 +110,17 @@ class MWare:
         :param mapping: dict as key-value pair
         :return: None
         """
+        print(mapping)
         if hash_key_list is None or mapping is None:
             raise TypeError('None type passed as argument (mapping=None)')
         # site_key_list = []
+        for hash_key in hash_key_list:
+            k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
+            self.table.set_site(key=k)
+            site_id = self.table.get_site(key=k)
+            # site_key_list.append((site_id, k))
+            self.redis_db[site_id].hset(k, mapping=mapping)
+        """
         for hash_key in hash_key_list:
             k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
             self.table.set_site(key=k)
@@ -124,6 +132,20 @@ class MWare:
         #     for v in site_key_list:
         #         pipe.hset(key, mapping=mapping)
         #     pipe.execute()
+        """
+
+    def set_multiples(self, key_list: list = None, name_list: list = None, email_list: list = None):
+        """
+
+        """
+        if key_list is None:
+            raise TypeError('None type passed as argument (mapping=None)')
+        # site_key_list = []
+        for k, n, e in zip(key_list, name_list, email_list):
+            k = 'Client:' + str(self.client_id) + ':' + str(k)
+            self.table.set_site(key=k)
+            site_id = self.table.get_site(key=k)
+            self.redis_db[site_id].hset(k, mapping={'name': n, 'email': e})
 
     def del_fields(self, *, hash_key: int = None, fields: list = None):
         """

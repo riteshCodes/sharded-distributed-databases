@@ -1,0 +1,9 @@
+Install gRPC:
+$ python -m pip install grpcio
+
+Install gRPC tools:
+$ python -m pip install grpcio-tools
+
+
+Generate gRPC code
+python -m grpc_tools.protoc -I./protos --python_out=./protos --pyi_out=./protos --grpc_python_out=./protos protos/comm.proto

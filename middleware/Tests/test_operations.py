@@ -1,43 +1,19 @@
 import random
-
 from main import MWare
 
-# redis/utils.py
-try:
-    import hiredis  # hiredis as minimalistic C client library for the Redis database
-
-    HIREDIS_AVAILABLE = True
-except ImportError:
-    HIREDIS_AVAILABLE = False
-
-
-def get_from(*key_list):
-    res = {}
-    for key in key_list:
-        res[key] = MWare.redis_db.get(key)
-
-    return res
-
-
-def set_values(*value_list):
-    #   redis_db.mset({key: value for key, value in key_value_list.items()})
-    with MWare.redis_db.pipeline() as pipe:
-        for value in value_list:
-            pipe.set(str(random.getrandbits(8)), value)
-        pipe.execute()
-
-
-def update(*key):
-    pass
-
-
-def delete_keys(*key_list):
-    with MWare.redis_db.pipeline() as pipe:
-        for key in key_list:
-            pipe.delete(key)
-        pipe.execute()
-
-
-def flush_db():
-    MWare.redis_db.flushdb()
-    # MWare.
+if __name__ == '__main__':
+    # for i in range(0, 10):
+    test_data = MWare(client_id=0)
+    # set single key store
+    test_data.set_to(hash_key=random.randint(0, 20), userID=random.randint(0, 30), name="Something",
+                     country="Germany")
+    # set multiple key stores
+    test_data.set_multiple(hash_key_list=[random.randint(21, 51), random.randint(52, 82), random.randint(83, 113)],
+                           userID=777, name='Multiple Assignment', country='Nepal')
+    # get all key stores info (server:number-of-values)
+    print(test_data.key_space_inf())
+    print(test_data.get_all(hash_key_list=[54]))
+    print(test_data.get_fields(hash_key=54, field_list=['userID', 'name']))
+    test_data.flush_all()
+    # flush all data
+    # test_data.flush_all()

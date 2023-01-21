@@ -1,0 +1,62 @@
+syntax = 'proto3';
+
+service CommunicationService {
+
+  rpc testConnection(StringMessage) returns (StringMessage) {}
+
+  rpc getKeySpaceInfo(Empty) returns (MapStringInt) {}
+
+  rpc getSingle(Key) returns (GetData) {}
+  rpc setSingle(Data) returns (StringMessage) {}
+
+  rpc getMultiple(KeyList) returns (GetDictData) {}
+  rpc setMultiple(Dict) returns (StringMessage) {}
+
+  rpc delKeys(KeyList) returns (StringMessage) {}
+
+}
+
+message Empty {}
+
+message StringMessage {
+  string message = 1;
+}
+
+message Key {
+  int64 key = 1;
+}
+
+message KeyList {
+  repeated Key key_list = 1;
+}
+
+message MapStringInt {
+  map<string, int64> key_value = 1;
+}
+
+message MapIntString {
+  map<int64, string> key_value = 1;
+}
+
+message MapDefault {
+  map<string, string> key_value = 1;
+}
+
+message Data {
+  int64 userID = 1;
+  string name = 2;
+  string email = 3;
+}
+
+message Dict {
+  repeated Data data = 1;
+}
+
+message GetData {
+  string name = 1;
+  string email = 2;
+}
+
+message GetDictData {
+  repeated GetData getdata = 1;
+}
