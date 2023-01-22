@@ -14,6 +14,8 @@ service CommunicationService {
 
   rpc delKeys(KeyList) returns (StringMessage) {}
 
+  rpc getRange(Range) returns (GetDictData) {}
+
 }
 
 message Empty {}
@@ -40,6 +42,11 @@ message MapIntString {
 
 message MapDefault {
   map<string, string> key_value = 1;
+}
+
+message Range {
+  int32 start = 1;
+  int32 end = 2;
 }
 
 message Data {

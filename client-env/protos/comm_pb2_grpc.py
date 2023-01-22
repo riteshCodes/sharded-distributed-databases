@@ -49,6 +49,11 @@ class CommunicationServiceStub(object):
                 request_serializer=comm__pb2.KeyList.SerializeToString,
                 response_deserializer=comm__pb2.StringMessage.FromString,
                 )
+        self.getRange = channel.unary_unary(
+                '/CommunicationService/getRange',
+                request_serializer=comm__pb2.Range.SerializeToString,
+                response_deserializer=comm__pb2.GetDictData.FromString,
+                )
 
 
 class CommunicationServiceServicer(object):
@@ -96,6 +101,12 @@ class CommunicationServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def getRange(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_CommunicationServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -133,6 +144,11 @@ def add_CommunicationServiceServicer_to_server(servicer, server):
                     servicer.delKeys,
                     request_deserializer=comm__pb2.KeyList.FromString,
                     response_serializer=comm__pb2.StringMessage.SerializeToString,
+            ),
+            'getRange': grpc.unary_unary_rpc_method_handler(
+                    servicer.getRange,
+                    request_deserializer=comm__pb2.Range.FromString,
+                    response_serializer=comm__pb2.GetDictData.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -260,5 +276,22 @@ class CommunicationService(object):
         return grpc.experimental.unary_unary(request, target, '/CommunicationService/delKeys',
             comm__pb2.KeyList.SerializeToString,
             comm__pb2.StringMessage.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def getRange(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/CommunicationService/getRange',
+            comm__pb2.Range.SerializeToString,
+            comm__pb2.GetDictData.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

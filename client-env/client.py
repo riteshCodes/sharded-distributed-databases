@@ -4,6 +4,9 @@ from protos.comm_pb2_grpc import CommunicationServiceStub
 
 from google.protobuf.json_format import MessageToDict
 
+from time import perf_counter
+import timeit
+
 HOST = 'localhost'
 PORT = '6379'
 
@@ -26,6 +29,16 @@ def parse_to_dict_list(proto_data):
         return dict_data['getdata']
 
 
+def execution_time(*, function):
+    """
+    timeit module measures the execution time of a function.
+    It runs the function multiple times (number argument) and returns the average execution time (in seconds)
+    :param function: function for time profiling
+    :return: execution time (in seconds)
+    """
+    return timeit.timeit(lambda: function, number=1)
+
+
 def run():
     """
     The run method, that sends gRPC conformant messages to the server
@@ -43,8 +56,8 @@ def run():
             # print(get_single(stub=stub, key=9))
 
             # Set (same) values to multiple keys
-            # set_multiples(stub=stub, userIDList=[0, 1, 2, 3, 4, 5], nameList=['N0', 'N1', 'N2', 'N3', 'N4', 'N5'],
-            #              emailList=['E0', 'E1', 'E2', 'E3', 'E4', 'E5'])
+            set_multiples(stub=stub, userIDList=[0, 1, 2, 3, 4, 5], nameList=['N0', 'N1', 'N2', 'N3', 'N4', 'N5'],
+                          emailList=['E0', 'E1', 'E2', 'E3', 'E4', 'E5'])
 
             # Get values from multiple keys
             # print(get_multiples(stub=stub, k_list=[9]))
@@ -52,10 +65,25 @@ def run():
             # Delete entries from given keys
             # del_keys(stub=stub, k_list=[4])
 
+            # Get values from given range of keys
+            print(get_range(stub=stub, start=0, end=2))
+
             # Site_Name:Total_Keys mapping
             keyspace_info = get_key_space_info(stub=stub)
-            # print("Total number of keys present in the sites :")
+            print("Total number of keys present in the sites :")
             print(keyspace_info)
+
+            ############################################################################################################
+            print('Time Profiling (Execution Time)')
+
+            print(execution_time(function=get_key_space_info(stub=stub)))
+
+            ############################################################################################################
+            print('Time Profiling (Wall Time)')
+            t1_start = perf_counter()  # Start the stopwatch / counter
+            get_key_space_info(stub=stub)
+            t1_stop = perf_counter()  # Stop the stopwatch / counter
+            print(f'Wall time in seconds: {t1_stop - t1_start}')
 
         except KeyboardInterrupt:
             print("KeyboardInterrupt")
@@ -65,7 +93,9 @@ def run():
 
 def close(channel):
     """
-    Close the channel
+    Function to close the channel
+    :param channel:
+    :return:
     """
     channel.close()
 
@@ -101,7 +131,7 @@ def get_multiples(*, stub, k_list: list = None):
 
 
 def get_range(*, stub, start: int, end: int):
-    pass
+    return MessageToDict(stub.getRange(Range(start=start, end=end)))['getdata']
 
 
 def set_single(*, stub, **mapping):

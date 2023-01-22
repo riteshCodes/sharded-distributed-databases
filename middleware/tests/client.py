@@ -43,14 +43,17 @@ def run():
             # print(get_single(stub=stub, key=9))
 
             # Set (same) values to multiple keys
-            # set_multiples(stub=stub, userIDList=[0, 1, 2, 3, 4, 5], nameList=['N0', 'N1', 'N2', 'N3', 'N4', 'N5'],
-            #              emailList=['E0', 'E1', 'E2', 'E3', 'E4', 'E5'])
+            set_multiples(stub=stub, userIDList=[0, 1, 2, 3, 4, 5], nameList=['N0', 'N1', 'N2', 'N3', 'N4', 'N5'],
+                          emailList=['E0', 'E1', 'E2', 'E3', 'E4', 'E5'])
 
             # Get values from multiple keys
             # print(get_multiples(stub=stub, k_list=[9]))
 
             # Delete entries from given keys
-            del_keys(stub=stub, k_list=[4])
+            # del_keys(stub=stub, k_list=[4])
+
+            # Get values from given range of keys
+            print(get_range(stub=stub, start=0, end=2))
 
             # Site_Name:Total_Keys mapping
             keyspace_info = get_key_space_info(stub=stub)
@@ -101,7 +104,7 @@ def get_multiples(*, stub, k_list: list = None):
 
 
 def get_range(*, stub, start: int, end: int):
-    pass
+    return MessageToDict(stub.getRange(Range(start=start, end=end)))['getdata']
 
 
 def set_single(*, stub, **mapping):

@@ -90,6 +90,14 @@ class MapStringInt(_message.Message):
     key_value: _containers.ScalarMap[str, int]
     def __init__(self, key_value: _Optional[_Mapping[str, int]] = ...) -> None: ...
 
+class Range(_message.Message):
+    __slots__ = ["end", "start"]
+    END_FIELD_NUMBER: _ClassVar[int]
+    START_FIELD_NUMBER: _ClassVar[int]
+    end: int
+    start: int
+    def __init__(self, start: _Optional[int] = ..., end: _Optional[int] = ...) -> None: ...
+
 class StringMessage(_message.Message):
     __slots__ = ["message"]
     MESSAGE_FIELD_NUMBER: _ClassVar[int]

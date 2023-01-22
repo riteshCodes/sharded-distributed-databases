@@ -93,6 +93,19 @@ class Listener(CommunicationServiceServicer):
 
         return StringMessage(message='OK')
 
+    def getRange(self, request, context):
+        res = GetDictData().getdata  # Valid response type
+        values_list = m_ware.get_range(start=request.start, end=request.end)
+
+        if values_list:
+            for v in values_list:
+                data = GetData(name=v.get('name'), email=v.get('email'))
+                res.append(data)
+        else:
+            res.append(GetData(name='EMPTY', email='EMPTY'))
+
+        return GetDictData(getdata=res)  # repeated getdata
+
 
 def serve():
     """The main serve function of the server.

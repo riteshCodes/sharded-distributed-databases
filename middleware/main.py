@@ -58,6 +58,7 @@ class MWare:
             k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
 
             try:
+                # TODO check if key exists in the database
                 site_id = self.table.get_site(key=k)
                 hash_values = self.redis_db[site_id].hgetall(k)
                 res.append(hash_values)
@@ -191,6 +192,18 @@ class MWare:
                 print(k, 'does not exist. Exception:', err)
 
     # self.redis_db.delete(*key_list)
+
+    def get_range(self, *, start: int = 0, end: int):
+        res = []
+        for i in range(start, end + 1):
+            k = 'Client:' + str(self.client_id) + ':' + str(i)
+            try:
+                site_id = self.table.get_site(key=k)
+                hash_values = self.redis_db[site_id].hgetall(k)
+                res.append(hash_values)
+            except KeyError as err:
+                continue
+        return res
 
     def flush_all(self):
         """
