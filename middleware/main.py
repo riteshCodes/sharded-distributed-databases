@@ -11,6 +11,9 @@ except ImportError:
 
 from config import InfoTable, hash_func
 
+from configs import SITES, NUM_REPLICAS
+from consistent_hash_sharding import ConsistentHashSharder
+
 store = {}  # Look-up table (dict type) containing <Hashed_Keys(int)-Redis-URL(str)> pairs for each client
 
 
@@ -19,11 +22,25 @@ class MWare:
     Mware Class
     """
 
-    def __init__(self, *, client_id: int, site_count: int = 1):
+    def __init__(self, *, client_id: int, replicas: int = 5):
         """
         init
         :param client_id:
-        :param site_count: site_count = 1; default number of sites (single site)
+        :param replicas: number of replicas for a single site to ensure uniform distribution
+        """
+        self.client_id = client_id
+
+        self.sharder = ConsistentHashSharder(num_replicas=NUM_REPLICAS)
+        for site in SITES:
+            self.sharder.add_site(site_name=site)
+
+        self.redis_db = {}
+
+        for hashed_site in self.sharder.sorted_keys:
+            site_url = self.sharder.ring.get(hashed_site)
+            self.redis_db[site_url] = redis.StrictRedis(
+                connection_pool=redis.ConnectionPool.from_url(site_url, decode_responses=True))
+
         """
 
         # redis database, config file: /etc/redis/6379.conf
@@ -43,6 +60,8 @@ class MWare:
 
         self.table.init_info(data=store)
         self.client_id = client_id
+        
+        """
 
     def get_all(self, *, hash_key_list: list = None):
         """
@@ -59,7 +78,8 @@ class MWare:
 
             try:
                 # TODO check if key exists in the database
-                site_id = self.table.get_site(key=k)
+                site_id = self.sharder.get_node(k=k)
+                # site_id = self.table.get_site(key=k)
                 hash_values = self.redis_db[site_id].hgetall(k)
                 res.append(hash_values)
             except KeyError as err:
@@ -80,7 +100,8 @@ class MWare:
         k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
 
         try:
-            site_id = self.table.get_site(key=k)
+            site_id = self.sharder.get_node(k=k)
+            # site_id = self.table.get_site(key=k)
             return self.redis_db[site_id].hmget(k, field_list)
         except KeyError as err:
             print(k, 'does not exist. Exception:', err)
@@ -96,8 +117,10 @@ class MWare:
             raise TypeError('None type passed as argument (mapping=None)')
 
         k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
-        self.table.set_site(key=k)
-        site_id = self.table.get_site(key=k)
+
+        site_id = self.sharder.get_node(k=k)
+        # self.table.set_site(key=k)
+        # site_id = self.table.get_site(key=k)
 
         self.redis_db[site_id].hset(k, mapping=mapping)
 
@@ -117,9 +140,10 @@ class MWare:
         # site_key_list = []
         for hash_key in hash_key_list:
             k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
-            self.table.set_site(key=k)
-            site_id = self.table.get_site(key=k)
-            # site_key_list.append((site_id, k))
+            site_id = self.sharder.get_node(k=k)
+            # self.table.set_site(key=k)
+            # site_id = self.table.get_site(key=k)
+            # site_key_list.append((site_id, k)) # OLD
             self.redis_db[site_id].hset(k, mapping=mapping)
         """
         for hash_key in hash_key_list:
@@ -144,8 +168,9 @@ class MWare:
         # site_key_list = []
         for k, n, e in zip(key_list, name_list, email_list):
             k = 'Client:' + str(self.client_id) + ':' + str(k)
-            self.table.set_site(key=k)
-            site_id = self.table.get_site(key=k)
+            site_id = self.sharder.get_node(k=k)
+            # self.table.set_site(key=k)
+            # site_id = self.table.get_site(key=k)
             self.redis_db[site_id].hset(k, mapping={'name': n, 'email': e})
 
     def del_fields(self, *, hash_key: int = None, fields: list = None):
@@ -160,7 +185,8 @@ class MWare:
 
         k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
         try:
-            site_id = self.table.get_site(key=k)
+            site_id = self.sharder.get_node(k=k)
+            # site_id = self.table.get_site(key=k)
             with self.redis_db[site_id].pipeline() as pipe:
                 pipe.watch(k)
                 pipe.multi()
@@ -182,7 +208,8 @@ class MWare:
         for hash_key in hash_key_list:
             k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
             try:
-                site_id = self.table.get_site(key=k)
+                site_id = self.sharder.get_node(k=k)
+                # site_id = self.table.get_site(key=k)
                 with self.redis_db[site_id].pipeline() as pipe:
                     pipe.watch(k)
                     pipe.multi()
@@ -198,7 +225,8 @@ class MWare:
         for i in range(start, end + 1):
             k = 'Client:' + str(self.client_id) + ':' + str(i)
             try:
-                site_id = self.table.get_site(key=k)
+                site_id = self.sharder.get_node(k=k)
+                # site_id = self.table.get_site(key=k)
                 hash_values = self.redis_db[site_id].hgetall(k)
                 res.append(hash_values)
             except KeyError as err:
@@ -210,8 +238,10 @@ class MWare:
         flush_all wipes all data of all database instances
         :return: None
         """
-        for site in self.table.sites:
-            self.redis_db[site].flushdb()
+        for site in self.redis_db.values():
+            site.flushdb()
+        # for site in self.table.sites:
+        # self.redis_db[site].flushdb()
 
     def key_space_inf(self):
         """
@@ -219,9 +249,16 @@ class MWare:
         :return: key-value pairs (dict) with key as site and value as total number of keys present
         """
         inf = {}
+        for site_id in self.redis_db.keys():
+            inf[site_id] = self.redis_db[site_id].dbsize()
+
+        return inf
+        """
+        inf = {}
         for site_id in self.table.sites:
             inf[site_id] = self.redis_db[site_id].dbsize()
         return inf
+        """
 
 
 if __name__ == '__main__':

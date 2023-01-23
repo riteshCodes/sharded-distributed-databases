@@ -2,43 +2,58 @@ import xxhash
 
 
 class ConsistentHashSharder:
-    def __init__(self, num_replicas: int):
+    """
+    Clockwise ring assignment
+    """
+
+    def __init__(self, *, num_replicas: int):
         self.num_replicas = num_replicas
         self.ring = {}
-        self.sorted_keys = []
+        self.sorted_keys = []  # sort the keys in ascending order to place them in the ring
 
-    def add_node(self, node):
+    def add_site(self, *, site_name: str):
+        """
+        :param site_name:
+        """
         for i in range(self.num_replicas):
-            replica = node + ':' + str(i)
-            key = hash_func(replica)
-            self.ring[key] = node
-            self.sorted_keys.append(key)
+            replica = site_name + ':' + str(i)
+            k = hash_func(data=replica)
+            self.ring[k] = site_name
+            self.sorted_keys.append(k)
         self.sorted_keys.sort()
 
-    def remove_node(self, node):
+    def remove_site(self, *, site_name: str):
+        """
+        :param site_name:
+        """
         for i in range(self.num_replicas):
-            replica = node + ':' + str(i)
-            print(replica)
-            key = hash_func(replica)
-            del self.ring[key]
-            self.sorted_keys.remove(key)
+            replica = site_name + ':' + str(i)
+            k = hash_func(data=replica)
+            del self.ring[k]
+            self.sorted_keys.remove(k)
 
-    def get_node(self, key):
+    def get_node(self, *, k):
+        """
+        :param k:
+        """
         if not self.ring:
             return None
 
-        hash_key = hash_func(key)
-        index = self._get_index(hash_key)
+        hash_key = hash_func(data=k)
+        index = self._get_index(k=hash_key)
         return self.ring[self.sorted_keys[index]]
 
-    def _get_index(self, key):
-        for i, node in enumerate(self.sorted_keys):
-            if key <= node:
+    def _get_index(self, *, k):
+        """
+        :param k:
+        """
+        for i, site_hash in enumerate(self.sorted_keys):
+            if k <= site_hash:
                 return i
         return 0
 
 
-def hash_func(data: str):
+def hash_func(*, data: str):
     """
     hash_func generates 64-bit hashes, using vectorized arithmetic. xxHash is an Extremely fast Hash algorithm,
     processing at RAM speed limits
@@ -49,25 +64,18 @@ def hash_func(data: str):
 
 
 if __name__ == '__main__':
-    sharder = ConsistentHashSharder(num_replicas=1)
+    sharder = ConsistentHashSharder(num_replicas=10)
 
     # Add some nodes to the sharder
-    nodes = ["redis://:sharding-ddms@10.0.2.82:6379/0", "redis://:sharding-ddms@10.0.2.83:6379/0",
+    sites = ["redis://:sharding-ddms@10.0.2.82:6379/0", "redis://:sharding-ddms@10.0.2.83:6379/0",
              "redis://:sharding-ddms@10.0.2.84:6379/0", "redis://:sharding-ddms@10.0.2.85:6379/0"]
 
-    for node in nodes:
-        sharder.add_node(node)
+    for site in sites:
+        sharder.add_site(site_name=site)
 
-    # Use the sharder to determine which node a key should be stored on
-    key = '123'
-    node = sharder.get_node(key)
-    print(f"Key {key} should be stored on node {node}")
+    # Use the sharder to determine which site a key should be stored on
+    key = '7'
+    s = sharder.get_node(k=key)
+    print(f"Key {key} should be stored on :  {s}")
     print(sharder.ring)
     print(sharder.sorted_keys)
-    sharder.remove_node('redis://:sharding-ddms@10.0.2.85:6379/0')
-
-    print('test')
-    print(sharder.ring)
-    print(sharder.sorted_keys)
-    node = sharder.get_node(key)
-    print(f"Key {key} should be stored on node {node}")
