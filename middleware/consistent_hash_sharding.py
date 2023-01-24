@@ -1,5 +1,7 @@
 import xxhash
 
+from configs import SITES
+
 
 class ConsistentHashSharder:
     """
@@ -50,7 +52,9 @@ class ConsistentHashSharder:
         for i, site_hash in enumerate(self.sorted_keys):
             if k <= site_hash:
                 return i
-        return 0
+        # return 0 # TODO what if k > site_hash (in total list)
+        # Approach: % total sites (without replicas)
+        return self._get_index(k=k % len(SITES))
 
 
 def hash_func(*, data: str):

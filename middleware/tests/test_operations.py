@@ -2,9 +2,9 @@ import random
 from main import MWare
 
 if __name__ == '__main__':
-    test_data = MWare(client_id=0)
+    test_data = MWare()
 
-    # test_data.flush_all()
+    test_data.flush_all()
 
     test_data.set_multiples(key_list=[0, 1, 2, 3, 4, 5], name_list=['N0', 'N1', 'N2', 'N3', 'N4', 'N5'],
                             email_list=['E0', 'E1', 'E2', 'E3', 'E4', 'E5'])

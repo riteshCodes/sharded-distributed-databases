@@ -8,7 +8,7 @@ from protos.comm_pb2_grpc import CommunicationServiceServicer, add_Communication
 # import main (MWare class)
 from main import MWare
 
-m_ware = MWare(client_id=0)
+m_ware = MWare()  # instance of middleware for calling operations
 
 HOST = 'localhost'
 PORT = '6379'
@@ -39,6 +39,9 @@ class Listener(CommunicationServiceServicer):
         return MapStringInt(key_value=key_space_inf)
 
     def getSingle(self, request, context):
+        """
+
+        """
         value = m_ware.get_all(hash_key_list=[request.key])
         print(value)
         if value:  # if the given key exists
@@ -50,10 +53,16 @@ class Listener(CommunicationServiceServicer):
             return GetData(name='EMPTY', email='EMPTY')  # if keys are not present [Test]
 
     def setSingle(self, request, context):
+        """
+
+        """
         m_ware.set_to(hash_key=request.userID, name=request.name, email=request.email)
         return StringMessage(message='OK')
 
     def getMultiple(self, request, context):
+        """
+
+        """
         keys = []
         for k in request.key_list:
             keys.append(k.key)
@@ -71,6 +80,9 @@ class Listener(CommunicationServiceServicer):
         return GetDictData(getdata=response)  # repeated getdata
 
     def setMultiple(self, request, context):
+        """
+
+        """
         uid_list = []
         name_list = []
         email_list = []
@@ -83,6 +95,9 @@ class Listener(CommunicationServiceServicer):
         return StringMessage(message='OK')
 
     def delKeys(self, request, context):
+        """
+
+        """
         keys = []
         for k in request.key_list:
             keys.append(k.key)
@@ -94,6 +109,9 @@ class Listener(CommunicationServiceServicer):
         return StringMessage(message='OK')
 
     def getRange(self, request, context):
+        """
+
+        """
         res = GetDictData().getdata  # Valid response type
         values_list = m_ware.get_range(start=request.start, end=request.end)
 
@@ -115,8 +133,11 @@ def serve():
     add_CommunicationServiceServicer_to_server(Listener(), server)
     server.add_insecure_port("[::]:6379")
     server.start()
-    print("Middleware is running ...")
-    server.wait_for_termination()
+    print('\nMiddleware is running ... \n')
+    try:
+        server.wait_for_termination()
+    except KeyboardInterrupt:
+        print('Middleware stopped.')
 
 
 def parse_to_data(dict_data):

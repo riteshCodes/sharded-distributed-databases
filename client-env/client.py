@@ -39,7 +39,7 @@ def execution_time(*, function):
     return timeit.timeit(lambda: function, number=1)
 
 
-def run():
+def run(*, u_ids: list, names: list, emails: list):
     """
     The run method, that sends gRPC conformant messages to the server
     """
@@ -55,9 +55,10 @@ def run():
             # Get value from single key
             # print(get_single(stub=stub, key=9))
 
-            # Set (same) values to multiple keys
-            set_multiples(stub=stub, userIDList=[0, 1, 2, 3, 4, 5], nameList=['N0', 'N1', 'N2', 'N3', 'N4', 'N5'],
-                          emailList=['E0', 'E1', 'E2', 'E3', 'E4', 'E5'])
+            # Set values to multiple keys
+            set_multiples(stub=stub, userIDList=u_ids, nameList=names, emailList=emails)
+            # set_multiples(stub=stub, userIDList=[0, 1, 2, 3, 4, 5], nameList=['N0', 'N1', 'N2', 'N3', 'N4', 'N5'],
+            #              emailList=['E0', 'E1', 'E2', 'E3', 'E4', 'E5'])
 
             # Get values from multiple keys
             # print(get_multiples(stub=stub, k_list=[9]))
@@ -66,7 +67,7 @@ def run():
             # del_keys(stub=stub, k_list=[4])
 
             # Get values from given range of keys
-            print(get_range(stub=stub, start=0, end=2))
+            print(get_range(stub=stub, start=0, end=100))
 
             # Site_Name:Total_Keys mapping
             keyspace_info = get_key_space_info(stub=stub)
@@ -156,4 +157,12 @@ def del_keys(*, stub, k_list: list = None):
 
 
 if __name__ == "__main__":
-    run()
+    test_user_ids = []
+    test_names = []
+    test_emails = []
+    for i in range(1000):
+        test_user_ids.append(i)
+        test_names.append(f'N-:{str(i)}')
+        test_emails.append(f'@Email-:{str(i)}')
+
+    run(u_ids=test_user_ids, names=test_names, emails=test_emails)

@@ -9,12 +9,8 @@ try:
 except ImportError:
     HIREDIS_AVAILABLE = False
 
-from config import InfoTable, hash_func
-
 from configs import SITES, NUM_REPLICAS
 from consistent_hash_sharding import ConsistentHashSharder
-
-store = {}  # Look-up table (dict type) containing <Hashed_Keys(int)-Redis-URL(str)> pairs for each client
 
 
 class MWare:
@@ -22,46 +18,21 @@ class MWare:
     Mware Class
     """
 
-    def __init__(self, *, client_id: int, replicas: int = 5):
+    def __init__(self):
         """
         init
-        :param client_id:
-        :param replicas: number of replicas for a single site to ensure uniform distribution
         """
-        self.client_id = client_id
-
+        # self.client_id = client_id
         self.sharder = ConsistentHashSharder(num_replicas=NUM_REPLICAS)
         for site in SITES:
             self.sharder.add_site(site_name=site)
 
         self.redis_db = {}
-
+        # redis database, config file: /etc/redis/6379.conf
         for hashed_site in self.sharder.sorted_keys:
             site_url = self.sharder.ring.get(hashed_site)
             self.redis_db[site_url] = redis.StrictRedis(
                 connection_pool=redis.ConnectionPool.from_url(site_url, decode_responses=True))
-
-        """
-
-        # redis database, config file: /etc/redis/6379.conf
-
-        self.table = InfoTable()
-        __table_sites = self.table.sites
-
-        self.redis_db = {}
-
-        for site in __table_sites:
-            self.redis_db[site] = redis.StrictRedis(
-                connection_pool=redis.ConnectionPool.from_url(site, decode_responses=True))
-            # TODO persistence to disk
-            for key in self.redis_db[site].scan_iter():
-                # store.setdefault(site, []).append(hash_func(data=key))
-                store[hash_func(data=key)] = site
-
-        self.table.init_info(data=store)
-        self.client_id = client_id
-        
-        """
 
     def get_all(self, *, hash_key_list: list = None):
         """
@@ -74,7 +45,7 @@ class MWare:
 
         res = []
         for hash_key in hash_key_list:
-            k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
+            k = 'userID' + ':' + str(hash_key)
 
             try:
                 # TODO check if key exists in the database
@@ -97,7 +68,7 @@ class MWare:
         if hash_key is None or field_list is None:
             raise TypeError('None type passed as argument')
 
-        k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
+        k = 'userID' + ':' + str(hash_key)
 
         try:
             site_id = self.sharder.get_node(k=k)
@@ -116,7 +87,7 @@ class MWare:
         if mapping is None:
             raise TypeError('None type passed as argument (mapping=None)')
 
-        k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
+        k = 'userID' + ':' + str(hash_key)
 
         site_id = self.sharder.get_node(k=k)
         # self.table.set_site(key=k)
@@ -139,7 +110,7 @@ class MWare:
             raise TypeError('None type passed as argument (mapping=None)')
         # site_key_list = []
         for hash_key in hash_key_list:
-            k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
+            k = 'userID' + ':' + str(hash_key)
             site_id = self.sharder.get_node(k=k)
             # self.table.set_site(key=k)
             # site_id = self.table.get_site(key=k)
@@ -167,7 +138,7 @@ class MWare:
             raise TypeError('None type passed as argument (mapping=None)')
         # site_key_list = []
         for k, n, e in zip(key_list, name_list, email_list):
-            k = 'Client:' + str(self.client_id) + ':' + str(k)
+            k = 'userID' + ':' + str(k)
             site_id = self.sharder.get_node(k=k)
             # self.table.set_site(key=k)
             # site_id = self.table.get_site(key=k)
@@ -183,7 +154,7 @@ class MWare:
         if hash_key is None or fields is None:
             raise TypeError('None type passed as argument.')
 
-        k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
+        k = 'userID' + ':' + str(hash_key)
         try:
             site_id = self.sharder.get_node(k=k)
             # site_id = self.table.get_site(key=k)
@@ -206,7 +177,7 @@ class MWare:
             raise TypeError('None type passed as argument (hash_key_list=None)')
 
         for hash_key in hash_key_list:
-            k = 'Client:' + str(self.client_id) + ':' + str(hash_key)
+            k = 'userID' + ':' + str(hash_key)
             try:
                 site_id = self.sharder.get_node(k=k)
                 # site_id = self.table.get_site(key=k)
@@ -223,7 +194,7 @@ class MWare:
     def get_range(self, *, start: int = 0, end: int):
         res = []
         for i in range(start, end + 1):
-            k = 'Client:' + str(self.client_id) + ':' + str(i)
+            k = 'userID' + ':' + str(i)
             try:
                 site_id = self.sharder.get_node(k=k)
                 # site_id = self.table.get_site(key=k)
@@ -253,12 +224,6 @@ class MWare:
             inf[site_id] = self.redis_db[site_id].dbsize()
 
         return inf
-        """
-        inf = {}
-        for site_id in self.table.sites:
-            inf[site_id] = self.redis_db[site_id].dbsize()
-        return inf
-        """
 
 
 if __name__ == '__main__':
