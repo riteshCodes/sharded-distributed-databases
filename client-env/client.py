@@ -47,7 +47,7 @@ def run(*, u_ids: list, names: list, emails: list):
         stub = CommunicationServiceStub(channel)
         try:
             # Connection Test
-            test_connection(stub=stub, message="CONNECTION TEST")
+            # test_connection(stub=stub, message="CONNECTION TEST")
 
             # Set values for single key
             # print(set_single(stub=stub, userID=2, name="Ritesh", email="gmail"))
@@ -56,7 +56,7 @@ def run(*, u_ids: list, names: list, emails: list):
             # print(get_single(stub=stub, key=9))
 
             # Set values to multiple keys
-            set_multiples(stub=stub, userIDList=u_ids, nameList=names, emailList=emails)
+            # set_multiples(stub=stub, userIDList=u_ids, nameList=names, emailList=emails)
             # set_multiples(stub=stub, userIDList=[0, 1, 2, 3, 4, 5], nameList=['N0', 'N1', 'N2', 'N3', 'N4', 'N5'],
             #              emailList=['E0', 'E1', 'E2', 'E3', 'E4', 'E5'])
 
@@ -67,22 +67,49 @@ def run(*, u_ids: list, names: list, emails: list):
             # del_keys(stub=stub, k_list=[4])
 
             # Get values from given range of keys
-            print(get_range(stub=stub, start=0, end=100))
+            # print(get_range(stub=stub, start=0, end=100))
 
             # Site_Name:Total_Keys mapping
-            keyspace_info = get_key_space_info(stub=stub)
-            print("Total number of keys present in the sites :")
-            print(keyspace_info)
+            # keyspace_info = get_key_space_info(stub=stub)
+            # print("Total number of keys present in the sites :")
+            # print(keyspace_info)
 
             ############################################################################################################
             print('Time Profiling (Execution Time)')
 
-            print(execution_time(function=get_key_space_info(stub=stub)))
+            # print(execution_time(function=test_connection(stub=stub, message="CONNECTION TEST")))
+
+            # print(execution_time(function=get_key_space_info(stub=stub)))
+
+            # print(execution_time(function=set_single(stub=stub, userID=1, name="single@name", email="single@email")))
+
+            # print(execution_time(function=set_multiples(stub=stub, userIDList=u_ids, nameList=names, emailList=emails)))
+
+            # print(execution_time(function=get_multiples(stub=stub, k_list=[9874])))
+
+            # print(execution_time(function=get_multiples(stub=stub, k_list=u_ids)))
+
+            # print(execution_time(function=get_range(stub=stub, start=0, end=9999)))
+
+            # print(execution_time(function=del_keys(stub=stub, k_list=[4897])))
+
+            # print(execution_time(function=del_keys(stub=stub, k_list=u_ids)))
 
             ############################################################################################################
+
             print('Time Profiling (Wall Time)')
             t1_start = perf_counter()  # Start the stopwatch / counter
-            get_key_space_info(stub=stub)
+
+            # print(test_connection(stub=stub, message="CONNECTION TEST"))
+            # set_single(stub=stub, userID=2, name="single@name", email="single@email")
+            # set_multiples(stub=stub, userIDList=u_ids, nameList=names, emailList=emails)
+            # get_multiples(stub=stub, k_list=[9874])
+            # get_multiples(stub=stub, k_list=u_ids)
+            # get_range(stub=stub, start=0, end=9999)
+            # del_keys(stub=stub, k_list=[7825])
+            # del_keys(stub=stub, k_list=u_ids)
+            # get_key_space_info(stub=stub)
+
             t1_stop = perf_counter()  # Stop the stopwatch / counter
             print(f'Wall time in seconds: {t1_stop - t1_start}')
 
@@ -160,7 +187,7 @@ if __name__ == "__main__":
     test_user_ids = []
     test_names = []
     test_emails = []
-    for i in range(1000):
+    for i in range(100):
         test_user_ids.append(i)
         test_names.append(f'N-:{str(i)}')
         test_emails.append(f'@Email-:{str(i)}')

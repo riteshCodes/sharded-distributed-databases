@@ -5,6 +5,7 @@ if __name__ == '__main__':
     test_data = MWare()
 
     test_data.flush_all()
+    """
 
     test_data.set_multiples(key_list=[0, 1, 2, 3, 4, 5], name_list=['N0', 'N1', 'N2', 'N3', 'N4', 'N5'],
                             email_list=['E0', 'E1', 'E2', 'E3', 'E4', 'E5'])
@@ -32,7 +33,9 @@ if __name__ == '__main__':
 
     field_values = test_data.get_fields(hash_key=10, field_list=['name', 'email'])
     print(field_values)
+    """
 
     # get all key stores info (server:number-of-values)
     print(test_data.key_space_inf())
     # test_data.flush_all()
+
