@@ -68,7 +68,7 @@ def hash_func(*, data: str):
 
 
 if __name__ == '__main__':
-    sharder = ConsistentHashSharder(num_replicas=10)
+    sharder = ConsistentHashSharder(num_replicas=1)
 
     # Add some nodes to the sharder
     sites = ["redis://:sharding-ddms@10.0.2.82:6379/0", "redis://:sharding-ddms@10.0.2.83:6379/0",
@@ -78,8 +78,21 @@ if __name__ == '__main__':
         sharder.add_site(site_name=site)
 
     # Use the sharder to determine which site a key should be stored on
-    key = '7'
+    key = '789111'
     s = sharder.get_node(k=key)
     print(f"Key {key} should be stored on :  {s}")
     print(sharder.ring)
     print(sharder.sorted_keys)
+
+    sharder.remove_site(site_name='redis://:sharding-ddms@10.0.2.83:6379/0')
+    t = sharder.get_node(k=key)
+    print(f"Key {key} should be stored on :  {t}")
+    print(sharder.ring)
+    print(sharder.sorted_keys)
+
+    sharder.remove_site(site_name='redis://:sharding-ddms@10.0.2.85:6379/0')
+    u = sharder.get_node(k=key)
+    print(f"Key {key} should be stored on :  {u}")
+    print(sharder.ring)
+    print(sharder.sorted_keys)
+

@@ -7,7 +7,8 @@ from google.protobuf.json_format import MessageToDict
 from time import perf_counter
 import timeit
 
-HOST = 'localhost'
+# HOST = 'localhost'
+HOST = '10.0.2.87'
 PORT = '6379'
 
 
@@ -43,11 +44,11 @@ def run(*, u_ids: list, names: list, emails: list):
     """
     The run method, that sends gRPC conformant messages to the server
     """
-    with grpc.insecure_channel("localhost:6379") as channel:
+    with grpc.insecure_channel(f'{HOST}:6379') as channel:
         stub = CommunicationServiceStub(channel)
         try:
             # Connection Test
-            # test_connection(stub=stub, message="CONNECTION TEST")
+            test_connection(stub=stub, message="CONNECTION TEST")
 
             # Set values for single key
             # print(set_single(stub=stub, userID=2, name="Ritesh", email="gmail"))
@@ -108,7 +109,7 @@ def run(*, u_ids: list, names: list, emails: list):
             # get_range(stub=stub, start=0, end=9999)
             # del_keys(stub=stub, k_list=[7825])
             # del_keys(stub=stub, k_list=u_ids)
-            # get_key_space_info(stub=stub)
+            # print(get_key_space_info(stub=stub))
 
             t1_stop = perf_counter()  # Stop the stopwatch / counter
             print(f'Wall time in seconds: {t1_stop - t1_start}')
