@@ -19,7 +19,7 @@ class ConsistentHashSharder:
         """
         for i in range(self.num_replicas):
             replica = site_name + ':' + str(i)
-            k = hash_func(data=replica)
+            k = hash_func(data=replica) % 360
             self.ring[k] = site_name
             self.sorted_keys.append(k)
         self.sorted_keys.sort()
@@ -30,7 +30,7 @@ class ConsistentHashSharder:
         """
         for i in range(self.num_replicas):
             replica = site_name + ':' + str(i)
-            k = hash_func(data=replica)
+            k = hash_func(data=replica) % 360
             del self.ring[k]
             self.sorted_keys.remove(k)
 
@@ -41,7 +41,7 @@ class ConsistentHashSharder:
         if not self.ring:
             return None
 
-        hash_key = hash_func(data=k)
+        hash_key = hash_func(data=k) % 360
         index = self._get_index(k=hash_key)
         return self.ring[self.sorted_keys[index]]
 
@@ -52,9 +52,10 @@ class ConsistentHashSharder:
         for i, site_hash in enumerate(self.sorted_keys):
             if k <= site_hash:
                 return i
-        # return 0 # TODO what if k > site_hash (in total list)
+
+        return 0  # TODO what if k > site_hash (in total list)
         # Approach: % total sites (without replicas)
-        return self._get_index(k=k % len(SITES))
+        # return self._get_index(k=k % len(SITES))
 
 
 def hash_func(*, data: str):
@@ -67,7 +68,22 @@ def hash_func(*, data: str):
     return xxhash.xxh3_64_intdigest(data.encode())
 
 
+def binary_search(array, key):
+    low = 0
+    high = len(array) - 1
+    while low <= high:
+        mid = int((low + high) / 2)
+        if array[mid] < key:
+            low = mid + 1
+        elif array[mid] > key:
+            high = mid - 1
+        else:
+            return mid
+    return None
+
+
 if __name__ == '__main__':
+
     sharder = ConsistentHashSharder(num_replicas=1)
 
     # Add some nodes to the sharder
@@ -95,4 +111,3 @@ if __name__ == '__main__':
     print(f"Key {key} should be stored on :  {u}")
     print(sharder.ring)
     print(sharder.sorted_keys)
-
