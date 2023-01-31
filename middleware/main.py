@@ -9,7 +9,7 @@ try:
 except ImportError:
     HIREDIS_AVAILABLE = False
 
-from configs import SITES, NUM_REPLICAS
+from configs import SITES, VIRTUAL_SITES
 from consistent_hash_sharding import ConsistentHashSharder
 
 
@@ -22,17 +22,12 @@ class MWare:
         """
         init
         """
-        # self.client_id = client_id
-        self.sharder = ConsistentHashSharder(num_replicas=NUM_REPLICAS)
+        self.redis_db = {}
+        self.sharder = ConsistentHashSharder(virtual_sites_count=VIRTUAL_SITES)
         for site in SITES:
             self.sharder.add_site(site_name=site)
-
-        self.redis_db = {}
-        # redis database, config file: /etc/redis/6379.conf
-        for hashed_site in self.sharder.sorted_keys:
-            site_url = self.sharder.ring.get(hashed_site)
-            self.redis_db[site_url] = redis.StrictRedis(
-                connection_pool=redis.ConnectionPool.from_url(site_url, decode_responses=True))
+            self.redis_db[site] = redis.StrictRedis(
+                connection_pool=redis.ConnectionPool.from_url(site, decode_responses=True))
 
     def get_all(self, *, hash_key_list: list = None):
         """
@@ -49,7 +44,7 @@ class MWare:
 
             try:
                 # TODO check if key exists in the database
-                site_id = self.sharder.get_node(k=k)
+                site_id = self.sharder.get_site(shard_key=k)
                 # site_id = self.table.get_site(key=k)
                 hash_values = self.redis_db[site_id].hgetall(k)
                 res.append(hash_values)
@@ -71,7 +66,7 @@ class MWare:
         k = 'userID' + ':' + str(hash_key)
 
         try:
-            site_id = self.sharder.get_node(k=k)
+            site_id = self.sharder.get_site(shard_key=k)
             # site_id = self.table.get_site(key=k)
             return self.redis_db[site_id].hmget(k, field_list)
         except KeyError as err:
@@ -89,7 +84,7 @@ class MWare:
 
         k = 'userID' + ':' + str(hash_key)
 
-        site_id = self.sharder.get_node(k=k)
+        site_id = self.sharder.get_site(shard_key=k)
         # self.table.set_site(key=k)
         # site_id = self.table.get_site(key=k)
 
@@ -111,7 +106,7 @@ class MWare:
         # site_key_list = []
         for hash_key in hash_key_list:
             k = 'userID' + ':' + str(hash_key)
-            site_id = self.sharder.get_node(k=k)
+            site_id = self.sharder.get_site(shard_key=k)
             # self.table.set_site(key=k)
             # site_id = self.table.get_site(key=k)
             # site_key_list.append((site_id, k)) # OLD
@@ -139,7 +134,7 @@ class MWare:
         # site_key_list = []
         for k, n, e in zip(key_list, name_list, email_list):
             k = 'userID' + ':' + str(k)
-            site_id = self.sharder.get_node(k=k)
+            site_id = self.sharder.get_site(shard_key=k)
             # self.table.set_site(key=k)
             # site_id = self.table.get_site(key=k)
             self.redis_db[site_id].hset(k, mapping={'name': n, 'email': e})
@@ -156,7 +151,7 @@ class MWare:
 
         k = 'userID' + ':' + str(hash_key)
         try:
-            site_id = self.sharder.get_node(k=k)
+            site_id = self.sharder.get_site(shard_key=k)
             # site_id = self.table.get_site(key=k)
             with self.redis_db[site_id].pipeline() as pipe:
                 pipe.watch(k)
@@ -179,7 +174,7 @@ class MWare:
         for hash_key in hash_key_list:
             k = 'userID' + ':' + str(hash_key)
             try:
-                site_id = self.sharder.get_node(k=k)
+                site_id = self.sharder.get_site(shard_key=k)
                 # site_id = self.table.get_site(key=k)
                 with self.redis_db[site_id].pipeline() as pipe:
                     pipe.watch(k)
@@ -196,7 +191,7 @@ class MWare:
         for i in range(start, end + 1):
             k = 'userID' + ':' + str(i)
             try:
-                site_id = self.sharder.get_node(k=k)
+                site_id = self.sharder.get_site(shard_key=k)
                 # site_id = self.table.get_site(key=k)
                 hash_values = self.redis_db[site_id].hgetall(k)
                 res.append(hash_values)
