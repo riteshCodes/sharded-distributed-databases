@@ -1,31 +1,32 @@
 import random
 import redis
 
-# redis/utils.py
-try:
-    import hiredis  # hiredis as minimalistic C client library for the Redis database
+from configs import DB_NODES, VIRTUAL_NODES
+from sharding import ConsistentHashSharder
 
-    HIREDIS_AVAILABLE = True
-except ImportError:
-    HIREDIS_AVAILABLE = False
+redis_client = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
 
-from configs import SITES, VIRTUAL_SITES
-from consistent_hash_sharding import ConsistentHashSharder
+if redis_client.connection_pool.connection_kwargs.get('decode_responses', False):
+    print('hiredis is enabled')
+
+import hiredis
 
 
 class MWare:
     """
-    Mware Class
+    Mware Class: Middleware, a layer between (python) clients and (Redis key-value store) distributed databases,
+                 responsible for fetching, storing and manipulating data.
     """
 
     def __init__(self):
         """
-        init
+        init initializes configurations (physical nodes' url, number of virtual nodes, responses) for redis connection
+        pool, using StrictRedis protocol from redis-py python interface.
         """
         self.redis_db = {}
-        self.sharder = ConsistentHashSharder(virtual_sites_count=VIRTUAL_SITES)
-        for site in SITES:
-            self.sharder.add_site(site_name=site)
+        self.sharder = ConsistentHashSharder(virtual_nodes=VIRTUAL_NODES)
+        for site in DB_NODES:
+            self.sharder.add_node(node_url=site)
             self.redis_db[site] = redis.StrictRedis(
                 connection_pool=redis.ConnectionPool.from_url(site, decode_responses=True))
 
@@ -44,8 +45,7 @@ class MWare:
 
             try:
                 # TODO check if key exists in the database
-                site_id = self.sharder.get_site(shard_key=k)
-                # site_id = self.table.get_site(key=k)
+                site_id = self.sharder.get_node_url(shard_key=k)
                 hash_values = self.redis_db[site_id].hgetall(k)
                 res.append(hash_values)
             except KeyError as err:
@@ -66,8 +66,7 @@ class MWare:
         k = 'userID' + ':' + str(hash_key)
 
         try:
-            site_id = self.sharder.get_site(shard_key=k)
-            # site_id = self.table.get_site(key=k)
+            site_id = self.sharder.get_node_url(shard_key=k)
             return self.redis_db[site_id].hmget(k, field_list)
         except KeyError as err:
             print(k, 'does not exist. Exception:', err)
@@ -84,7 +83,7 @@ class MWare:
 
         k = 'userID' + ':' + str(hash_key)
 
-        site_id = self.sharder.get_site(shard_key=k)
+        site_id = self.sharder.get_node_url(shard_key=k)
         # self.table.set_site(key=k)
         # site_id = self.table.get_site(key=k)
 
@@ -106,7 +105,7 @@ class MWare:
         # site_key_list = []
         for hash_key in hash_key_list:
             k = 'userID' + ':' + str(hash_key)
-            site_id = self.sharder.get_site(shard_key=k)
+            site_id = self.sharder.get_node_url(shard_key=k)
             # self.table.set_site(key=k)
             # site_id = self.table.get_site(key=k)
             # site_key_list.append((site_id, k)) # OLD
@@ -134,7 +133,7 @@ class MWare:
         # site_key_list = []
         for k, n, e in zip(key_list, name_list, email_list):
             k = 'userID' + ':' + str(k)
-            site_id = self.sharder.get_site(shard_key=k)
+            site_id = self.sharder.get_node_url(shard_key=k)
             # self.table.set_site(key=k)
             # site_id = self.table.get_site(key=k)
             self.redis_db[site_id].hset(k, mapping={'name': n, 'email': e})
@@ -151,7 +150,7 @@ class MWare:
 
         k = 'userID' + ':' + str(hash_key)
         try:
-            site_id = self.sharder.get_site(shard_key=k)
+            site_id = self.sharder.get_node_url(shard_key=k)
             # site_id = self.table.get_site(key=k)
             with self.redis_db[site_id].pipeline() as pipe:
                 pipe.watch(k)
@@ -174,7 +173,7 @@ class MWare:
         for hash_key in hash_key_list:
             k = 'userID' + ':' + str(hash_key)
             try:
-                site_id = self.sharder.get_site(shard_key=k)
+                site_id = self.sharder.get_node_url(shard_key=k)
                 # site_id = self.table.get_site(key=k)
                 with self.redis_db[site_id].pipeline() as pipe:
                     pipe.watch(k)
@@ -191,7 +190,7 @@ class MWare:
         for i in range(start, end + 1):
             k = 'userID' + ':' + str(i)
             try:
-                site_id = self.sharder.get_site(shard_key=k)
+                site_id = self.sharder.get_node_url(shard_key=k)
                 # site_id = self.table.get_site(key=k)
                 hash_values = self.redis_db[site_id].hgetall(k)
                 res.append(hash_values)
@@ -219,7 +218,3 @@ class MWare:
             inf[site_id] = self.redis_db[site_id].dbsize()
 
         return inf
-
-
-if __name__ == '__main__':
-    print("MWare is running")
