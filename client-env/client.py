@@ -48,7 +48,7 @@ def run(*, u_ids: list, names: list, emails: list):
         stub = CommunicationServiceStub(channel)
         try:
             # Connection Test
-            test_connection(stub=stub, message="CONNECTION TEST")
+            # test_connection(stub=stub, message="CONNECTION TEST")
 
             # Set values for single key
             # print(set_single(stub=stub, userID=2, name="Ritesh", email="gmail"))
@@ -78,7 +78,7 @@ def run(*, u_ids: list, names: list, emails: list):
             ############################################################################################################
             print('Time Profiling (Execution Time)')
 
-            print(execution_time(function=test_connection(stub=stub, message="CONNECTION TEST")))
+            # print(execution_time(function=test_connection(stub=stub, message="CONNECTION TEST")))
 
             # print(execution_time(function=get_key_space_info(stub=stub)))
 
@@ -100,15 +100,15 @@ def run(*, u_ids: list, names: list, emails: list):
 
             print('Time Profiling (Wall Time)')
             t1_start = perf_counter()  # Start the stopwatch / counter
-            print(test_connection(stub=stub, message="CONNECTION TEST"))
+            # print(test_connection(stub=stub, message="CONNECTION TEST"))
             # set_single(stub=stub, userID=2, name="single@name", email="single@email")
             # set_multiples(stub=stub, userIDList=u_ids, nameList=names, emailList=emails)
             # get_multiples(stub=stub, k_list=[9874])
-            # get_multiples(stub=stub, k_list=u_ids)
+            # print(get_multiples(stub=stub, k_list=u_ids))
             # print(get_range(stub=stub, start=0, end=9999))
             # del_keys(stub=stub, k_list=[7825])
             # del_keys(stub=stub, k_list=u_ids)
-            print(get_key_space_info(stub=stub))
+            # print(get_key_space_info(stub=stub))
             t1_stop = perf_counter()  # Stop the stopwatch / counter
             print(f'Wall time in seconds: {t1_stop - t1_start}')
 

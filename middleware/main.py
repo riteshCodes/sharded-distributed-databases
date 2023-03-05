@@ -4,13 +4,6 @@ import redis
 from configs import DB_NODES, VIRTUAL_NODES
 from sharding import ConsistentHashSharder
 
-redis_client = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
-
-if redis_client.connection_pool.connection_kwargs.get('decode_responses', False):
-    print('hiredis is enabled')
-
-import hiredis
-
 
 class MWare:
     """
@@ -30,11 +23,12 @@ class MWare:
             self.redis_db[site] = redis.StrictRedis(
                 connection_pool=redis.ConnectionPool.from_url(site, decode_responses=True))
 
-    def get_all(self, *, hash_key_list: list = None):
+    def get_all(self, *, key_list: list = None):
         """
         get_all retrieves all key-value pairs (data) from the given key_list in the database
-        :param hash_key_list: list of keys from which data is fetched
+        :param key_list: list of keys from which data is fetched
         :return: mapping of the values as dict or KeyError: if the key is not present in the database
+        """
         """
         if hash_key_list is None:
             raise TypeError('None type passed as argument (hash_key_list=None)')
@@ -52,6 +46,23 @@ class MWare:
                 print(k, 'does not exist. Exception:', err)
 
         return res
+        """
+        result = []
+        pipe = {}
+        keys = uid(k_list=key_list)
+
+        for node, pool in self.redis_db.items():
+            pipe[node] = pool.pipeline(transaction=True)
+
+        for k in keys:
+            node = self.sharder.get_node_url(shard_key=k)
+            pipe[node].hgetall(k)
+
+        for p in pipe.values():
+            result += p.execute()
+            p.close()
+
+        return result
 
     def get_fields(self, *, hash_key: int = None, field_list: list = None):
         """
@@ -125,8 +136,16 @@ class MWare:
         """
 
     def set_multiples(self, key_list: list = None, name_list: list = None, email_list: list = None):
-        """
+        pipe = {}
+        for node, pool in self.redis_db.items():
+            pipe[node] = pool.pipeline(transaction=True)
 
+        for k, n, e in zip(uid(k_list=key_list), name_list, email_list):
+            node = self.sharder.get_node_url(shard_key=k)
+            pipe[node].hset(k, mapping={'name': n, 'email': e})
+
+        for p in pipe.values():
+            p.execute(), p.close()
         """
         if key_list is None:
             raise TypeError('None type passed as argument (mapping=None)')
@@ -134,9 +153,11 @@ class MWare:
         for k, n, e in zip(key_list, name_list, email_list):
             k = 'userID' + ':' + str(k)
             site_id = self.sharder.get_node_url(shard_key=k)
+            self.redis_db[site_id].hset(k, mapping={'name': n, 'email': e})
             # self.table.set_site(key=k)
             # site_id = self.table.get_site(key=k)
-            self.redis_db[site_id].hset(k, mapping={'name': n, 'email': e})
+
+        """
 
     def del_fields(self, *, hash_key: int = None, fields: list = None):
         """
@@ -161,16 +182,13 @@ class MWare:
         except KeyError as err:
             print(k, 'does not exist. Exception:', err)
 
-    def del_keys(self, *, hash_key_list: list = None):
+    def del_keys(self, *, key_list: list = None):
         """
         del_keys deletes all given key list from the database
-        :param hash_key_list: key list to delete
+        :param key_list: key list to delete
         :return: None: if successful, KeyError: if the key to delete is not present in the database
-        """
-        if hash_key_list is None:
-            raise TypeError('None type passed as argument (hash_key_list=None)')
 
-        for hash_key in hash_key_list:
+         for hash_key in hash_key_list:
             k = 'userID' + ':' + str(hash_key)
             try:
                 site_id = self.sharder.get_node_url(shard_key=k)
@@ -182,31 +200,60 @@ class MWare:
                     pipe.execute()
             except KeyError as err:
                 print(k, 'does not exist. Exception:', err)
+        """
+        if key_list is None:
+            raise TypeError('None type passed as argument (hash_key_list=None)')
 
-    # self.redis_db.delete(*key_list)
+        pipe = {}
+        keys = uid(k_list=key_list)
+
+        for node, pool in self.redis_db.items():
+            pipe[node] = pool.pipeline(transaction=True)
+
+        for k in keys:
+            node = self.sharder.get_node_url(shard_key=k)
+            pipe[node].delete(k)
+
+        for p in pipe.values():
+            p.execute(), p.close()
 
     def get_range(self, *, start: int = 0, end: int):
+        """
         res = []
         for i in range(start, end + 1):
             k = 'userID' + ':' + str(i)
             try:
                 site_id = self.sharder.get_node_url(shard_key=k)
-                # site_id = self.table.get_site(key=k)
                 hash_values = self.redis_db[site_id].hgetall(k)
                 res.append(hash_values)
-            except KeyError as err:
+            except KeyError:
                 continue
+        return res
+        """
+        res = []
+        pipe = {}
+
+        keys = uid(k_list=[*range(start, end + 1)])
+
+        for node, pool in self.redis_db.items():
+            pipe[node] = pool.pipeline(transaction=True)
+
+        for k in keys:
+            node = self.sharder.get_node_url(shard_key=k)
+            pipe[node].hgetall(k)
+
+        for p in pipe.values():
+            res += p.execute()
+            p.close()
         return res
 
     def flush_all(self):
         """
-        flush_all wipes all data of all database instances
+        flush_all wipes all data from all database instances
         :return: None
         """
-        for site in self.redis_db.values():
-            site.flushdb()
-        # for site in self.table.sites:
-        # self.redis_db[site].flushdb()
+        for db_nodes in self.redis_db.values():
+            assert db_nodes.flushdb()
 
     def key_space_inf(self):
         """
@@ -218,3 +265,12 @@ class MWare:
             inf[site_id] = self.redis_db[site_id].dbsize()
 
         return inf
+
+
+def uid(*, k_list: list):
+    if len(k_list) == 0:
+        return KeyError('Key list is empty')
+    elif len(k_list) == 1:
+        return 'userID' + ':' + '{:04d}'.format(k_list[0])
+    else:
+        return ['userID' + ':' + '{:04d}'.format(k) for k in k_list]

@@ -4,7 +4,7 @@ from main import MWare
 if __name__ == '__main__':
     test_data = MWare()
 
-    test_data.flush_all()
+    # test_data.flush_all()
     """
     test_data.set_multiples(key_list=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                             name_list=['N0', 'N1', 'N2', 'N3', 'N4', 'N5', 'N6', 'N7', 'N8', 'N9', 'N10'],

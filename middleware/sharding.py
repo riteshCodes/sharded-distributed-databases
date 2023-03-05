@@ -1,4 +1,4 @@
-from farmhash import FarmHash64
+from farmhash import FarmHash32
 
 
 class ConsistentHashSharder:
@@ -16,8 +16,8 @@ class ConsistentHashSharder:
         :param node_url:
         """
         for i in range(self.virtual_nodes):
-            v_node = node_url + '_:_' + str(i)
-            k = hash_func(data=v_node) % 360
+            v_node = node_url + ':' + str(i)
+            k = hash_func(data=v_node) % 4294967295
 
             self.ring[k] = node_url
             self.sorted_keys.append(k)
@@ -29,8 +29,8 @@ class ConsistentHashSharder:
         :param node_url:
         """
         for i in range(self.virtual_nodes):
-            v_node = node_url + '_:_' + str(i)
-            k = hash_func(data=v_node) % 360
+            v_node = node_url + ':' + str(i)
+            k = hash_func(data=v_node) % 4294967295
             del self.ring[k]
             self.sorted_keys.remove(k)
 
@@ -41,7 +41,7 @@ class ConsistentHashSharder:
         if not self.ring:
             return None
 
-        k = hash_func(data=shard_key) % 360
+        k = hash_func(data=shard_key) % 4294967295
         index = _get_index(array=self.sorted_keys, value=k)
         return self.ring[self.sorted_keys[index]]
 
@@ -53,7 +53,7 @@ def hash_func(*, data: str):
     :param data: input data
     :return: 64-bit hash
     """
-    return FarmHash64(data)
+    return FarmHash32(data)
 
 
 def _get_index(*, array, value):

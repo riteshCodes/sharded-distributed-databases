@@ -16,12 +16,12 @@ PORT = '6379'
 
 class Listener(CommunicationServiceServicer):
     """
-    The listener function implements the rpc call as described in the .protos file
+    The listener class functions implement the rpc calls as described in the .protos file
     """
 
     def testConnection(self, request, context):
         """
-        The testConnection function takes a simple string message as request and returns a string message as response
+        testConnection function takes a simple string message as request and returns a string message as response
          for testing the connection between middleware and client
         """
         return StringMessage(
@@ -29,7 +29,8 @@ class Listener(CommunicationServiceServicer):
 
     def getKeySpaceInfo(self, request, context):
         """
-
+        getKeySpaceInfo returns a string-int key-value pairs with database url as string and number of keys stored in
+        corresponding database as int
         """
         key_space_inf = MapStringInt().key_value  # response type
 
@@ -40,9 +41,10 @@ class Listener(CommunicationServiceServicer):
 
     def getSingle(self, request, context):
         """
-
+        getSingle returns associated value of given key (single key) if it exits in database, else returns an empty
+        value
         """
-        value = m_ware.get_all(hash_key_list=[request.key])
+        value = m_ware.get_all(key_list=[request.key])
         print(value)
         if value:  # if the given key exists
             # Generate valid data
@@ -54,19 +56,20 @@ class Listener(CommunicationServiceServicer):
 
     def setSingle(self, request, context):
         """
-
+        setSingle stores a single key-value pair in corresponding database
         """
         m_ware.set_to(hash_key=request.userID, name=request.name, email=request.email)
         return StringMessage(message='OK')
 
     def getMultiple(self, request, context):
         """
-
+        getMultiple returns associated values of given keys (multiple keys) if they exits in database, else returns an
+        empty value for the key, which is not present
         """
         keys = []
         for k in request.key_list:
             keys.append(k.key)
-        values = m_ware.get_all(hash_key_list=keys)
+        values = m_ware.get_all(key_list=keys)
 
         response = GetDictData().getdata
 
@@ -81,7 +84,7 @@ class Listener(CommunicationServiceServicer):
 
     def setMultiple(self, request, context):
         """
-
+        setMultiple stores multiple key-value pairs in corresponding database atomically
         """
         uid_list = []
         name_list = []
@@ -96,13 +99,13 @@ class Listener(CommunicationServiceServicer):
 
     def delKeys(self, request, context):
         """
-
+        delKeys deletes single/multiple key-value pairs from corresponding database atomically
         """
         keys = []
         for k in request.key_list:
             keys.append(k.key)
 
-        deleted = m_ware.del_keys(hash_key_list=keys)
+        deleted = m_ware.del_keys(key_list=keys)
         if deleted is None:
             return StringMessage(message='NONE')
 
@@ -110,7 +113,8 @@ class Listener(CommunicationServiceServicer):
 
     def getRange(self, request, context):
         """
-
+        getRange returns associated values of given key range (inclusive range) if they exits in database, else returns
+        an empty value for the key, which is not present
         """
         res = GetDictData().getdata  # Valid response type
         values_list = m_ware.get_range(start=request.start, end=request.end)
@@ -126,9 +130,10 @@ class Listener(CommunicationServiceServicer):
 
 
 def serve():
-    """The main serve function of the server.
-    This opens the socket, and listens for incoming grpc conformant packets"""
-
+    """
+    The main serve function of the server.
+    This opens the socket, and listens for incoming grpc conformant packets
+    """
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     add_CommunicationServiceServicer_to_server(Listener(), server)
     server.add_insecure_port("[::]:6379")
@@ -142,7 +147,7 @@ def serve():
 
 
 def print_msg_box(msg, indent=1, width=None, title=None):
-    """Print message-box with optional title."""
+    """Print start up message"""
     lines = msg.split('\n')
     space = " " * indent
     if not width:
