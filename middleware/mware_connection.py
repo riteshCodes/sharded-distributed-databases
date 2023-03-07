@@ -45,13 +45,10 @@ class Listener(CommunicationServiceServicer):
         value
         """
         value = m_ware.get_all(key_list=[request.key])
-        print(value)
         if value:  # if the given key exists
             # Generate valid data
-            print(value[0])
             return GetData(name=value[0].get('name'), email=value[0].get('email'))
         else:
-            print("EMPTY")
             return GetData(name='EMPTY', email='EMPTY')  # if keys are not present [Test]
 
     def setSingle(self, request, context):
