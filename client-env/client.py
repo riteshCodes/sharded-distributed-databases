@@ -5,6 +5,7 @@ from protos.comm_pb2_grpc import CommunicationServiceStub
 from google.protobuf.json_format import MessageToDict
 
 import numpy as np
+import random
 
 from time import perf_counter
 import timeit
@@ -56,6 +57,7 @@ def latency(*, stub, iterations, u_ids, names, emails):
     :return: execution time (in seconds)
     """
     measurements = []
+    """
     print(f'Time Profiling (Wall Time/Total Latency), number of iterations = {iterations}')
     lat = 0
     for it in range(0, iterations):
@@ -63,14 +65,14 @@ def latency(*, stub, iterations, u_ids, names, emails):
         test_connection(stub=stub, message="CONNECTION TEST")
         t1_stop = perf_counter()  # Stop the stopwatch / counter
         lat += (t1_stop - t1_start)
-    total_latency = lat / iterations
-    measurements.append(total_latency)
+        # total_latency = lat / iterations
+    total_latency = lat
+    # measurements.append(total_latency)
 
     print(f'Wall time in seconds (test_connection): {total_latency}')
-   #  write_to_excel_wall_time(sheet_name='test_connection', data=np.array(measurements))
-
-    """
-
+    #  write_to_excel_wall_time(sheet_name='test_connection', data=np.array(measurements))
+ """
+    # userID=u_ids[random.randint(0, 999)]
     lat = 0
     for it in range(0, iterations):
         t1_start = perf_counter()  # Start the stopwatch / counter
@@ -79,7 +81,8 @@ def latency(*, stub, iterations, u_ids, names, emails):
         lat += (t1_stop - t1_start)
     total_latency = lat / iterations
     print(f'Wall time in seconds (set_single): {total_latency}')
-
+   #  write_to_excel_wall_time(sheet_name='test_connection', data=np.array(measurements))
+    """
     lat = 0
     for it in range(0, iterations):
         t1_start = perf_counter()  # Start the stopwatch / counter
@@ -218,9 +221,9 @@ def run(*, u_ids: list, names: list, emails: list):
             """
             ############################################################################################################
 
-            # latency(stub=stub, iterations=10, u_ids=u_ids, names=names, emails=emails)
-            latency(stub=stub, iterations=10000, u_ids=u_ids, names=names, emails=emails)
-
+            latency(stub=stub, iterations=1, u_ids=u_ids, names=names, emails=emails)
+            # latency(stub=stub, iterations=1000, u_ids=u_ids, names=names, emails=emails)
+            # print(execution_time(function=test_connection(stub=stub, message="CONNECTION TEST"), iterations=100))
         except KeyboardInterrupt:
             print("KeyboardInterrupt")
             channel.unsubscribe(close)

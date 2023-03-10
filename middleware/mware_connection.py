@@ -55,7 +55,7 @@ class Listener(CommunicationServiceServicer):
         """
         setSingle stores a single key-value pair in corresponding database
         """
-        m_ware.set_to(hash_key=request.userID, name=request.name, email=request.email)
+        m_ware.set_to(key=request.userID, name=request.name, email=request.email)
         return StringMessage(message='OK')
 
     def getMultiple(self, request, context):

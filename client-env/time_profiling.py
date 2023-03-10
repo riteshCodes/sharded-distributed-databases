@@ -26,7 +26,7 @@ def get_data_from_excel(*, with_sheet_name: str, header_value=5,
 
 def visualize_data(*, measurements=None):
     # Data configurations
-    default_x_ticks = np.arange(5)
+    default_x_ticks = np.arange(4)
     keys_range = np.power(10, default_x_ticks)
 
     # Store latency data in a Pandas DataFrame
@@ -46,6 +46,7 @@ def visualize_data(*, measurements=None):
     plt.title('Total Latency: ')
     plt.legend(framealpha=1)
     plt.grid(True)
+    plt.savefig('assets/test_connection.png', dpi=1200)
     plt.show()
 
 
