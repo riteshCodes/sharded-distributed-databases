@@ -1,4 +1,4 @@
 redis~=4.3.5
 hiredis~=2.0.0
 grpcio~=1.51.1
-cityhash
+grpcio-tools~=1.51.1
