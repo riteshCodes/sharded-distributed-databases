@@ -11,181 +11,67 @@ from time import perf_counter
 import timeit
 from time_profiling import write_to_excel_exec_time, write_to_excel_wall_time
 
-HOST = 'localhost'
-# HOST = '10.0.2.87'
-PORT = '6379'
 
-
-def parse_to_dict(proto_data):
-    """
-    single values
-    """
-    dict_data = MessageToDict(proto_data)
-    if isinstance(proto_data, MapStringInt) or isinstance(proto_data, MapIntString) or isinstance(proto_data,
-                                                                                                  MapDefault):
-        return dict_data['keyValue']
-    else:
-        return dict_data['data']
-
-
-def parse_to_dict_list(proto_data):
-    dict_data = MessageToDict(proto_data)
-    if isinstance(proto_data, GetDictData):
-        return dict_data['getdata']
-
-
-def execution_time(*, function, iterations):
-    """
-    timeit module measures the execution time of a function.
-    It runs the function multiple times (number argument) and returns the average execution time (in seconds)
-    :param function: function for time profiling
-    :param iterations:
-    :return: execution time (in seconds)
-    """
-    return timeit.timeit(lambda: function, number=iterations)
-
-
-def latency(*, stub, iterations, u_ids, names, emails):
-    """
-    timeit module measures the execution time of a function.
-    It runs the function multiple times (number argument) and returns the average execution time (in seconds)
-    :param stub:
-    :param iterations:
-    :param u_ids:
-    :param names:
-    :param emails:
-    :return: execution time (in seconds)
-    """
-    measurements = []
-    """
-    print(f'Time Profiling (Wall Time/Total Latency), number of iterations = {iterations}')
-    lat = 0
-    for it in range(0, iterations):
-        t1_start = perf_counter()  # Start the stopwatch / counter
-        test_connection(stub=stub, message="CONNECTION TEST")
-        t1_stop = perf_counter()  # Stop the stopwatch / counter
-        lat += (t1_stop - t1_start)
-        # total_latency = lat / iterations
-    total_latency = lat
-    # measurements.append(total_latency)
-
-    print(f'Wall time in seconds (test_connection): {total_latency}')
-    #  write_to_excel_wall_time(sheet_name='test_connection', data=np.array(measurements))
- """
-    # userID=u_ids[random.randint(0, 999)]
-    lat = 0
-    for it in range(0, iterations):
-        t1_start = perf_counter()  # Start the stopwatch / counter
-        set_single(stub=stub, userID=u_ids[random.randint(0, 999)], name="single@name", email="single@email")
-        t1_stop = perf_counter()  # Stop the stopwatch / counter
-        lat += (t1_stop - t1_start)
-    total_latency = lat / iterations
-    print(f'Wall time in seconds (set_single): {total_latency}')
-   #  write_to_excel_wall_time(sheet_name='test_connection', data=np.array(measurements))
-    """
-    lat = 0
-    for it in range(0, iterations):
-        t1_start = perf_counter()  # Start the stopwatch / counter
-        set_multiples(stub=stub, userIDList=u_ids, nameList=names, emailList=emails)
-        t1_stop = perf_counter()  # Stop the stopwatch / counter
-        lat += (t1_stop - t1_start)
-    total_latency = lat / iterations
-    print(f'Wall time in seconds (set_multiples): {total_latency}')
-
-    lat = 0
-    for it in range(0, iterations):
-        t1_start = perf_counter()  # Start the stopwatch / counter
-        get_single(stub=stub, key=u_ids[random.randint(0, 999)])
-        t1_stop = perf_counter()  # Stop the stopwatch / counter
-        lat += (t1_stop - t1_start)
-    total_latency = lat / iterations
-    print(f'Wall time in seconds (get_single): {total_latency}')
-
-    lat = 0
-    for it in range(0, iterations):
-        t1_start = perf_counter()  # Start the stopwatch / counter
-        get_multiples(stub=stub, k_list=u_ids)
-        t1_stop = perf_counter()  # Stop the stopwatch / counter
-        lat += (t1_stop - t1_start)
-    total_latency = lat / iterations
-    print(f'Wall time in seconds (get_multiples): {total_latency}')
-
-    lat = 0
-    for it in range(0, iterations):
-        t1_start = perf_counter()  # Start the stopwatch / counter
-        get_range(stub=stub, start=0, end=999)
-        t1_stop = perf_counter()  # Stop the stopwatch / counter
-        lat += (t1_stop - t1_start)
-    total_latency = lat / iterations
-    print(f'Wall time in seconds (get_range): {total_latency}')
-
-    lat = 0
-    for it in range(0, iterations):
-        t1_start = perf_counter()  # Start the stopwatch / counter
-        del_keys(stub=stub, k_list=[u_ids[random.randint(0, 999)]])
-        t1_stop = perf_counter()  # Stop the stopwatch / counter
-        lat += (t1_stop - t1_start)
-    total_latency = lat / iterations
-    print(f'Wall time in seconds (del_single_key): {total_latency}')
-
-    lat = 0
-    for it in range(0, iterations):
-        t1_start = perf_counter()  # Start the stopwatch / counter
-        del_keys(stub=stub, k_list=u_ids)
-        t1_stop = perf_counter()  # Stop the stopwatch / counter
-        lat += (t1_stop - t1_start)
-    total_latency = lat / iterations
-    print(f'Wall time in seconds (del_keys): {total_latency}')
-
-    lat = 0
-    for it in range(0, iterations):
-        t1_start = perf_counter()  # Start the stopwatch / counter
-        get_key_space_info(stub=stub)
-        t1_stop = perf_counter()  # Stop the stopwatch / counter
-        lat += (t1_stop - t1_start)
-    total_latency = lat / iterations
-    print(f'Wall time in seconds (key_space_info): {total_latency}')
-"""
-
-
-def run(*, u_ids: list, names: list, emails: list):
+def run(*, host_address='localhost', port='6379'):
     """
     The run method, that sends gRPC conformant messages to the server
     """
-    with grpc.insecure_channel(f'{HOST}:6379') as channel:
+    # Test data
+    u_ids = []
+    names = []
+    emails = []
+    for i in range(1000):
+        u_ids.append(i)
+        names.append(f'N-:{str(i)}')
+        emails.append(f'@Email-:{str(i)}')
+
+    data = {'userID': u_ids, 'name': names, 'email': emails}
+
+    with grpc.insecure_channel(f'{host_address}:{port}') as channel:
         stub = CommunicationServiceStub(channel)
         try:
+            # execution_time_request(stub=stub, iterations=1000)
+            # latency_request(stub=stub, iterations=1000)
+
+            # execution_time_set(stub=stub, set_function='single', iterations=10, data=data)
+            # execution_time_set(stub=stub, set_function='multiple', iterations=10, data=data)
+            # latency_set(stub=stub, set_function='single', iterations=10, data=data)
+            # latency_set(stub=stub, set_function='multiple', iterations=10, data=data)
+
+            # execution_time_get(stub=stub, get_function='single', iterations=10)
+            execution_time_get(stub=stub, get_function='multiple', iterations=10, keys=u_ids)
+            # latency_get(stub=stub, get_function='single', iterations=10)
+            # latency_get(stub=stub, get_function='multiple', iterations=10)
+            """
             # Connection Test
-            # test_connection(stub=stub, message="CONNECTION TEST")
+            test_connection(stub=stub, message="CONNECTION TEST")
 
             # Set values for single key
-            # print(set_single(stub=stub, userID=2, name="Ritesh", email="gmail"))
+            assert set_single(stub=stub, userID=0, name="Ritesh", email="Gmail") == 'OK'
 
             # Get value from single key
-            # print(get_single(stub=stub, key=9))
+            print(get_single(stub=stub, key=9))
 
             # Set values to multiple keys
             # set_multiples(stub=stub, userIDList=u_ids, nameList=names, emailList=emails)
-            # set_multiples(stub=stub, userIDList=[0, 1, 2, 3, 4, 5], nameList=['N0', 'N1', 'N2', 'N3', 'N4', 'N5'],
-            #              emailList=['E0', 'E1', 'E2', 'E3', 'E4', 'E5'])
 
             # Get values from multiple keys
-            # print(get_multiples(stub=stub, k_list=[9]))
+            print(get_multiples(stub=stub, k_list=[9]))
 
             # Delete entries from given keys
-            # del_keys(stub=stub, k_list=[4]
+            del_keys(stub=stub, k_list=[4])
 
             # Delete entries
-            # del_keys(stub=stub, k_list=u_ids)
+            del_keys(stub=stub, k_list=u_ids)
 
             # Get values from given range of keys
-            # print(get_range(stub=stub, start=0, end=100))
+            print(get_range(stub=stub, start=0, end=100))
 
             # Site_Name:Total_Keys mapping
-            # keyspace_info = get_key_space_info(stub=stub)
-            # print("Total number of keys present in the sites :")
-            # print(keyspace_info)
-
+            keyspace_info = get_key_space_info(stub=stub)
+            print("Total number of keys present in the sites :")
+            print(keyspace_info)
+            """
             ############################################################################################################
             """
             print(f'Time Profiling (Execution Time), number of iterations = {10}')
@@ -219,11 +105,6 @@ def run(*, u_ids: list, names: list, emails: list):
             print('del_multiples')
             print(execution_time(function=del_keys(stub=stub, k_list=u_ids), iterations=10))
             """
-            ############################################################################################################
-
-            latency(stub=stub, iterations=1, u_ids=u_ids, names=names, emails=emails)
-            # latency(stub=stub, iterations=1000, u_ids=u_ids, names=names, emails=emails)
-            # print(execution_time(function=test_connection(stub=stub, message="CONNECTION TEST"), iterations=100))
         except KeyboardInterrupt:
             print("KeyboardInterrupt")
             channel.unsubscribe(close)
@@ -232,9 +113,7 @@ def run(*, u_ids: list, names: list, emails: list):
 
 def close(channel):
     """
-    Function to close the channel
-    :param channel:
-    :return:
+    Function to close the given channel
     """
     channel.close()
 
@@ -294,13 +173,200 @@ def del_keys(*, stub, k_list: list = None):
     return stub.delKeys(KeyList(key_list=keys))
 
 
-if __name__ == "__main__":
-    test_user_ids = []
-    test_names = []
-    test_emails = []
-    for i in range(1000):
-        test_user_ids.append(i)
-        test_names.append(f'N-:{str(i)}')
-        test_emails.append(f'@Email-:{str(i)}')
+def parse_to_dict(proto_data):
+    """
+    single values
+    """
+    dict_data = MessageToDict(proto_data)
+    if isinstance(proto_data, MapStringInt) or isinstance(proto_data, MapIntString) or isinstance(proto_data,
+                                                                                                  MapDefault):
+        return dict_data['keyValue']
+    else:
+        return dict_data['data']
 
-    run(u_ids=test_user_ids, names=test_names, emails=test_emails)
+
+def parse_to_dict_list(proto_data):
+    dict_data = MessageToDict(proto_data)
+    if isinstance(proto_data, GetDictData):
+        return dict_data['getdata']
+
+
+def execution_time(*, function, iterations):
+    """
+        timeit module measures the execution time of a function and returns a single floating point value representing
+        the cumulative amount of time spent running the main statement.
+        :param function: function for time profiling
+        :param iterations:
+        :return: execution time (in seconds)
+        """
+    return timeit.timeit(lambda: function, number=iterations)
+
+
+def execution_time_request(*, stub, iterations):
+    total_exec = execution_time(function=test_connection(stub=stub, message='TEST'),
+                                iterations=iterations)
+    print(f'Execution time in seconds for {iterations} request : {total_exec}')
+
+
+def execution_time_set(*, stub, set_function, iterations, data):
+    total_exec = 0
+    if set_function == 'single':
+        total_exec = execution_time(function=set_single(stub=stub,
+                                                        userID=data['userID'][0], name=data['name'][0],
+                                                        email=data['email'][0]),
+                                    iterations=iterations) / iterations
+
+    elif set_function == 'multiple':
+        total_exec = execution_time(function=
+                                    set_multiples(stub=stub,
+                                                  userIDList=data['userID'], nameList=data['name'],
+                                                  emailList=data['email']),
+                                    iterations=iterations) / iterations
+    else:
+        print(f'{set_function} : function not defined')
+
+    total_keys = len(data['userID'])
+    print(f'Execution time in seconds for setting {total_keys} key-value pairs :: {total_exec}')
+
+    return total_exec
+
+    # return timeit.timeit(lambda: function, number=iterations)
+
+
+def execution_time_get(*, stub, get_function, iterations, keys=None, start=0, end=0):
+    """
+    timeit module measures the execution time of a function.
+    It runs the function multiple times (number argument) and returns the average execution time (in seconds)
+    :param stub:
+    :param get_function: function for time profiling
+    :param iterations:
+    :param keys:
+    :param start:
+    :param end:
+    :return: execution time (in seconds)
+    """
+    total_exec = 0
+    total_keys = 1 if keys is None else len(keys)
+    if get_function == 'single':
+        total_exec = execution_time(function=
+                                    get_single(stub=stub, key=1),
+                                    iterations=iterations) / iterations
+
+    elif get_function == 'multiple':
+        total_exec = execution_time(function=
+                                    get_multiples(stub=stub, k_list=keys),
+                                    iterations=iterations) / iterations
+    elif get_function == 'range':
+        total_exec = execution_time(function=
+                                    get_range(stub=stub, start=start, end=end),
+                                    iterations=iterations) / iterations
+    else:
+        print(f'{get_function} : function not defined')
+
+    print(f'Execution time in seconds for getting {total_keys} key-value pairs :: {total_exec}')
+
+    return total_exec
+
+
+def execution_time_del(*, stub, iterations, keys=None):
+    """
+    timeit module measures the execution time of a function.
+    It runs the function multiple times (number argument) and returns the average execution time (in seconds)
+    :param stub:
+    :param iterations:
+    :param keys:
+    :return: execution time (in seconds)
+    """
+    total_exec = execution_time(function=
+                                del_keys(stub=stub, k_list=keys),
+                                iterations=iterations) / iterations
+    print(f'Execution time in seconds for deleting {len(keys)} key-value pairs :: {total_exec}')
+    return total_exec
+
+
+def latency_request(*, stub, iterations):
+    lat = 0
+    for it in range(0, iterations):
+        t1_start = perf_counter()  # Start the stopwatch / counter
+        test_connection(stub=stub, message='TEST')
+        t1_stop = perf_counter()  # Stop the stopwatch / counter
+        lat += (t1_stop - t1_start)
+    print(f'Latency in seconds for {iterations} request : {lat}')
+    return lat
+
+
+def latency_set(*, stub, set_function, iterations, data: list):
+    lat = 0
+    total_latency = 0
+    if set_function == 'single':
+        for it in range(0, iterations):
+            t1_start = perf_counter()  # Start the stopwatch / counter
+            set_single(stub=stub, userID=data['userID'][0], name=data['name'][0], email=data['email'][0])
+            t1_stop = perf_counter()  # Stop the stopwatch / counter
+            lat += (t1_stop - t1_start)
+        total_latency = lat / iterations
+
+    elif set_function == 'multiple':
+        for it in range(0, iterations):
+            t1_start = perf_counter()  # Start the stopwatch / counter
+            set_multiples(stub=stub, userIDList=data['userID'], nameList=data['name'], emailList=data['email'])
+            t1_stop = perf_counter()  # Stop the stopwatch / counter
+            lat += (t1_stop - t1_start)
+        total_latency = lat / iterations
+
+    else:
+        print(f'{set_function} : function not defined')
+
+    total_keys = len(data['userID'])
+    print(f'Wall time in seconds for setting {total_keys} key-value pairs :: {total_latency}')
+    return total_latency
+
+
+def latency_get(*, stub, get_function, iterations, keys=None, start=0, end=0):
+    lat = 0
+    total_latency = 0
+    if get_function == 'single':
+        for it in range(0, iterations):
+            t1_start = perf_counter()  # Start the stopwatch / counter
+            get_single(stub=stub, key=1)
+            t1_stop = perf_counter()  # Stop the stopwatch / counter
+            lat += (t1_stop - t1_start)
+        total_latency = lat / iterations
+
+    elif get_function == 'multiple':
+        for it in range(0, iterations):
+            t1_start = perf_counter()  # Start the stopwatch / counter
+            get_multiples(stub=stub, k_list=keys)
+            t1_stop = perf_counter()  # Stop the stopwatch / counter
+            lat += (t1_stop - t1_start)
+        total_latency = lat / iterations
+
+    elif get_function == 'range':
+        for it in range(0, iterations):
+            t1_start = perf_counter()  # Start the stopwatch / counter
+            get_range(stub=stub, start=start, end=end)
+            t1_stop = perf_counter()  # Stop the stopwatch / counter
+            lat += (t1_stop - t1_start)
+        total_latency = lat / iterations
+
+    else:
+        print(f'{get_function} : function not defined')
+
+    print(f'Wall time in seconds for getting {len(keys)} key-value pairs : {total_latency}')
+    return total_latency
+
+
+def latency_del(*, stub, iterations, keys=None):
+    lat = 0
+    for it in range(0, iterations):
+        t1_start = perf_counter()  # Start the stopwatch / counter
+        del_keys(stub=stub, k_list=keys)
+        t1_stop = perf_counter()  # Stop the stopwatch / counter
+        lat += (t1_stop - t1_start)
+    total_latency = lat / iterations
+    print(f'Wall time in seconds (del_keys for deleting {len(keys)} keys: {total_latency}')
+    return total_latency
+
+
+if __name__ == "__main__":
+    run(host_address='10.0.2.87')
