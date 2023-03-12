@@ -30,9 +30,10 @@ class RedisClient:
         if len(key_list) == 1:
             result.append(self.redis_db.hgetall(keys))
         else:
-            for k in keys:
-                result.append(self.redis_db.hgetall(k))
-
+            with self.redis_db.pipeline() as pipe:
+                for k in keys:
+                    pipe.hgetall(k)
+                result += pipe.execute()
         return result
 
     def get_fields(self, *, key_list: list = None, field_list: list = None):
@@ -64,8 +65,10 @@ class RedisClient:
             result.append(self.redis_db.hgetall(keys))
 
         else:
-            for k in keys:
-                result.append(self.redis_db.hgetall(k))
+            with self.redis_db.pipeline() as pipe:
+                for k in keys:
+                    pipe.hgetall(k)
+                result += pipe.execute()
 
         return result
 
@@ -130,11 +133,13 @@ class RedisClient:
         :return: None: if successful, KeyError: if the key to delete is not present in the database
         """
         keys = uid(k_list=key_list)
-        with self.redis_db.pipeline() as pipe:
-            for k in keys:
-                pipe.delete(k)
-        pipe.execute()
-        pipe.close()
+        if len(key_list) == 1:
+            self.redis_db.delete(keys)
+        else:
+            with self.redis_db.pipeline() as pipe:
+                for k in keys:
+                    pipe.delete(k)
+                pipe.execute()
 
         return 'OK'
 

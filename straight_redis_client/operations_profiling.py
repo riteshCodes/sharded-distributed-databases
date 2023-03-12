@@ -155,7 +155,7 @@ if __name__ == '__main__':
     u_ids = []
     names = []
     emails = []
-    for i in range(1000):
+    for i in range(10):
         u_ids.append(i)
         names.append(f'N-:{str(i)}')
         emails.append(f'@Email-:{str(i)}')
@@ -164,7 +164,7 @@ if __name__ == '__main__':
 
     ###################################################################################################################
     # Test
-    latency_ping(iterations=10, ping_calls=1000)
+    # latency_ping(iterations=10, ping_calls=1000)
 
     # execution_time_set(set_function='single', iterations=10, data=test_data)
     # execution_time_set(set_function='multiple', iterations=10, data=test_data)
@@ -177,7 +177,7 @@ if __name__ == '__main__':
     # latency_get(get_function='multiple', iterations=10, keys=u_ids)
 
     # execution_time_get(get_function='range', iterations=10, start=0, end=len(u_ids) - 1)
-    # latency_get(get_function='range', iterations=10, start=0, end=len(u_ids) - 1)
+    latency_get(get_function='range', iterations=10, start=0, end=len(u_ids) - 1)
 
     # execution_time_del(iterations=10, keys=[test_data['userID'][0]])
     # latency_del(iterations=10, keys=test_data['userID'])

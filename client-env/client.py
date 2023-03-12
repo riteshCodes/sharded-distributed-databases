@@ -39,7 +39,7 @@ def run(*, host_address='localhost', port='6379'):
             # latency_set(stub=stub, set_function='multiple', iterations=10, data=data)
 
             # execution_time_get(stub=stub, get_function='single', iterations=10)
-            execution_time_get(stub=stub, get_function='multiple', iterations=10, keys=u_ids)
+            # execution_time_get(stub=stub, get_function='multiple', iterations=10, keys=u_ids)
             # latency_get(stub=stub, get_function='single', iterations=10)
             # latency_get(stub=stub, get_function='multiple', iterations=10)
             """
