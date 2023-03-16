@@ -1,0 +1,34 @@
+from os import path
+from pathlib import Path
+
+import json
+
+
+def get_file_path(*, data_code):
+    return path.join(path.dirname(Path(__file__)), Path(f'test_data\\data-{data_code}-file.json'))
+
+
+def synthesize_data(*, limit: int):
+    # Test data
+    u_ids = []
+    names = []
+    emails = []
+    for i in range(limit):
+        u_ids.append(i)
+        names.append(f'N-:{str(i)}')
+        emails.append(f'@Email-:{str(i)}')
+
+    data = {'userID': u_ids, 'name': names, 'email': emails}
+
+    with open(get_file_path(data_code=limit), 'w') as d_file:
+        json.dump(data, d_file, indent=1)
+
+
+def read_data(*, data_code: int):
+    with open(get_file_path(data_code=data_code), "r") as d_file:
+        return json.load(d_file)
+
+
+if __name__ == '__main__':
+    pass
+    # synthesize_data(limit=1000)

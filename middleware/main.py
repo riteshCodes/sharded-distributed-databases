@@ -2,6 +2,9 @@ import redis
 
 from configs import DB_NODES, VIRTUAL_NODES
 from sharding import ConsistentHashSharder
+from logger import log_execution_time
+
+import inspect  # for decorator
 
 
 class MWare:
@@ -236,3 +239,10 @@ def uid(*, k_list: list):
         return KeyError('Key list is empty')
     else:
         return ['userID' + ':' + '{:04d}'.format(k) for k in k_list]
+
+
+for name, fct in inspect.getmembers(MWare, inspect.isfunction):
+    if name == '__init__' or name == 'start_pipeline':
+        pass
+    else:
+        setattr(MWare, name, log_execution_time(fct))

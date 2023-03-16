@@ -134,9 +134,7 @@ def get_single(*, stub, key):
 
 
 def get_multiples(*, stub, k_list: list = None):
-    # stub.getMultiple(KeyList(key_list=[Key(key=1), Key(key=2)]))
     keys = KeyList().key_list
-    #
 
     for k in k_list:
         keys.append(Key(key=k))

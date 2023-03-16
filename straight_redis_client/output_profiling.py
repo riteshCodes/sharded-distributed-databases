@@ -76,7 +76,8 @@ def visualize_data_combined_operations(*, with_columns):
     plt.title(f'Total latency regarding number of key-value pairs')
     plt.legend(framealpha=1)
     plt.grid(True)
-    plt.savefig(f'assets/combined_visualization_no_middleware.svg', dpi=1200)
+    plt.savefig(f'assets/test.eps', dpi=1200)
+    # plt.savefig(f'assets/combined_visualization_no_middleware.svg', dpi=1200)
     plt.show()
 
 
