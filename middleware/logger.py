@@ -1,7 +1,7 @@
 from os import path
 from pathlib import Path
 import logging
-import time
+from time import perf_counter
 
 log_file_path = path.join(path.dirname(Path(__file__)), Path('logs\\middleware.log'))
 
@@ -16,14 +16,16 @@ file_handler.setFormatter(formatter)
 
 mware_logger.addHandler(file_handler)
 
+mware_logger.info('--------------------------------------------------------------------')
+
 
 def log_execution_time(func):
     def wrapper(*args, **kwargs):
-        start_time = time.time()
+        start_time = perf_counter()
         result = func(*args, **kwargs)
-        end_time = time.time()
+        end_time = perf_counter()
         execution_time = end_time - start_time
-        mware_logger.info(f'{func.__name__}:{execution_time}')   # Execution time is in seconds
+        mware_logger.info(f'{func.__name__}:{execution_time}')  # Response time is in seconds
         return result
 
     return wrapper

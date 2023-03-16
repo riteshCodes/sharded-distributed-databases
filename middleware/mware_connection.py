@@ -90,7 +90,6 @@ class Listener(CommunicationServiceServicer):
             uid_list.append(d.userID)
             name_list.append(d.name)
             email_list.append(d.email)
-        # TODO concurrent writes
         m_ware.set_multiples(key_list=uid_list, name_list=name_list, email_list=email_list)
         return StringMessage(message='OK')
 
