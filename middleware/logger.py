@@ -3,7 +3,7 @@ from pathlib import Path
 import logging
 from time import perf_counter
 
-log_file_path = path.join(path.dirname(Path(__file__)), Path('logs\\middleware.log'))
+log_file_path = path.join(path.dirname(Path(__file__)), 'logs', 'middleware.log')
 
 mware_logger = logging.getLogger('mware_logger')
 mware_logger.setLevel(logging.DEBUG)
