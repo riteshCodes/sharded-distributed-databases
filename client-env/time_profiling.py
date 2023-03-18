@@ -37,13 +37,13 @@ def visualize_data(*, function, sheet_name, with_columns):
         plt.plot(default_x_ticks, df[col], marker='*', label=col)
     plt.xticks(default_x_ticks, keys_range)
 
-    x_label = 'Throughput (Number of key-value pairs)'  # default x label
+    x_label = 'Number of key-value pairs'  # default x label
     function_label = function.split()[0].lower()
     if function_label == 'ping':
         x_label = 'Number of ping requests (string message)'
 
     plt.xlabel(x_label)
-    plt.ylabel('Latency (seconds)')  # milliseconds(ms), 1 second = 1000 milliseconds
+    plt.ylabel('Response Time (seconds)')  # milliseconds(ms), 1 second = 1000 milliseconds
     plt.title(f'Total Latency: {function}')
     plt.legend(framealpha=1)
     plt.grid(True)
@@ -75,8 +75,8 @@ def visualize_data_combined_operations(*, with_columns):
 
     plt.xticks(default_x_ticks, keys_range)
 
-    plt.xlabel('Throughput (Number of key-value pairs)')
-    plt.ylabel('Latency (seconds)')  # milliseconds(ms), 1 second = 1000 milliseconds
+    plt.xlabel('Number of key-value pairs')
+    plt.ylabel('Response Time (seconds)')  # milliseconds(ms), 1 second = 1000 milliseconds
     plt.title(f'Total latency regarding number of key-value pairs (With Middleware)')
     plt.legend(framealpha=1)
     plt.grid(True)

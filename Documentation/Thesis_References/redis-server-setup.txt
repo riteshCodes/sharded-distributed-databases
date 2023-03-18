@@ -1,0 +1,26 @@
+------------------------------------------------------------
+
+Installation:
+wget http://download.redis.io/releases/redis-6.0.16.tar.gz
+tar xzf redis-6.0.16.tar.gz
+cd redis-6.0.16
+make
+
+------------------------------------------------------------
+
+Setup:
+/etc/init.d/redis-server start
+/etc/init.d/redis-server stop
+/etc/init.d/redis-server restart
+
+------------------------------------------------------------
+
+Authentication:
+NETWORK: Comment bind address
+NETWORK: protected-mode no
+SECURITY: requirepass sharding-ddms
+
+Run with:
+	cd redis-6.0.16/src/
+ 	./redis-server ~/redis-6.0.16/redis.conf
+Redis-CLI : AUTH sharding-ddms

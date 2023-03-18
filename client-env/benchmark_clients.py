@@ -6,14 +6,15 @@ from locust import task
 
 from google.protobuf.json_format import MessageToDict
 
-import base_client, utils
+import base_client
+import utils
 
 
 class BenchmarkingClient(base_client.BaseUser):
     host = '10.0.2.87:6379'  # middleware address
     stub_class = CommunicationServiceStub
 
-    @task
+    # @task
     def ping(self):
         self.stub.testConnection(StringMessage(message='Ping Load Testing'))
 
@@ -55,7 +56,10 @@ class BenchmarkingClient(base_client.BaseUser):
 
         self.stub.setMultiple(Dict(data=dict_data))
 
-    def delete_keys(self, k_list: list = None):
+    @task
+    def delete_keys(self):
+        mapping = utils.read_data(data_code=pow(10, random.randint(0, 3)))
+        k_list = mapping.get('userID')
         keys = KeyList().key_list
 
         for k in k_list:
