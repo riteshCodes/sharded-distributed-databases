@@ -2,8 +2,10 @@ from os import path
 from pathlib import Path
 import logging
 from time import perf_counter
+import datetime
 
-log_file_path = path.join(path.dirname(Path(__file__)), 'logs', 'middleware.log')
+log_date = datetime.datetime.now().strftime('%d-%B')
+log_file_path = path.join(path.dirname(Path(__file__)), 'logs', f'middleware_{log_date}.log')
 
 mware_logger = logging.getLogger('mware_logger')
 mware_logger.setLevel(logging.DEBUG)
@@ -16,7 +18,7 @@ file_handler.setFormatter(formatter)
 
 mware_logger.addHandler(file_handler)
 
-mware_logger.info('--------------------------------------------------------------------')
+mware_logger.info('---------------------------------------------------------------------------------------------------')
 
 
 def log_execution_time(func):
