@@ -2,6 +2,7 @@ from os import path
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+from matplotlib import ticker
 import numpy as np
 import pandas as pd
 from openpyxl import load_workbook
@@ -34,20 +35,26 @@ def visualize_data(*, function, sheet_name, with_columns):
     # Plot configurations
     fig, axs = plt.subplots()
     for col in df.columns:
-        plt.plot(default_x_ticks, df[col], marker='*', label=col)
+        plt.plot(default_x_ticks, df[col], marker='*', label=function)
     plt.xticks(default_x_ticks, keys_range)
 
-    x_label = 'Throughput (Number of key-value pairs)'  # default x label
+    x_label = 'Number of key-value pairs'  # default x label
     function_label = function.split()[0].lower()
     if function_label == 'ping':
         x_label = 'Number of ping requests (string message)'
 
     plt.xlabel(x_label)
-    plt.ylabel('Latency (seconds)')  # milliseconds(ms), 1 second = 1000 milliseconds
-    plt.title(f'Total Latency: {function}')
+
+    formatter = ticker.ScalarFormatter(useMathText=True)  # scientific notation
+    formatter.set_scientific(True)
+    formatter.set_powerlimits((0, 0))
+    axs.yaxis.set_major_formatter(formatter)
+    plt.ylabel('Average Response Time (seconds)')  # milliseconds(ms), 1 second = 1000 milliseconds
+    # plt.title(f'Total Latency: {function}')
     plt.legend(framealpha=1)
     plt.grid(True)
     plt.savefig(f'assets/{function}.svg', dpi=1200)
+    plt.savefig(f'assets/{function}.pdf', dpi=1200)
     plt.show()
 
 
@@ -63,7 +70,7 @@ def visualize_data_combined_operations(*, with_columns):
 
     # Iterate through each worksheet
     for sheet in profiling_file.sheet_names:
-        if sheet == 'ping':
+        if sheet.split()[0] == 'Ping':
             continue
         df = get_data_from_excel(with_sheet_name=sheet, with_columns=with_columns)
         for col in df.columns:
@@ -71,48 +78,57 @@ def visualize_data_combined_operations(*, with_columns):
 
     plt.xticks(default_x_ticks, keys_range)
 
-    plt.xlabel('Throughput (Number of key-value pairs)')
-    plt.ylabel('Latency (seconds)')  # milliseconds(ms), 1 second = 1000 milliseconds
-    plt.title(f'Total latency regarding number of key-value pairs')
+    plt.xlabel('Number of key-value pairs')
+    formatter = ticker.ScalarFormatter(useMathText=True)  # scientific notation
+    formatter.set_scientific(True)
+    formatter.set_powerlimits((-1, 4))
+    axs.yaxis.set_major_formatter(formatter)
+    plt.ylabel('Average Response Time (seconds)')
+
+    plt.title(f'Average Response Time Per Given Key-Value Pairs (Without Middleware)')
     plt.legend(framealpha=1)
     plt.grid(True)
-    plt.savefig(f'assets/test.eps', dpi=1200)
-    # plt.savefig(f'assets/combined_visualization_no_middleware.svg', dpi=1200)
+
+    plt.savefig(f'assets/combined_visualization_no_middleware_{with_columns[0].split()[0]}.svg', dpi=1200)
+    plt.savefig(f'assets/combined_visualization_no_middleware_{with_columns[0].split()[0]}.pdf', dpi=1200)
     plt.show()
 
 
 if __name__ == '__main__':
     # visualize_data_combined_operations(with_columns=['Wall_Time_Optimized(seconds)'])   # optimized operations
-    visualize_data_combined_operations(with_columns=['Wall_Time(seconds)'])  # not optimized
+
+    visualize_data_combined_operations(with_columns=['Response_Time_Optimized (seconds)'])
     """
+     visualize_data_combined_operations(with_columns=['Response_Time (seconds)'])  # not optimized
     # Combined visualization
-    visualize_data(function='Ping (String) Request', sheet_name='ping', with_columns=['Wall_Time(seconds)'])
-    visualize_data(function='Set Function', sheet_name='set',
+    visualize_data(function='Ping (String) Request', sheet_name='Ping Message', with_columns=['Wall_Time(seconds)'])
+    visualize_data(function='Set Function', sheet_name='Set Function',
                    with_columns=['Wall_Time_Optimized(seconds)', 'Wall_Time(seconds)'])
-    visualize_data(function='Get Function', sheet_name='get',
+    visualize_data(function='Get Function', sheet_name='Get Function',
                    with_columns=['Wall_Time_Optimized(seconds)', 'Wall_Time(seconds)'])
-    visualize_data(function='Get Range Function', sheet_name='get_range',
+    visualize_data(function='Get Range Function', sheet_name='Get-Range Function',
                    with_columns=['Wall_Time_Optimized(seconds)', 'Wall_Time(seconds)'])
-    visualize_data(function='Delete Function', sheet_name='delete',
+    visualize_data(function='Delete Function', sheet_name='Delete Function',
                    with_columns=['Wall_Time_Optimized(seconds)', 'Wall_Time(seconds)'])
-
+   
     # Sequential operation visualization
-    visualize_data(function='Set Function (Sequential)', sheet_name='set',
-                   with_columns=['Wall_Time(seconds)'])
-    visualize_data(function='Get Function (Sequential)', sheet_name='get',
-                   with_columns=['Wall_Time(seconds)'])
-    visualize_data(function='Get Range Function (Sequential)', sheet_name='get_range',
-                   with_columns=['Wall_Time(seconds)'])
-    visualize_data(function='Delete Function (Sequential)', sheet_name='delete',
-                   with_columns=['Wall_Time(seconds)'])
-
+    visualize_data(function='Ping (String) Request', sheet_name='Ping Message',
+                   with_columns=['Response_Time (seconds)'])
+    visualize_data(function='Set Function (Sequential)', sheet_name='Set Function',
+                   with_columns=['Response_Time (seconds)'])
+    visualize_data(function='Get Function (Sequential)', sheet_name='Get Function',
+                   with_columns=['Response_Time (seconds)'])
+    visualize_data(function='Get Range Function (Sequential)', sheet_name='Get-Range Function',
+                   with_columns=['Response_Time (seconds)'])
+    visualize_data(function='Delete Function (Sequential)', sheet_name='Delete Function',
+                   with_columns=['Response_Time (seconds)'])
+     """
     # Optimized operation visualization
-    visualize_data(function='Set (With Pipeline Operator)', sheet_name='set',
-                   with_columns=['Wall_Time_Optimized(seconds)'])
-    visualize_data(function='Get Function (With Pipeline Operator)', sheet_name='get',
-                   with_columns=['Wall_Time_Optimized(seconds)'])
-    visualize_data(function='Get Range Function (With Pipeline Operator)', sheet_name='get_range',
-                   with_columns=['Wall_Time_Optimized(seconds)'])
-    visualize_data(function='Delete Function (With Pipeline Operator)', sheet_name='delete',
-                   with_columns=['Wall_Time_Optimized(seconds)'])
-    """
+    visualize_data(function='Set Function', sheet_name='Set Function',
+                   with_columns=['Response_Time_Optimized (seconds)'])
+    visualize_data(function='Get Function', sheet_name='Get Function',
+                   with_columns=['Response_Time_Optimized (seconds)'])
+    visualize_data(function='Get Range Function', sheet_name='Get-Range Function',
+                   with_columns=['Response_Time_Optimized (seconds)'])
+    visualize_data(function='Delete Function', sheet_name='Delete Function',
+                   with_columns=['Response_Time_Optimized (seconds)'])

@@ -14,21 +14,28 @@ class BenchmarkingClient(base_client.BaseUser):
     host = '10.0.2.87:6379'  # middleware address
     stub_class = CommunicationServiceStub
 
+    def __init__(self, environment):
+        super().__init__(environment)
+        self.mapping = utils.read_data(data_code=random.choice([1, 10, 100, 1000]))
+        self.single_mapping = utils.read_data(data_code=1)
+        self.multiple_mapping = utils.read_data(data_code=random.choice([10, 100, 1000]))
+
     # @task
     def ping(self):
         self.stub.testConnection(StringMessage(message='Ping Load Testing'))
 
     @task
     def get_single(self):
-        data = self.stub.getSingle(Key(key=random.randint(0, 99)))
+        assert (len(self.single_mapping.get('userID')) == 1)
+        data = self.stub.getSingle(Key(key=self.single_mapping.get('userID')[0]))
         dict_data = MessageToDict(data)
         return dict_data
 
     @task
-    def get_multiples(self, data_code: int = 100):
+    def get_multiples(self):
         keys = KeyList().key_list
 
-        for k in utils.read_data(data_code=data_code)['userID']:
+        for k in self.multiple_mapping.get('userID'):
             keys.append(Key(key=k))
 
         proto_data = self.stub.getMultiple(KeyList(key_list=keys))
@@ -38,28 +45,29 @@ class BenchmarkingClient(base_client.BaseUser):
             return dict_data['getdata']
 
     @task
-    def get_range(self, start: int = 0, end: int = random.randint(0, 99)):
+    def get_range(self):
+        start = 0
+        end = random.choice([0, 9, 99, 999])  # anywhere between 1, 10, 100, 1000 key-value pairs
         return MessageToDict(self.stub.getRange(Range(start=start, end=end)))['getdata']
 
     @task
     def set_single(self):
-        mapping = utils.read_data(data_code=1)
         return self.stub.setSingle(
-            Data(userID=mapping.get('userID')[0], name=mapping.get('name')[0], email=mapping.get('email')[0]))
+            Data(userID=self.single_mapping.get('userID')[0], name=self.single_mapping.get('name')[0],
+                 email=self.single_mapping.get('email')[0]))
 
     @task
     def set_multiples(self):
-        mapping = utils.read_data(data_code=pow(10, random.randint(1, 3)))
         dict_data = Dict().data
-        for u, n, e in zip(mapping.get('userID'), mapping.get('name'), mapping.get('email')):
+        for u, n, e in zip(self.multiple_mapping.get('userID'), self.multiple_mapping.get('name'),
+                           self.multiple_mapping.get('email')):
             dict_data.append(Data(userID=u, name=n, email=e))
 
         self.stub.setMultiple(Dict(data=dict_data))
 
     @task
     def delete_keys(self):
-        mapping = utils.read_data(data_code=pow(10, random.randint(0, 3)))
-        k_list = mapping.get('userID')
+        k_list = self.mapping.get('userID')
         keys = KeyList().key_list
 
         for k in k_list:
