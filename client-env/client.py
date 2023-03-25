@@ -4,12 +4,8 @@ from protos.comm_pb2_grpc import CommunicationServiceStub
 
 from google.protobuf.json_format import MessageToDict
 
-import numpy as np
-import random
-
 from time import perf_counter
 import timeit
-from time_profiling import write_to_excel_exec_time, write_to_excel_wall_time
 
 
 def run(*, host_address='localhost', port='6379'):
@@ -35,13 +31,18 @@ def run(*, host_address='localhost', port='6379'):
 
             # execution_time_set(stub=stub, set_function='single', iterations=10, data=data)
             # execution_time_set(stub=stub, set_function='multiple', iterations=10, data=data)
+
             # latency_set(stub=stub, set_function='single', iterations=10, data=data)
             # latency_set(stub=stub, set_function='multiple', iterations=10, data=data)
 
             # execution_time_get(stub=stub, get_function='single', iterations=10)
             # execution_time_get(stub=stub, get_function='multiple', iterations=10, keys=u_ids)
-            # latency_get(stub=stub, get_function='single', iterations=10)
-            # latency_get(stub=stub, get_function='multiple', iterations=10)
+
+            # latency_get(stub=stub, get_function='single', iterations=10, keys=data.get('userID'))
+            # latency_get(stub=stub, get_function='multiple', iterations=10, keys=data.get('userID'))
+            # latency_get(stub=stub, get_function='range', iterations=10, start=0, end=999)
+
+            latency_del(stub=stub, iterations=10, keys=data.get('userID'))
             """
             # Connection Test
             test_connection(stub=stub, message="CONNECTION TEST")
@@ -326,7 +327,7 @@ def latency_get(*, stub, get_function, iterations, keys=None, start=0, end=0):
     if get_function == 'single':
         for it in range(0, iterations):
             t1_start = perf_counter()  # Start the stopwatch / counter
-            get_single(stub=stub, key=1)
+            get_single(stub=stub, key=keys[0])
             t1_stop = perf_counter()  # Stop the stopwatch / counter
             lat += (t1_stop - t1_start)
         total_latency = lat / iterations
@@ -350,7 +351,8 @@ def latency_get(*, stub, get_function, iterations, keys=None, start=0, end=0):
     else:
         print(f'{get_function} : function not defined')
 
-    print(f'Wall time in seconds for getting {len(keys)} key-value pairs : {total_latency}')
+    total_keys = len(keys) if keys is not None else (start + end + 1)
+    print(f'Wall time in seconds for getting {total_keys} key-value pairs : {total_latency}')
     return total_latency
 
 
