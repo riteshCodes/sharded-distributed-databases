@@ -17,6 +17,8 @@ class BenchmarkingClient(base_client.BaseUser):
     def __init__(self, environment):
         super().__init__(environment)
         self.mapping = utils.read_data(data_code=random.choice([1, 10, 100, 1000]))
+        # self.single_mapping = utils.read_data(data_code=1)
+        # self.multiple_mapping = utils.read_data(data_code=random.choice([10, 100, 1000]))
         self.single_mapping = utils.read_data(data_code=1)
         self.multiple_mapping = utils.read_data(data_code=random.choice([10, 100, 1000]))
 
@@ -24,14 +26,13 @@ class BenchmarkingClient(base_client.BaseUser):
     def ping(self):
         self.stub.testConnection(StringMessage(message='Ping Load Testing'))
 
-    @task
+    # @task
     def get_single(self):
-        assert (len(self.single_mapping.get('userID')) == 1)
         data = self.stub.getSingle(Key(key=self.single_mapping.get('userID')[0]))
         dict_data = MessageToDict(data)
         return dict_data
 
-    @task
+    # @task
     def get_multiples(self):
         keys = KeyList().key_list
 
@@ -44,7 +45,7 @@ class BenchmarkingClient(base_client.BaseUser):
         if isinstance(proto_data, GetDictData):
             return dict_data['getdata']
 
-    @task
+    # @task
     def get_range(self):
         start = 0
         end = random.choice([0, 9, 99, 999])  # anywhere between 1, 10, 100, 1000 key-value pairs
@@ -65,7 +66,7 @@ class BenchmarkingClient(base_client.BaseUser):
 
         self.stub.setMultiple(Dict(data=dict_data))
 
-    @task
+    # @task
     def delete_keys(self):
         k_list = self.mapping.get('userID')
         keys = KeyList().key_list
@@ -74,3 +75,4 @@ class BenchmarkingClient(base_client.BaseUser):
             keys.append(Key(key=k))
 
         return self.stub.delKeys(KeyList(key_list=keys))
+

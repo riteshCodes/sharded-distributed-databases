@@ -2,3 +2,4 @@ redis~=4.3.5
 hiredis~=2.0.0
 grpcio~=1.51.1
 grpcio-tools~=1.51.1
+matplotlib~=3.7.0
