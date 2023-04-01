@@ -35,10 +35,8 @@ def read_data(*, data_code: int):
 
 if __name__ == '__main__':
     # pass
-    print(read_data(data_code=1))
-    """
+    # print(read_data(data_code=1))
     synthesize_data(limit=1)
     synthesize_data(limit=10)
     synthesize_data(limit=100)
     synthesize_data(limit=1000)
-    """
