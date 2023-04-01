@@ -93,7 +93,7 @@ def visualize_data_combined_operations(*, with_columns):
     axs.yaxis.set_major_formatter(formatter)
     plt.ylabel('Average Response Time (seconds)')  # milliseconds(ms), 1 second = 1000 milliseconds
 
-    # plt.title(f'Average Response Time Per Given Key-Value Pairs (With Middleware)')
+    plt.title(f'Average Response Time Per Given Key-Value Pairs (With Middleware)')
     plt.legend(framealpha=1)
     plt.grid(True)
     plt.savefig(f'assets/{OUTPUT_FOLDER}/combined_visualization.pdf', dpi=1200)
@@ -127,6 +127,7 @@ def write_to_excel_exec_time(*, sheet_name: str, start_row: int = 7, data):
 
 if __name__ == '__main__':
     visualize_data_combined_operations(with_columns=['Response_Time (seconds)'])
+    """
     if comparison:
 
         # Visualization from client side to middleware
@@ -159,3 +160,4 @@ if __name__ == '__main__':
                        with_columns=['Response_Time (seconds)'])
         visualize_data(function='Delete Function', sheet_name='Delete Function',
                        with_columns=['Response_Time (seconds)'])
+"""

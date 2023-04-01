@@ -16,7 +16,7 @@ def run(*, host_address='localhost', port='6379'):
     u_ids = []
     names = []
     emails = []
-    for i in range(1000):
+    for i in range(10):
         u_ids.append(i)
         names.append(f'N-:{str(i)}')
         emails.append(f'@Email-:{str(i)}')
@@ -364,7 +364,7 @@ def latency_del(*, stub, iterations, keys=None):
         t1_stop = perf_counter()  # Stop the stopwatch / counter
         lat += (t1_stop - t1_start)
     total_latency = lat / iterations
-    print(f'Wall time in seconds (del_keys for deleting {len(keys)} keys: {total_latency}')
+    print(f'Wall time in seconds del_keys for deleting {len(keys)} keys: {total_latency}')
     return total_latency
 
 

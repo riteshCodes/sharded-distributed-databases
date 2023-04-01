@@ -28,13 +28,17 @@ def synthesize_data(*, limit: int):
 
 
 def read_data(*, data_code: int):
+    synthesize_data(limit=data_code)
     with open(get_file_path(data_code=data_code), "r") as d_file:
         return json.load(d_file)
 
 
 if __name__ == '__main__':
     # pass
+    print(read_data(data_code=1))
+    """
     synthesize_data(limit=1)
     synthesize_data(limit=10)
     synthesize_data(limit=100)
     synthesize_data(limit=1000)
+    """
