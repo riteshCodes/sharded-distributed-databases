@@ -1,2 +1,2 @@
 #!/bin/sh
-locust -f benchmark_clients.py --users 100 --spawn-rate 10 --run-time 120 --stop-timeout 10s
+locust -f benchmark_clients.py --users 1000 --spawn-rate 100 --run-time 5m --stop-timeout 10s

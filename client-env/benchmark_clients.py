@@ -51,13 +51,13 @@ class BenchmarkingClient(base_client.BaseUser):
         end = random.choice([0, 9, 99, 999])  # anywhere between 1, 10, 100, 1000 key-value pairs
         return MessageToDict(self.stub.getRange(Range(start=start, end=end)))['getdata']
 
-    @task
+    # @task
     def set_single(self):
         return self.stub.setSingle(
             Data(userID=self.single_mapping.get('userID')[0], name=self.single_mapping.get('name')[0],
                  email=self.single_mapping.get('email')[0]))
 
-    @task
+    # @task
     def set_multiples(self):
         dict_data = Dict().data
         for u, n, e in zip(self.multiple_mapping.get('userID'), self.multiple_mapping.get('name'),
