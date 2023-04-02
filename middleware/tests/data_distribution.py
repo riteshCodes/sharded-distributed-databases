@@ -40,15 +40,26 @@ def visualize_data_distribution(m_ware, keys_limit):
     for idx, value in enumerate(info.values()):
         mapping[f'DB-{idx}'] = value
 
-    plt.plot(mapping.keys(), mapping.values(), marker='*')
+    # Plot configurations
+    plt.title(f'Data Distribution Among Database-Sites')
     plt.xlabel('Database-Sites')
     plt.ylabel('Number of key-value pairs')  # milliseconds(ms), 1 second = 1000 milliseconds
-    plt.ylim(0, keys_limit/2)
-    plt.yticks(range(0, int(keys_limit/2) + 1, 1))
 
-    plt.title(f'Data Distribution Among Database-Sites')
+    if len(mapping.keys()) == 2:
+        # Set the spacing between the ticks
+        plt.xlim([0, 3])
+        plt.xticks([1, 2], mapping.keys())
+        plt.ylim(0, keys_limit)
+        plt.yticks(range(0, int(keys_limit) + 1, int(keys_limit / 10)))
+        plt.plot([1, 2], mapping.values(), marker='*')
+    else:
+        plt.ylim(0, keys_limit / 2)
+        plt.yticks(range(0, int(keys_limit / 2) + 1, int(keys_limit / 10)))
+        plt.plot(mapping.keys(), mapping.values(), marker='*')
+
     plt.grid(True)
     plt.savefig(f'distribution-{keys_limit}.pdf', dpi=1200)
+    plt.savefig(f'distribution-{keys_limit}.svg', dpi=1200)
     plt.show()
 
 
@@ -60,5 +71,5 @@ def feed_data(m_ware, data):
 
 if __name__ == '__main__':
     m_ware = MWare()
-    feed_data(m_ware, read_data(data_code=10))
-    visualize_data_distribution(m_ware, keys_limit=10)
+    feed_data(m_ware, read_data(data_code=1000))
+    visualize_data_distribution(m_ware, keys_limit=1000)
