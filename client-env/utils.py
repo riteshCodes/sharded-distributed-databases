@@ -11,15 +11,14 @@ def get_file_path(*, data_code):
 
 def synthesize_data(*, limit: int):
     # Test data
-    # random_ids = random.sample(range(1000, 10000), limit)  # 4-digits random number sample selection with limit
-    # u_ids = [*set(random_ids)]
-    u_ids = []
+    random_ids = random.sample(range(1000, 10000), limit)  # 4-digits random number sample selection with limit
+    u_ids = [*set(random_ids)]
+    # u_ids = []
     names = []
     emails = []
-    for i in range(limit):
-        u_ids.append(i)
-        names.append(f'N-:{str(i)}')
-        emails.append(f'@Email-:{str(i)}')
+    for u in u_ids:
+        names.append(f'N-:{str(u)}')
+        emails.append(f'@Email-:{str(u)}')
 
     data = {'userID': u_ids, 'name': names, 'email': emails}
 
