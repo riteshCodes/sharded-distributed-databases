@@ -1,4 +1,5 @@
 import redis
+from locust import HttpUser, task
 from configs import REDIS_DB_URL
 
 
@@ -169,3 +170,4 @@ def uid(*, k_list: list):
 
     else:
         return ['userID' + ':' + '{:04d}'.format(k) for k in k_list]
+

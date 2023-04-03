@@ -1,7 +1,7 @@
 ALL_NODES = ["redis://:sharding-ddms@10.0.2.81:6379/0", "redis://:sharding-ddms@10.0.2.82:6379/0",
              "redis://:sharding-ddms@10.0.2.83:6379/0", "redis://:sharding-ddms@10.0.2.84:6379/0",
              "redis://:sharding-ddms@10.0.2.85:6379/0", "redis://:sharding-ddms@10.0.2.86:6379/0"]
-DB_NODES = ALL_NODES[:6]
+DB_NODES = ALL_NODES[:1]
 # "redis://:sharding-ddms@10.0.2.81:6379/0",
 # VIRTUAL_NODES = len(DB_NODES) * 1000
 # VIRTUAL_NODES = len(DB_NODES) * 100
