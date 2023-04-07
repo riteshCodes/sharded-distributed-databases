@@ -9,7 +9,7 @@ from protos.comm_pb2_grpc import CommunicationServiceServicer, add_Communication
 # import main (MWare class)
 from main import MWare
 
-# m_ware = MWare()  # instance of middleware for calling operations
+m_ware = MWare()  # instance of middleware for calling operations
 
 HOST = 'localhost'
 PORT = '6379'
@@ -19,9 +19,6 @@ class Listener(CommunicationServiceServicer):
     """
     The listener class functions implement the rpc calls as described in the .protos file
     """
-
-    def __init__(self):
-        self.m_ware = MWare()
 
     def testConnection(self, request, context):
         """
@@ -38,7 +35,7 @@ class Listener(CommunicationServiceServicer):
         """
         key_space_inf = MapStringInt().key_value  # response type
 
-        for k, v in self.m_ware.key_space_inf().items():
+        for k, v in m_ware.key_space_inf().items():
             key_space_inf[k] = v
 
         return MapStringInt(key_value=key_space_inf)
@@ -48,7 +45,7 @@ class Listener(CommunicationServiceServicer):
         getSingle returns associated value of given key (single key) if it exits in database, else returns an empty
         value
         """
-        value = self.m_ware.get_all(key_list=[request.key])
+        value = m_ware.get_all(key_list=[request.key])
         if value:  # if the given key exists
             # Generate valid data
             return GetData(name=value[0].get('name'), email=value[0].get('email'))
@@ -59,7 +56,7 @@ class Listener(CommunicationServiceServicer):
         """
         setSingle stores a single key-value pair in corresponding database
         """
-        self.m_ware.set_to(key=request.userID, name=request.name, email=request.email)
+        m_ware.set_to(key=request.userID, name=request.name, email=request.email)
         return StringMessage(message='OK')
 
     def getMultiple(self, request, context):
@@ -70,7 +67,7 @@ class Listener(CommunicationServiceServicer):
         keys = []
         for k in request.key_list:
             keys.append(k.key)
-        values = self.m_ware.get_all(key_list=keys)
+        values = m_ware.get_all(key_list=keys)
 
         response = GetDictData().getdata
 
@@ -94,7 +91,7 @@ class Listener(CommunicationServiceServicer):
             uid_list.append(d.userID)
             name_list.append(d.name)
             email_list.append(d.email)
-        self.m_ware.set_multiples(key_list=uid_list, name_list=name_list, email_list=email_list)
+        m_ware.set_multiples(key_list=uid_list, name_list=name_list, email_list=email_list)
         return StringMessage(message='OK')
 
     def delKeys(self, request, context):
@@ -105,7 +102,7 @@ class Listener(CommunicationServiceServicer):
         for k in request.key_list:
             keys.append(k.key)
 
-        deleted = self.m_ware.del_keys(key_list=keys)
+        deleted = m_ware.del_keys(key_list=keys)
         if deleted is None:
             return StringMessage(message='NONE')
 
@@ -117,7 +114,7 @@ class Listener(CommunicationServiceServicer):
         an empty value for the key, which is not present
         """
         res = GetDictData().getdata  # Valid response type
-        values_list = self.m_ware.get_range(start=request.start, end=request.end)
+        values_list = m_ware.get_range(start=request.start, end=request.end)
 
         if values_list:
             for v in values_list:
