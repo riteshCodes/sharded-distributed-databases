@@ -28,6 +28,10 @@ class RedisClient:
         """
         result = []
         keys = uid(k_list=key_list)
+
+        for k in keys:
+            result.append(self.redis_db.hgetall(k))
+        """
         if len(key_list) == 1:
             result.append(self.redis_db.hgetall(keys))
         else:
@@ -35,6 +39,7 @@ class RedisClient:
                 for k in keys:
                     pipe.hgetall(k)
                 result += pipe.execute()
+        """
         return result
 
     def get_fields(self, *, key_list: list = None, field_list: list = None):
@@ -58,6 +63,10 @@ class RedisClient:
         :param start: start index key
         :param end: end index key
         :return:
+          with self.redis_db.pipeline() as pipe:
+                        for k in keys:
+                            pipe.hgetall(k)
+                        result += pipe.execute()
         """
         result = []
 
@@ -66,11 +75,8 @@ class RedisClient:
             result.append(self.redis_db.hgetall(keys))
 
         else:
-            with self.redis_db.pipeline() as pipe:
-                for k in keys:
-                    pipe.hgetall(k)
-                result += pipe.execute()
-
+            for k in keys:
+                result.append(self.redis_db.hgetall(k))
         return result
 
     def set_to(self, *, key: int, **mapping):
@@ -92,12 +98,14 @@ class RedisClient:
         :param name_list:
         :param email_list:
         :return:
-        """
-        keys = uid(k_list=key_list)
         with self.redis_db.pipeline() as pipe:
             for k, n, e in zip(keys, name_list, email_list):
                 pipe.hset(k, mapping={'name': n, 'email': e})
             pipe.execute()
+        """
+        keys = uid(k_list=key_list)
+        for k, n, e in zip(keys, name_list, email_list):
+            self.redis_db.hset(k, mapping={'name': n, 'email': e})
         return 'OK'
 
     def update_values(self, key_list: list = None, **mapping):
@@ -132,16 +140,18 @@ class RedisClient:
         del_keys (deletion) deletes all given key list from the database
         :param key_list: key list to delete
         :return: None: if successful, KeyError: if the key to delete is not present in the database
+
+        with self.redis_db.pipeline() as pipe:
+            for k in keys:
+                pipe.delete(k)
+            pipe.execute()
         """
         keys = uid(k_list=key_list)
         if len(key_list) == 1:
             self.redis_db.delete(keys)
         else:
-            with self.redis_db.pipeline() as pipe:
-                for k in keys:
-                    pipe.delete(k)
-                pipe.execute()
-
+            for k in keys:
+                self.redis_db.delete(k)
         return 'OK'
 
     def flush_all(self):
@@ -170,4 +180,3 @@ def uid(*, k_list: list):
 
     else:
         return ['userID' + ':' + '{:04d}'.format(k) for k in k_list]
-

@@ -9,6 +9,3 @@ VIRTUAL_NODES = 256
 # Uniform distribution of keys depends upon the number of virtual nodes (directly proportional)
 # But the number of virtual nodes has also negative impact upon the response time (due to computational overhead
 # of searching keys and their respective nodes
-
-if __name__ == '__main__':
-    print(DB_NODES)

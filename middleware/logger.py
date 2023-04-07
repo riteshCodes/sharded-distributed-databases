@@ -5,7 +5,7 @@ from time import perf_counter
 import datetime
 
 log_date = datetime.datetime.now().strftime('%d-%B')
-log_file_path = path.join(path.dirname(Path(__file__)), 'logs', f'middleware_{log_date}.log')
+log_file_path = path.join(path.dirname(Path(__file__)), Path('logs'), f'middleware_{log_date}.log')
 
 mware_logger = logging.getLogger('mware_logger')
 mware_logger.setLevel(logging.DEBUG)

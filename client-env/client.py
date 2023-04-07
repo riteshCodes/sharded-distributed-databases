@@ -42,7 +42,7 @@ def run(*, host_address='localhost', port='6379'):
             # latency_get(stub=stub, get_function='multiple', iterations=10, keys=data.get('userID'))
             # latency_get(stub=stub, get_function='range', iterations=10, start=0, end=999)
 
-            latency_del(stub=stub, iterations=10, keys=data.get('userID'))
+            # latency_del(stub=stub, iterations=10, keys=data.get('userID'))
             """
             # Connection Test
             test_connection(stub=stub, message="CONNECTION TEST")
