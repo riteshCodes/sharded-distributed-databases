@@ -6,7 +6,12 @@ from main import MWare
 
 m_ware = MWare()
 m_ware.flush_all()
-print('All data are flushed from the databases')
+print('Before Flushing (Key-Space Information):')
+print(m_ware.key_space_inf())
+print('\n')
+m_ware.flush_all()
+print('All data are flushed from the databases \n')
+print('After Flushing (Key-Space Information):')
 print(m_ware.key_space_inf())
 
 # Set the directory where log files are stored
@@ -24,6 +29,6 @@ if os.path.isdir(log_dir):
         except OSError as e:
             print(f"Error deleting {log_file}: {e}")
 
-    print(f"All log files have been deleted from {log_dir}.")
+    print(f"All log files have been deleted from {log_dir}  \n")
 else:
     print(f"Error: Directory {log_dir} does not exist.")
