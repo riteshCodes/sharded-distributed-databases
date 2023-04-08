@@ -102,4 +102,4 @@ def find_next_position(*, sorted_array, target):
     Efficient: Time complexity around O(log n)
     """
     index = bisect.bisect(sorted_array, target)
-    return index
+    return index if index < len(sorted_array) else 0

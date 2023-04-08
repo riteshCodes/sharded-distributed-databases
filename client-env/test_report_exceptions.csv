@@ -1,1 +1,88 @@
 Count,Message,Traceback,Nodes
+94,"<_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.UNKNOWN
+	details = ""Exception calling application: list index out of range""
+	debug_error_string = ""UNKNOWN:Error received from peer ipv4:10.0.2.87:6379 {grpc_message:""Exception calling application: list index out of range"", grpc_status:2, created_time:""2023-04-08T08:26:37.7077108+00:00""}""
+>","  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 347, in run
+    self.execute_next_task()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 372, in execute_next_task
+    self.execute_task(self._task_queue.pop(0))
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 493, in execute_task
+    task(self.user)
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\benchmark_clients.py"", line 69, in set_multiples
+    self.stub.setMultiple(Dict(data=dict_data))
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 247, in __call__
+    response, ignored_call = self._with_call(request,
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 290, in _with_call
+    return call.result(), call
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\base_client.py"", line 33, in intercept
+    response_length = response.result().ByteSize()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 274, in continuation
+    response, call = self._thunk(new_method).with_call(
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 957, in with_call
+    return _end_unary_response_blocking(state, call, True, None)
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 849, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)
+",local
+69,"<_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.UNKNOWN
+	details = ""Exception calling application: list index out of range""
+	debug_error_string = ""UNKNOWN:Error received from peer ipv4:10.0.2.87:6379 {created_time:""2023-04-08T08:26:37.7228258+00:00"", grpc_status:2, grpc_message:""Exception calling application: list index out of range""}""
+>","  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 347, in run
+    self.execute_next_task()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 372, in execute_next_task
+    self.execute_task(self._task_queue.pop(0))
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 493, in execute_task
+    task(self.user)
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\benchmark_clients.py"", line 43, in get_multiples
+    proto_data = self.stub.getMultiple(KeyList(key_list=keys))
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 247, in __call__
+    response, ignored_call = self._with_call(request,
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 290, in _with_call
+    return call.result(), call
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\base_client.py"", line 33, in intercept
+    response_length = response.result().ByteSize()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 274, in continuation
+    response, call = self._thunk(new_method).with_call(
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 957, in with_call
+    return _end_unary_response_blocking(state, call, True, None)
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 849, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)
+",local
+59,"<_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.UNKNOWN
+	details = ""Exception calling application: list index out of range""
+	debug_error_string = ""UNKNOWN:Error received from peer ipv4:10.0.2.87:6379 {created_time:""2023-04-08T08:26:37.7305505+00:00"", grpc_status:2, grpc_message:""Exception calling application: list index out of range""}""
+>","  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 347, in run
+    self.execute_next_task()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 372, in execute_next_task
+    self.execute_task(self._task_queue.pop(0))
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 493, in execute_task
+    task(self.user)
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\benchmark_clients.py"", line 80, in delete_keys
+    return self.stub.delKeys(KeyList(key_list=keys))
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 247, in __call__
+    response, ignored_call = self._with_call(request,
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 290, in _with_call
+    return call.result(), call
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\base_client.py"", line 33, in intercept
+    response_length = response.result().ByteSize()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 274, in continuation
+    response, call = self._thunk(new_method).with_call(
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 957, in with_call
+    return _end_unary_response_blocking(state, call, True, None)
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 849, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)
+",local
