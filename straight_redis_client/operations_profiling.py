@@ -1,4 +1,4 @@
-from main import RedisClient
+from normal_operations import RedisClient
 from time import perf_counter
 import timeit
 

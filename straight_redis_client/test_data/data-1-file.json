@@ -1,11 +1,7 @@
 {
- "userID": [
-  7769
- ],
- "name": [
-  "N-:7769"
- ],
- "email": [
-  "@Email-:7769"
- ]
+  "1": {
+    "userID": 1,
+    "name": "N-:1",
+    "email": "@Email-:1"
+  }
 }

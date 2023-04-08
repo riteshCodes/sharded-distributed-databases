@@ -6,7 +6,7 @@ from grpc_interceptor import ClientInterceptor
 from locust import User
 from locust.exception import LocustError
 
-# patch grpc so that it uses gevent instead of asyncio
+# use gevent instead of asyncio
 grpc_gevent.init_gevent()
 
 
@@ -24,18 +24,19 @@ class LocustInterceptor(ClientInterceptor):
     ):
         response = None
         exception = None
-        start_perf_counter = time.perf_counter()
         response_length = 0
+        start_time = time.time()
+        response_time = 0
         try:
             response = method(request_or_iterator, call_details)
+            response_time = time.time() - start_time
             response_length = response.result().ByteSize()
         except grpc.RpcError as e:
             exception = e
-
         self.env.events.request.fire(
             request_type="grpc",
             name=call_details.method,
-            response_time=(time.perf_counter() - start_perf_counter) * 1000,
+            response_time=response_time * 1000,
             response_length=response_length,
             response=response,
             context=None,

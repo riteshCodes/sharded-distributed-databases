@@ -1,6 +1,8 @@
 from farmhash import FarmHash32
 import hashlib
 
+import bisect
+
 MAX_NUMBER_32_BITS = 4294967295
 # 16-bits binary value can represent 2^16 distinct values
 MAX_NUMBER_16_BITS = 65535  # Range of hash values used: [0, (2^16 -1)]
@@ -17,9 +19,6 @@ class ConsistentHashSharder:
         self.sorted_keys = []  # sort the keys in ascending order to place them in the ring
 
     def add_node(self, *, node_url: str):
-        """
-        :param node_url:
-        """
         if self.virtual_nodes != 0:
             for i in range(self.virtual_nodes):
                 v_node = node_url + ':' + str(i)
@@ -39,9 +38,6 @@ class ConsistentHashSharder:
         self.sorted_keys.sort()
 
     def remove_node(self, *, node_url: str):
-        """
-        :param node_url:
-        """
         for i in range(self.virtual_nodes):
             v_node = node_url + ':' + str(i)
 
@@ -52,9 +48,6 @@ class ConsistentHashSharder:
             self.sorted_keys.remove(k)
 
     def get_node_url(self, *, shard_key):
-        """
-        :param shard_key:
-        """
         if not self.ring:
             return None
 
@@ -93,3 +86,8 @@ def _get_index(*, array, value):
         else:
             high = mid - 1
     return low if low < len(array) else 0
+
+
+def find_next_position(*, sorted_array, target):
+    index = bisect.bisect(sorted_array, target)
+    return index

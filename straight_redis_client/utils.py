@@ -1,7 +1,6 @@
 from os import path
 from pathlib import Path
 import random
-
 import json
 
 
@@ -32,10 +31,16 @@ def read_data(*, data_code: int):
         return json.load(d_file)
 
 
-if __name__ == '__main__':
-    # pass
-    # print(read_data(data_code=1))
-    synthesize_data(limit=1)
-    synthesize_data(limit=10)
-    synthesize_data(limit=100)
-    synthesize_data(limit=1000)
+def generate_workload(*, limit):
+    content = {}
+    for i in range(1, limit + 1):
+        user_data = {
+            "userID": i,
+            "name": f"N-:{i}",
+            "email": f"@Email-:{i}"
+        }
+        content[i] = user_data
+
+    # Write the content schema to a JSON file
+    with open(get_file_path(data_code=limit), 'w') as d_file:
+        json.dump(content, d_file, indent=2)
