@@ -163,20 +163,20 @@ def set_multiples(*, stub, **mapping):
     stub.setMultiple(Dict(data=dict_data))
 
 
-def del_single(*, stub, k_list: list = None):
+def del_multiples(*, stub, k_list: list = None):
     keys = KeyList().key_list
 
     for k in k_list:
         keys.append(Key(key=k))
 
-    return stub.delKeys(KeyList(key_list=keys))
+    return stub.delSingle(KeyList(key_list=keys))
 
 
-def del_multiples(*, stub, k):
+def del_single(*, stub, k):
     keys = KeyList().key_list
     keys.append(Key(key=k))
 
-    return stub.delKeys(KeyList(key_list=keys))
+    return stub.delMultiple(KeyList(key_list=keys))
 
 
 def parse_to_dict(proto_data):
@@ -284,7 +284,7 @@ def execution_time_del(*, stub, iterations, keys=None):
     :return: execution time (in seconds)
     """
     total_exec = execution_time(function=
-                                del_keys(stub=stub, k_list=keys),
+                                del_multiples(stub=stub, k_list=keys),
                                 iterations=iterations) / iterations
     print(f'Execution time in seconds for deleting {len(keys)} key-value pairs :: {total_exec}')
     return total_exec
@@ -367,7 +367,7 @@ def latency_del(*, stub, iterations, keys=None):
     lat = 0
     for it in range(0, iterations):
         t1_start = perf_counter()  # Start the stopwatch / counter
-        del_keys(stub=stub, k_list=keys)
+        del_multiples(stub=stub, k_list=keys)
         t1_stop = perf_counter()  # Stop the stopwatch / counter
         lat += (t1_stop - t1_start)
     total_latency = lat / iterations

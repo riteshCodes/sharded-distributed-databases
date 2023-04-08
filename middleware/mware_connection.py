@@ -94,7 +94,21 @@ class Listener(CommunicationServiceServicer):
         m_ware.set_multiples(key_list=uid_list, name_list=name_list, email_list=email_list)
         return StringMessage(message='OK')
 
-    def delKeys(self, request, context):
+    def delSingle(self, request, context):
+        """
+        delKeys deletes single/multiple key-value pairs from corresponding database atomically
+        """
+        keys = []
+        for k in request.key_list:
+            keys.append(k.key)
+
+        deleted = m_ware.del_keys(key_list=keys)
+        if deleted is None:
+            return StringMessage(message='NONE')
+
+        return StringMessage(message='OK')
+
+    def delMultiple(self, request, context):
         """
         delKeys deletes single/multiple key-value pairs from corresponding database atomically
         """
@@ -171,3 +185,6 @@ def parse_to_data(dict_data):
 
 if __name__ == "__main__":
     serve()
+
+
+# python -m grpc_tools.protoc -I./protos --python_out=./protos --pyi_out=./protos --grpc_python_out=./protos protos/comm.proto

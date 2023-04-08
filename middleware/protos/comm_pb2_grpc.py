@@ -44,8 +44,13 @@ class CommunicationServiceStub(object):
                 request_serializer=comm__pb2.Dict.SerializeToString,
                 response_deserializer=comm__pb2.StringMessage.FromString,
                 )
-        self.delKeys = channel.unary_unary(
-                '/CommunicationService/delKeys',
+        self.delSingle = channel.unary_unary(
+                '/CommunicationService/delSingle',
+                request_serializer=comm__pb2.KeyList.SerializeToString,
+                response_deserializer=comm__pb2.StringMessage.FromString,
+                )
+        self.delMultiple = channel.unary_unary(
+                '/CommunicationService/delMultiple',
                 request_serializer=comm__pb2.KeyList.SerializeToString,
                 response_deserializer=comm__pb2.StringMessage.FromString,
                 )
@@ -95,7 +100,13 @@ class CommunicationServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def delKeys(self, request, context):
+    def delSingle(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def delMultiple(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -140,8 +151,13 @@ def add_CommunicationServiceServicer_to_server(servicer, server):
                     request_deserializer=comm__pb2.Dict.FromString,
                     response_serializer=comm__pb2.StringMessage.SerializeToString,
             ),
-            'delKeys': grpc.unary_unary_rpc_method_handler(
-                    servicer.delKeys,
+            'delSingle': grpc.unary_unary_rpc_method_handler(
+                    servicer.delSingle,
+                    request_deserializer=comm__pb2.KeyList.FromString,
+                    response_serializer=comm__pb2.StringMessage.SerializeToString,
+            ),
+            'delMultiple': grpc.unary_unary_rpc_method_handler(
+                    servicer.delMultiple,
                     request_deserializer=comm__pb2.KeyList.FromString,
                     response_serializer=comm__pb2.StringMessage.SerializeToString,
             ),
@@ -263,7 +279,7 @@ class CommunicationService(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def delKeys(request,
+    def delSingle(request,
             target,
             options=(),
             channel_credentials=None,
@@ -273,7 +289,24 @@ class CommunicationService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/CommunicationService/delKeys',
+        return grpc.experimental.unary_unary(request, target, '/CommunicationService/delSingle',
+            comm__pb2.KeyList.SerializeToString,
+            comm__pb2.StringMessage.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def delMultiple(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/CommunicationService/delMultiple',
             comm__pb2.KeyList.SerializeToString,
             comm__pb2.StringMessage.FromString,
             options, channel_credentials,

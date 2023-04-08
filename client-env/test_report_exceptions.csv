@@ -1,1 +1,204 @@
 Count,Message,Traceback,Nodes
+346,"<_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.UNAVAILABLE
+	details = ""failed to connect to all addresses; last error: UNAVAILABLE: ipv4:127.0.0.1:443: WSA Error""
+	debug_error_string = ""UNKNOWN:failed to connect to all addresses; last error: UNAVAILABLE: ipv4:127.0.0.1:443: WSA Error {grpc_status:14, created_time:""2023-04-08T11:35:20.21725794+00:00""}""
+>","  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 347, in run
+    self.execute_next_task()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 372, in execute_next_task
+    self.execute_task(self._task_queue.pop(0))
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 493, in execute_task
+    task(self.user)
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\benchmark_clients.py"", line 56, in set_single
+    return self.stub.setSingle(
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 247, in __call__
+    response, ignored_call = self._with_call(request,
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 290, in _with_call
+    return call.result(), call
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\base_client.py"", line 33, in intercept
+    response_length = response.result().ByteSize()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 274, in continuation
+    response, call = self._thunk(new_method).with_call(
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 957, in with_call
+    return _end_unary_response_blocking(state, call, True, None)
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 849, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)
+",local
+351,"<_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.UNAVAILABLE
+	details = ""failed to connect to all addresses; last error: UNAVAILABLE: ipv4:127.0.0.1:443: WSA Error""
+	debug_error_string = ""UNKNOWN:failed to connect to all addresses; last error: UNAVAILABLE: ipv4:127.0.0.1:443: WSA Error {created_time:""2023-04-08T11:35:20.221540817+00:00"", grpc_status:14}""
+>","  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 347, in run
+    self.execute_next_task()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 372, in execute_next_task
+    self.execute_task(self._task_queue.pop(0))
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 493, in execute_task
+    task(self.user)
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\benchmark_clients.py"", line 86, in del_multiples
+    return self.stub.delMultiple(KeyList(key_list=keys))
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 247, in __call__
+    response, ignored_call = self._with_call(request,
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 290, in _with_call
+    return call.result(), call
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\base_client.py"", line 33, in intercept
+    response_length = response.result().ByteSize()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 274, in continuation
+    response, call = self._thunk(new_method).with_call(
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 957, in with_call
+    return _end_unary_response_blocking(state, call, True, None)
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 849, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)
+",local
+374,"<_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.UNAVAILABLE
+	details = ""failed to connect to all addresses; last error: UNAVAILABLE: ipv4:127.0.0.1:443: WSA Error""
+	debug_error_string = ""UNKNOWN:failed to connect to all addresses; last error: UNAVAILABLE: ipv4:127.0.0.1:443: WSA Error {grpc_status:14, created_time:""2023-04-08T11:35:20.225498257+00:00""}""
+>","  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 347, in run
+    self.execute_next_task()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 372, in execute_next_task
+    self.execute_task(self._task_queue.pop(0))
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 493, in execute_task
+    task(self.user)
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\benchmark_clients.py"", line 67, in set_multiples
+    self.stub.setMultiple(Dict(data=dict_data))
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 247, in __call__
+    response, ignored_call = self._with_call(request,
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 290, in _with_call
+    return call.result(), call
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\base_client.py"", line 33, in intercept
+    response_length = response.result().ByteSize()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 274, in continuation
+    response, call = self._thunk(new_method).with_call(
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 957, in with_call
+    return _end_unary_response_blocking(state, call, True, None)
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 849, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)
+",local
+370,"<_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.UNAVAILABLE
+	details = ""failed to connect to all addresses; last error: UNAVAILABLE: ipv4:127.0.0.1:443: WSA Error""
+	debug_error_string = ""UNKNOWN:failed to connect to all addresses; last error: UNAVAILABLE: ipv4:127.0.0.1:443: WSA Error {grpc_status:14, created_time:""2023-04-08T11:35:20.227654824+00:00""}""
+>","  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 347, in run
+    self.execute_next_task()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 372, in execute_next_task
+    self.execute_task(self._task_queue.pop(0))
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 493, in execute_task
+    task(self.user)
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\benchmark_clients.py"", line 30, in get_single
+    data = self.stub.getSingle(Key(key=key_list[0]))
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 247, in __call__
+    response, ignored_call = self._with_call(request,
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 290, in _with_call
+    return call.result(), call
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\base_client.py"", line 33, in intercept
+    response_length = response.result().ByteSize()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 274, in continuation
+    response, call = self._thunk(new_method).with_call(
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 957, in with_call
+    return _end_unary_response_blocking(state, call, True, None)
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 849, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)
+",local
+378,"<_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.UNAVAILABLE
+	details = ""failed to connect to all addresses; last error: UNAVAILABLE: ipv4:127.0.0.1:443: WSA Error""
+	debug_error_string = ""UNKNOWN:failed to connect to all addresses; last error: UNAVAILABLE: ipv4:127.0.0.1:443: WSA Error {created_time:""2023-04-08T11:35:20.229648937+00:00"", grpc_status:14}""
+>","  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 347, in run
+    self.execute_next_task()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 372, in execute_next_task
+    self.execute_task(self._task_queue.pop(0))
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 493, in execute_task
+    task(self.user)
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\benchmark_clients.py"", line 75, in del_single
+    return self.stub.delSingle(KeyList(key_list=keys))
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 247, in __call__
+    response, ignored_call = self._with_call(request,
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 290, in _with_call
+    return call.result(), call
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\base_client.py"", line 33, in intercept
+    response_length = response.result().ByteSize()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 274, in continuation
+    response, call = self._thunk(new_method).with_call(
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 957, in with_call
+    return _end_unary_response_blocking(state, call, True, None)
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 849, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)
+",local
+328,"<_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.UNAVAILABLE
+	details = ""failed to connect to all addresses; last error: UNAVAILABLE: ipv4:127.0.0.1:443: WSA Error""
+	debug_error_string = ""UNKNOWN:failed to connect to all addresses; last error: UNAVAILABLE: ipv4:127.0.0.1:443: WSA Error {grpc_status:14, created_time:""2023-04-08T11:35:20.233458619+00:00""}""
+>","  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 347, in run
+    self.execute_next_task()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 372, in execute_next_task
+    self.execute_task(self._task_queue.pop(0))
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 493, in execute_task
+    task(self.user)
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\benchmark_clients.py"", line 41, in get_multiples
+    proto_data = self.stub.getMultiple(KeyList(key_list=keys))
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 247, in __call__
+    response, ignored_call = self._with_call(request,
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 290, in _with_call
+    return call.result(), call
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\base_client.py"", line 33, in intercept
+    response_length = response.result().ByteSize()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 274, in continuation
+    response, call = self._thunk(new_method).with_call(
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 957, in with_call
+    return _end_unary_response_blocking(state, call, True, None)
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 849, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)
+",local
+349,"<_InactiveRpcError of RPC that terminated with:
+	status = StatusCode.UNAVAILABLE
+	details = ""failed to connect to all addresses; last error: UNAVAILABLE: ipv4:127.0.0.1:443: WSA Error""
+	debug_error_string = ""UNKNOWN:failed to connect to all addresses; last error: UNAVAILABLE: ipv4:127.0.0.1:443: WSA Error {created_time:""2023-04-08T11:35:20.239227849+00:00"", grpc_status:14}""
+>","  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 347, in run
+    self.execute_next_task()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 372, in execute_next_task
+    self.execute_task(self._task_queue.pop(0))
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\locust\user\task.py"", line 493, in execute_task
+    task(self.user)
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\benchmark_clients.py"", line 51, in get_range
+    return MessageToDict(self.stub.getRange(Range(start=start, end=end)))['getdata']
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 247, in __call__
+    response, ignored_call = self._with_call(request,
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 290, in _with_call
+    return call.result(), call
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""D:\tuSemesters\Semester Winter 2022_23\Bachelor Thesis\sharded-distributed-databases\client-env\base_client.py"", line 33, in intercept
+    response_length = response.result().ByteSize()
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 343, in result
+    raise self
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_interceptor.py"", line 274, in continuation
+    response, call = self._thunk(new_method).with_call(
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 957, in with_call
+    return _end_unary_response_blocking(state, call, True, None)
+  File ""C:\Users\textr\AppData\Local\Programs\Python\Python310\lib\site-packages\grpc\_channel.py"", line 849, in _end_unary_response_blocking
+    raise _InactiveRpcError(state)
+",local

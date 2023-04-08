@@ -71,7 +71,7 @@ class BenchmarkingClient(base_client.BaseUser):
         keys = KeyList().key_list
 
         keys.append(Key(key=key_list[0]))  # delete single key
-        return self.stub.delKeys(KeyList(key_list=keys))
+        return self.stub.delSingle(KeyList(key_list=keys))
 
     @task(1)
     def del_multiples(self):
@@ -82,6 +82,6 @@ class BenchmarkingClient(base_client.BaseUser):
         for k in key_list:
             keys.append(Key(key=k))
 
-        return self.stub.delKeys(KeyList(key_list=keys))
+        return self.stub.delMultiple(KeyList(key_list=keys))
 
 # locust -f benchmark_clients.py --csv=test_report_stats

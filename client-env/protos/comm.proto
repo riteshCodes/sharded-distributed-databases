@@ -12,7 +12,8 @@ service CommunicationService {
   rpc getMultiple(KeyList) returns (GetDictData) {}
   rpc setMultiple(Dict) returns (StringMessage) {}
 
-  rpc delKeys(KeyList) returns (StringMessage) {}
+  rpc delSingle(KeyList) returns (StringMessage) {}
+  rpc delMultiple(KeyList) returns (StringMessage) {}
 
   rpc getRange(Range) returns (GetDictData) {}
 
