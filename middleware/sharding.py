@@ -1,7 +1,11 @@
+import time
+import timeit
 from farmhash import FarmHash32
 import hashlib
 
 import bisect
+
+import configs
 
 MAX_NUMBER_32_BITS = 4294967295
 # 16-bits binary value can represent 2^16 distinct values
@@ -54,7 +58,8 @@ class ConsistentHashSharder:
         k = hash_md5(data=shard_key) % MAX_NUMBER_16_BITS
         # k = hash_md5(data=shard_key) % MAX_NUMBER_32_BITS
 
-        index = _get_index(array=self.sorted_keys, value=k)
+        # index = _get_index(array=self.sorted_keys, value=k)
+        index = find_next_position(sorted_array=self.sorted_keys, target=k)  # Efficient search
         return self.ring[self.sorted_keys[index]]
 
 
@@ -77,6 +82,9 @@ def hash_md5(*, data: str):
 
 
 def _get_index(*, array, value):
+    """
+    Legacy code: Slow execution, higher time complexity of around 0(n/2) linear
+    """
     low = 0
     high = len(array) - 1
     while low <= high:
@@ -89,5 +97,9 @@ def _get_index(*, array, value):
 
 
 def find_next_position(*, sorted_array, target):
+    """
+    inbuilt-bisect function for binary search
+    Efficient: Time complexity around O(log n)
+    """
     index = bisect.bisect(sorted_array, target)
     return index
