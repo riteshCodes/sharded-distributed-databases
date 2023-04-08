@@ -11,12 +11,12 @@ def get_file_path(*, data_code):
 
 def synthesize_data(*, limit: int):
     # Test data
-    random_ids = random.sample(range(1000, 10000), limit)  # 4-digits random number sample selection with limit
-    u_ids = [*set(random_ids)]
-    # u_ids = []
+    # random_ids = random.sample(range(1000, 10000), limit)  # 4-digits random number sample selection with limit
+    # u_ids = [*set(random_ids)]
+    u_ids = []
     names = []
     emails = []
-    for u in u_ids:
+    for u in range(limit):
         names.append(f'N-:{str(u)}')
         emails.append(f'@Email-:{str(u)}')
 
@@ -33,8 +33,6 @@ def read_data(*, data_code: int):
 
 
 if __name__ == '__main__':
-    # pass
-    # print(read_data(data_code=1))
     synthesize_data(limit=1)
     synthesize_data(limit=10)
     synthesize_data(limit=100)

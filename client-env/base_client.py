@@ -13,7 +13,6 @@ grpc_gevent.init_gevent()
 class LocustInterceptor(ClientInterceptor):
     def __init__(self, environment, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.env = environment
 
     def intercept(
@@ -59,6 +58,4 @@ class BaseUser(User):
         self._channel = grpc.insecure_channel(self.host)
         interceptor = LocustInterceptor(environment=environment)
         self._channel = grpc.intercept_channel(self._channel, interceptor)
-        self.tasks
-
         self.stub = self.stub_class(self._channel)
