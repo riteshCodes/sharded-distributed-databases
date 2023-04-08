@@ -33,8 +33,9 @@ class LocustInterceptor(ClientInterceptor):
             response_length = response.result().ByteSize()
         except grpc.RpcError as e:
             exception = e
+
         self.env.events.request.fire(
-            request_type="grpc",
+            request_type="client-middleware",
             name=call_details.method,
             response_time=response_time * 1000,
             response_length=response_length,
@@ -58,5 +59,6 @@ class BaseUser(User):
         self._channel = grpc.insecure_channel(self.host)
         interceptor = LocustInterceptor(environment=environment)
         self._channel = grpc.intercept_channel(self._channel, interceptor)
+        self.tasks
 
         self.stub = self.stub_class(self._channel)

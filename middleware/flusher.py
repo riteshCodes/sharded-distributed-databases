@@ -5,7 +5,6 @@ from pathlib import Path
 from main import MWare
 
 m_ware = MWare()
-m_ware.flush_all()
 print('Before Flushing (Key-Space Information):')
 print(m_ware.key_space_inf())
 print('\n')

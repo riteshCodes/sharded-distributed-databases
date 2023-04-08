@@ -163,11 +163,18 @@ def set_multiples(*, stub, **mapping):
     stub.setMultiple(Dict(data=dict_data))
 
 
-def del_keys(*, stub, k_list: list = None):
+def del_single(*, stub, k_list: list = None):
     keys = KeyList().key_list
 
     for k in k_list:
         keys.append(Key(key=k))
+
+    return stub.delKeys(KeyList(key_list=keys))
+
+
+def del_multiples(*, stub, k):
+    keys = KeyList().key_list
+    keys.append(Key(key=k))
 
     return stub.delKeys(KeyList(key_list=keys))
 
