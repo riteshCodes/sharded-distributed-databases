@@ -17,6 +17,7 @@ def synthesize_data(*, limit: int):
     names = []
     emails = []
     for u in range(limit):
+        u_ids.append(u)
         names.append(f'N-:{str(u)}')
         emails.append(f'@Email-:{str(u)}')
 

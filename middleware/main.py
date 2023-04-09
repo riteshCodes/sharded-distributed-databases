@@ -34,7 +34,14 @@ class MWare:
             pipe[node] = pool.pipeline(transaction=True)
         return pipe
 
-    def get_all(self, *, key_list: list = None):
+    def get_single(self, *, key_list: list = None):
+        keys = uid(k_list=key_list)
+
+        node = self.sharder.get_node_url(shard_key=keys[0])
+
+        return [self.redis_db[node].hgetall(keys[0])]
+
+    def get_multiple(self, *, key_list: list = None):
         """
         get_all (selection) retrieves all key-value pairs (data) from the given key_list in the database
         :param key_list: list of keys from which data is fetched
@@ -189,7 +196,7 @@ class MWare:
 
         return 'OK'
 
-    def del_keys(self, *, key_list: list = None):
+    def del_multiple(self, *, key_list: list = None):
         """
         del_keys (deletion) deletes all given key list from the database
         :param key_list: key list to delete
@@ -209,6 +216,21 @@ class MWare:
 
         for p in pipe.values():
             p.execute(), p.close()
+
+        return 'OK'
+
+    def del_single(self, *, key_list: list = None):
+        """
+        del_single (deletion) delete given single key from key list from the database
+        :param key_list: key list to delete (with single key)
+        :return: None: if successful, KeyError: if the key to delete is not present in the database
+        """
+        if key_list is None:
+            raise TypeError('None type passed as argument (hash_key_list=None)')
+        keys = uid(k_list=key_list)
+
+        node = self.sharder.get_node_url(shard_key=keys[0])
+        self.redis_db[node].delete(keys[0])
 
         return 'OK'
 

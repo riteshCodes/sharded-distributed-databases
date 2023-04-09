@@ -104,7 +104,7 @@ class RedisClientLoad(User):
         except Exception as e:
             report_failure(env=self.environment, method_name="set_single", start_time=start_time, exception=e)
 
-    @task(1)
+    @task(2)
     def set_multiples_task(self):
         start_time = time.time()
 

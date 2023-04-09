@@ -19,21 +19,21 @@ class TestMiddlewareOperations(unittest.TestCase):
     def test_set_get_single(self):
         self.assertEqual(self.test.set_to(key=self.random_key, name='single_set_name', email='single_set_email'), 'OK')
         expected = [{'name': 'single_set_name', 'email': 'single_set_email'}]
-        self.assertEqual(expected, self.test.get_all(key_list=[self.random_key]))
+        self.assertEqual(expected, self.test.get_single(key_list=[self.random_key]))
 
     def test_set_get_multiples(self):
         self.assertEqual('OK',
                          self.test.set_multiples(key_list=self.test_uids, name_list=self.test_names,
                                                  email_list=self.test_emails))
-        total_kv_pairs = len(self.test.get_all(key_list=self.test_uids))
+        total_kv_pairs = len(self.test.get_multiple(key_list=self.test_uids))
         self.assertEqual(len(self.test_uids), total_kv_pairs)
-        self.assertEqual(len(self.test.get_all(key_list=[0, 1, 2, 3])), 4)
+        self.assertEqual(len(self.test.get_multiple(key_list=[0, 1, 2, 3])), 4)
 
     def test_update_get_values(self):
         self.test.update_values(key_list=[0, 1, 88], name='updated_names', email='updated_emails',
                                 test='test_field_update')
         expected = {'name': 'updated_names', 'email': 'updated_emails', 'test': 'test_field_update'}
-        actual = self.test.get_all(key_list=[0, 1, 88])
+        actual = self.test.get_multiple(key_list=[0, 1, 88])
         for d in actual:
             self.assertDictEqual(expected, d)
 
@@ -55,14 +55,14 @@ class TestMiddlewareOperations(unittest.TestCase):
 
     def test_del_keys_fields(self):
         self.test.del_fields(key_list=[10, 11], fields=['email'])
-        actual = self.test.get_all(key_list=[10, 11])
+        actual = self.test.get_multiple(key_list=[10, 11])
         expected = [{'name': 'N-:11'}, {'name': 'N-:10'}]
 
         self.assertDictEqual(expected[0], actual[0])
         self.assertDictEqual(expected[1], actual[1])
 
-        self.test.del_keys(key_list=[27])
-        self.assertEqual([{}], self.test.get_all(key_list=[27]))
+        self.test.del_single(key_list=[27])
+        self.assertEqual([{}], self.test.get_single(key_list=[27]))
 
     @classmethod
     def tearDownClass(cls) -> None:

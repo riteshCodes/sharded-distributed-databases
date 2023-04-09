@@ -4,6 +4,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 
 # Path to profiling data
 TEST_REPORT_PATH = path.join(path.dirname(Path(__file__)), Path('test_reports'))
@@ -18,11 +19,51 @@ def save_file_to(*, client_folder: str, configuration: str):
                      Path('extracted_stats.xlsx'))
 
 
-def get_data(*, client_nr, configuration, header_value=0, with_columns=None, warm_up_time):
+def saver(configuration):
+    if configuration == 'direct_client':
+        report_path = path.join(TEST_REPORT_PATH, Path('throughput/Increasing_Clients/direct_client/'),
+                                Path('extracted_stats.xlsx'))
+    else:
+        report_path = path.join(TEST_REPORT_PATH, Path('throughput/Increasing_Clients/client-env/'),
+                                Path(configuration),
+                                Path('extracted_stats.xlsx'))
+    return report_path
+
+
+def vis_path(eval_type):
+    return path.join(TEST_REPORT_PATH, Path('Visualization'), Path(eval_type))
+
+
+def workload_path(*, configuration):
+    """
+    Path containing workload with User Counts (Clients), Average Response Time and Average Throughput
+    :param configuration: for middleware
+    :return:
+    """
+    if configuration == 'direct_client':
+        report_path = path.join(TEST_REPORT_PATH, Path('throughput/Increasing_Clients/direct_client/'),
+                                Path('workload.xlsx'))
+    else:
+        report_path = path.join(TEST_REPORT_PATH, Path('throughput/Increasing_Clients/client-env/'),
+                                Path(configuration),
+                                Path('workload.xlsx'))
+    return report_path
+
+
+def get_data(*, eval_type, client_nr, configuration, header_value=0, with_columns=None, warm_up_time):
     if with_columns is None:
         with_columns = ['Timestamp', 'Requests/s', 'User Count', 'Total Average Response Time']
 
-    report_path = get_file_path(configuration=configuration, client_folder=client_nr)
+    # report_path = get_file_path(configuration=configuration, client_folder=client_nr)
+
+    if configuration == 'direct_client':
+        report_path = path.join(TEST_REPORT_PATH, Path('throughput'), Path(eval_type), Path(client_nr),
+                                Path('direct_client'),
+                                Path('test_report_stats_history.csv'))
+    else:
+        report_path = path.join(TEST_REPORT_PATH, Path('throughput'), Path(eval_type), Path(client_nr),
+                                Path('client-env'),
+                                Path(configuration), Path('test_report_stats_history.csv'))
 
     data_frame = pd.read_csv(report_path, header=header_value,
                              usecols=with_columns).dropna()
@@ -34,38 +75,134 @@ def get_data(*, client_nr, configuration, header_value=0, with_columns=None, war
     data_frame = data_frame.drop(data_frame.iloc[:warm_up_time].index)
 
     # Store extracted data
-    data_frame.to_excel(save_file_to(client_folder=client_nr, configuration=configuration), index=False)
+    # data_frame.to_excel(save_file_to(client_folder=client_nr, configuration=configuration), index=False)
+    # data_frame.to_excel(saver(configuration), index=False)
+    # data_frame.to_excel(saver(configuration=configuration), index=False)
 
     return data_frame
 
 
-def visualize_throughput(*, client_nr, configuration, warm_up_time, nth_value, results_from):
+def get_data_client_load(*, configuration, header_value=0, with_columns=None):
+    if with_columns is None:
+        with_columns = ['Requests/s', 'User Count', 'Total Average Response Time']
+
+    if configuration == 'direct_client':
+        report_path = path.join(TEST_REPORT_PATH, Path('throughput'),
+                                Path('Increasing_Clients/direct_client'),
+                                Path('test_report_stats_history.csv'))
+
+    else:
+        report_path = path.join(TEST_REPORT_PATH, Path('throughput/Increasing_Clients'),
+                                Path('client-env'),
+                                Path(configuration), Path('test_report_stats_history.csv'))
+
+    data_frame = pd.read_csv(report_path, header=header_value,
+                             usecols=with_columns).dropna()
+
+    data_frame = data_frame.loc[(data_frame['User Count'] != 0)]
+
+    # result = data_frame.groupby('User Count')['Requests/s'].mean().reset_index()
+
+    result = data_frame.groupby('User Count')[['Requests/s', 'Total Average Response Time']].mean().reset_index()
+
+    result.to_excel(workload_path(configuration=configuration), index=False)
+
+    return result
+
+
+def throughput_client_load(mware_configurations):
+    df_baseline = get_data_client_load(configuration='direct_client')
+    client_load = df_baseline['User Count'].values  # default x-axis values
+
+    # Baseline plot
+    df_baseline_rps = df_baseline['Requests/s'].values  # y-axis values
+    plt.plot(client_load, df_baseline_rps, label='Baseline')
+
+    # Middleware configurations and plot
+    for c in mware_configurations:
+        df = get_data_client_load(configuration=c)
+
+        df_rps = df['Requests/s'].values  # y-axis values
+        config_mware = [val for val in re.findall(r'\d+', c)][0]
+        plt.plot(client_load, df_rps, label=f'M:{config_mware}')
+
+    plt.xlabel(r'Number of Clients (Concurrent Client Load)')
+    plt.ylabel('Average Requests Per Second (requests/sec)')
+
+    plt.legend(framealpha=1, bbox_to_anchor=(1, 1), loc="upper left")
+    plt.grid(True)
+
+    plt.savefig(path.join(vis_path(eval_type='Throughput'), f'throughput(rps).pdf'), dpi=2400, bbox_inches="tight")
+    plt.savefig(path.join(vis_path(eval_type='Throughput'), f'throughput(rps).svg'), dpi=2400, bbox_inches="tight")
+    plt.show()
+
+
+def response_time_load(mware_configurations=None):
+    with_columns = ['User Count', 'Total Average Response Time']
+    df_baseline = pd.read_excel(workload_path(configuration='direct_client'), header=0, usecols=with_columns).dropna()
+
+    client_load = df_baseline['User Count'].values  # default x-axis values
+    # Baseline plot
+    df_baseline_rps = df_baseline['Total Average Response Time'].values  # y-axis values
+    plt.plot(client_load, df_baseline_rps, label='Baseline')
+    """
+    # Middleware configurations and plot
+    for c in mware_configurations:
+        df = pd.read_excel(workload_path(configuration=c), header=0, usecols=with_columns).dropna()
+
+        df_avg_rt = df['Total Average Response Time'].values  # y-axis values
+        config_mware = [val for val in re.findall(r'\d+', c)][0]
+        plt.plot(client_load, df_avg_rt, label=f'M:{config_mware}')
+"""
+    # Plot configurations
+    plt.xlabel(r'Number of Clients (Concurrent Client Load)')
+    plt.ylabel('Average Response Time (ms)')
+    plt.legend(framealpha=1, bbox_to_anchor=(1, 1), loc="upper left")
+    plt.grid(True)
+
+    plt.savefig(path.join(vis_path(eval_type='Response_Time'), f'avg_response_time.pdf'), dpi=2400, bbox_inches="tight")
+    plt.savefig(path.join(vis_path(eval_type='Response_Time'), f'avg_response_time.svg'), dpi=2400, bbox_inches="tight")
+    plt.show()
+
+
+def visualize_throughput(*, eval_type, client_nr, configuration, warm_up_time, nth_value, results_from):
     default_timestamps = None
 
     for c in configuration:
-        df = get_data(client_nr=client_nr, configuration=c, warm_up_time=warm_up_time)
+        df = get_data(eval_type=eval_type, client_nr=client_nr, configuration=c, warm_up_time=warm_up_time)
 
         start_time = df['Timestamp'].values[0]
         df.loc[:, 'Timestamp'] = df['Timestamp'].apply(lambda t: t - start_time)
 
         # Get always nth rows from the data, example: every 5 seconds, 10 seconds etc.
+        # df = df.iloc[::nth_value]
         df = df[df['Timestamp'] % nth_value == 0]
 
-        df.loc[:, 'Timestamp'] = df['Timestamp'].apply(lambda t: '{:02d}:{:02d}'.format(*divmod(t, 60)))
+        # df.loc[:, 'Timestamp'] = df['Timestamp'].apply(lambda t: '{:02d}:{:02d}'.format(*divmod(t, 60)))
 
         stats_df = df.head(results_from)  # Get from 00:00 to 02:00
-        df_timestamps = stats_df['Timestamp'].values  # x-axis values
+        # df_timestamps = stats_df['Timestamp'].values  # x-axis values
+        df_timestamps = ['{:02d}:{:02d}'.format(*divmod(t, 60)) for t in range(0, 61, 5)]
+
         df_rps = stats_df['Requests/s'].values  # y-axis values
 
         config_mware = [val for val in re.findall(r'\d+', c)][0]
+
+        """
+        if config_mware == '4':
+            df_timestamps = df_timestamps[:-1]
+            df_rps = df_rps[:-1]
+        """
         plt.plot(df_timestamps, df_rps, label=f'M:{config_mware}')
 
         default_timestamps = df_timestamps
 
     # Base_line
-    base_line = get_data(client_nr=client_nr, configuration='direct_client', warm_up_time=warm_up_time)
+    base_line = get_data(eval_type=eval_type, client_nr=client_nr, configuration='direct_client',
+                         warm_up_time=warm_up_time)
     # base_line = base_line.iloc[::nth_value]
 
+    # base_line = base_line.iloc[::nth_value]
     base_line = base_line[base_line['Timestamp'] % nth_value == 0]
 
     base_line_df = base_line.head(results_from)  # Get from 00:00 to 02:00
@@ -74,22 +211,23 @@ def visualize_throughput(*, client_nr, configuration, warm_up_time, nth_value, r
     plt.plot(default_timestamps, df_baseline_rps, label='Baseline')
 
     # Plot configurations
-    plt.title('Throughput Overview [1 Client]')
+
+    # plt.title('Average Throughput Overview')
     plt.xlabel(r'Elapsed Time (min:sec)')
     plt.ylabel('Requests Per Second (requests/sec)')
 
     # Limits ranges
-    plt.ylim([0, 500])
+    # plt.ylim([0, 500])
     # plt.gca().set_ylim(top=400)
 
     plt.xticks(rotation=60)
-    plt.tick_params(axis='x', which='major', labelsize=8)
-    plt.subplots_adjust(bottom=0.15)
-
-    plt.legend(framealpha=1, loc="upper right")
+    plt.tick_params(axis='x', which='major')  # 8 default
+    plt.subplots_adjust(bottom=0.18)
+    plt.legend(framealpha=1, bbox_to_anchor=(1, 1), loc="upper left")
     plt.grid(True)
-    plt.savefig(path.join(TEST_REPORT_PATH, Path(client_nr), 'throughput(rps).pdf'), dpi=2400)
-    plt.savefig(path.join(TEST_REPORT_PATH, Path(client_nr), 'throughput(rps).svg'), dpi=2400)
+
+    plt.savefig(path.join(TEST_REPORT_PATH, f'throughput(rps)_{client_nr}.pdf'), dpi=2400, bbox_inches="tight")
+    plt.savefig(path.join(TEST_REPORT_PATH, f'throughput(rps)_{client_nr}.svg'), dpi=2400, bbox_inches="tight")
     plt.show()
 
 
@@ -154,9 +292,21 @@ if __name__ == '__main__':
                          configuration=['client_mware_1_db', 'client_mware_2_db',
                                         'client_mware_4_db', 'client_mware_6_db'],
                          warm_up_time=0, nth_value=5, results_from=24)
-    """
+    
 
     visualize_response_time(client_nr='client_stable_1',
                             configuration=['client_mware_1_db', 'client_mware_2_db',
                                            'client_mware_4_db', 'client_mware_6_db'],
                             warm_up_time=10, nth_value=5, results_from=24)
+    
+    visualize_throughput(client_nr='100_Client',
+                         configuration=['1_DB', '2_DB', '4_DB', '6_DB'],
+                         warm_up_time=10, nth_value=5, results_from=13)
+    
+    visualize_throughput_client_load(mware_configurations=['1_DB', '2_DB', '4_DB', '6_DB'])
+    """
+    # response_time_load(mware_configurations=['1_DB', '2_DB', '4_DB', '6_DB'])
+
+    visualize_throughput(eval_type='Elapsed_Time', client_nr='1_Client',
+                         configuration=['1_DB', '2_DB', '4_DB', '6_DB'],
+                         warm_up_time=10, nth_value=5, results_from=13)
