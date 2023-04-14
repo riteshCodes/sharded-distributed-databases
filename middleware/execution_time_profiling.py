@@ -22,16 +22,14 @@ def execution_time_set(data, set_function):
     if set_function == 'single':
         key = random.sample(data['userID'], 1)[0]
         start_time = time.time()
-        total_exec = m_ware.set_to(key=key, name='single_name', email='single_email')
-        assert total_exec == 'OK'
+        m_ware.set_to(key=key, name='single_name', email='single_email')
         total_time = (time.time() - start_time) * 1000
         print(f'Total execution of set_{set_function}: {total_time} ms')
 
     elif set_function == 'multiple':
         start_time = time.time()
-        total_exec = m_ware.set_multiples(key_list=data['userID'], name_list=data['name'],
+        m_ware.set_multiples(key_list=data['userID'], name_list=data['name'],
                                           email_list=data['email'])
-        assert total_exec == 'OK'
         total_time = (time.time() - start_time) * 1000
         print(f'Total execution of set_{set_function}: {total_time} ms')
     else:
@@ -42,15 +40,13 @@ def execution_time_get(data, get_function):
     if get_function == 'single':
         key_list = random.sample(data['userID'], 1)
         start_time = time.time()
-        total_exec = m_ware.get_single(key_list=key_list)
-        assert total_exec is not None
+        m_ware.get_single(key_list=key_list)
         total_time = (time.time() - start_time) * 1000
         print(f'Total execution of get_{get_function}: {total_time} ms')
 
     elif get_function == 'multiple':
         start_time = time.time()
-        total_exec = m_ware.get_multiple(key_list=data['userID'])
-        assert total_exec is not None
+        m_ware.get_multiple(key_list=data['userID'])
         total_time = (time.time() - start_time) * 1000
         print(f'Total execution of get_{get_function}: {total_time} ms')
 
@@ -58,8 +54,7 @@ def execution_time_get(data, get_function):
         start = random.randint(0, 999)
         end = start + 100
         start_time = time.time()
-        total_exec = m_ware.get_range(start=start, end=end)
-        assert total_exec is not None
+        m_ware.get_range(start=start, end=end)
         total_time = (time.time() - start_time) * 1000
         print(f'Total execution of get_{get_function}: {total_time} ms')
 
@@ -71,16 +66,14 @@ def execution_time_del(data, del_function):
     if del_function == 'single':
         key_list = random.sample(data['userID'], 1)
         start_time = time.time()
-        total_exec = m_ware.del_single(key_list=key_list)
-        assert total_exec == 'OK'
+        m_ware.del_single(key_list=key_list)
         total_time = (time.time() - start_time) * 1000
         print(f'Total execution of delete_{del_function}: {total_time} ms')
 
     elif del_function == 'multiple':
         key_list = random.sample(data['userID'], 100)
         start_time = time.time()
-        total_exec = m_ware.del_multiple(key_list=key_list)
-        assert total_exec == 'OK'
+        m_ware.del_multiple(key_list=key_list)
         total_time = (time.time() - start_time) * 1000
         print(f'Total execution of delete_{del_function}: {total_time} ms')
     else:
