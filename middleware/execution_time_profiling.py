@@ -4,14 +4,13 @@ import time
 import timeit
 from os import path
 from pathlib import Path
-
 from main import MWare
 
 m_ware = MWare()
 
 
 def get_file_path(*, data_code):
-    return path.join(path.dirname(Path(__file__)), Path('synthetic_data'), Path(f'data-{data_code}-file.json'))
+    return path.join(path.dirname(Path(__file__)), Path('test_data'), Path(f'data-{data_code}-file.json'))
 
 
 def read_data(*, data_code: int):
@@ -39,7 +38,7 @@ def execution_time_set(data, set_function):
         print(f'{set_function} : function not defined')
 
 
-def execution_time_get(data, get_function, keys=None, start=0, end=0):
+def execution_time_get(data, get_function):
     if get_function == 'single':
         key_list = random.sample(data['userID'], 1)
         start_time = time.time()
