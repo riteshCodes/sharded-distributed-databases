@@ -17,7 +17,7 @@ def generate_summary(*, log_path, fct_list):
         # Write the filtered logs to separate files
         # with open(f'{fct}.log', 'w') as log_file:
         #    log_file.writelines(fct_logs)
-
+        """
         # Find the first and last minute
         warm_up = min(timestamps)
         start_time = max([ts for ts in timestamps if ts <= warm_up + timedelta(minutes=2)])
@@ -30,9 +30,11 @@ def generate_summary(*, log_path, fct_list):
 
         # Total runtime = 3 minutes (including warm-up time and cool-down time)
         # Total evaluation runtime = 2 Minutes
-
+        """
         # Logs for evaluation
-        filtered_logs = [line for line, ts in zip(fct_logs, timestamps) if start_time <= ts <= end_time]
+        # filtered_logs = [line for line, ts in zip(fct_logs, timestamps) if start_time <= ts <= end_time]
+
+        filtered_logs = fct_logs
 
         # Save filtered logs in a file
         with open(f'{fct}.log', 'w') as log_file:
@@ -77,7 +79,19 @@ if __name__ == '__main__':
     log_file_path = get_file_path(log_from='03-April')
     res_fct_1, fct_iter_1 = generate_summary(log_path=log_file_path, fct='get_range')
 
-    """
+    
+
     log_file_path = get_file_path(log_from='08-April', mware_config='1_DB', client_load='1_Client')
     generate_summary(log_path=log_file_path,
                      fct_list=['set_to', 'set_multiples', 'del_keys', 'get_all', 'get_range'])
+    
+    """
+    test = '09-April'
+    log_file_path = get_file_path(log_from=test, mware_config='6_DB', client_load='100_Client')
+    if test == '08-April':
+        generate_summary(log_path=log_file_path,
+                         fct_list=['set_to', 'set_multiples', 'del_keys', 'get_all', 'get_range'])
+    else:
+        generate_summary(log_path=log_file_path,
+                         fct_list=['set_to', 'set_multiples', 'del_single', 'del_multiple', 'get_single',
+                                   'get_multiple', 'get_range'])

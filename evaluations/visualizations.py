@@ -44,9 +44,9 @@ def workload_path(*, configuration):
         report_path = path.join(TEST_REPORT_PATH, Path('throughput/Increasing_Clients/direct_client/'),
                                 Path('workload.xlsx'))
     else:
-        report_path = path.join(TEST_REPORT_PATH, Path('throughput/Increasing_Clients/client-env/'),
+        report_path = path.join(path.dirname(Path(__file__)), Path('response_time_increasing_clients/'),
                                 Path(configuration),
-                                Path('workload.xlsx'))
+                                Path('aggregated_workload.xlsx'))
     return report_path
 
 
@@ -137,8 +137,9 @@ def throughput_client_load(mware_configurations):
     plt.show()
 
 
-def response_time_load(mware_configurations=None):
-    with_columns = ['User Count', 'Total Average Response Time']
+def response_time_load(mware_configurations=None, comparion=False):
+    """
+
     df_baseline = pd.read_excel(workload_path(configuration='direct_client'), header=0, usecols=with_columns).dropna()
 
     client_load = df_baseline['User Count'].values  # default x-axis values
@@ -146,22 +147,66 @@ def response_time_load(mware_configurations=None):
     df_baseline_rps = df_baseline['Total Average Response Time'].values  # y-axis values
     plt.plot(client_load, df_baseline_rps, label='Baseline')
     """
+    with_columns = ['Requests/s', 'User Count', 'Total Average Response Time']
+
+    baseline_path = path.join(path.dirname(Path(__file__)), Path('response_time_increasing_clients'),
+                              Path('direct_client'))
+    df_baseline = pd.read_csv(path.join(baseline_path, Path('test_report_stats_history.csv')), header=0,
+                              usecols=with_columns).dropna()
+
+    # df_baseline = pd.read_csv(path.join(baseline_path, Path('aggregated_workload.csv')), header=0,usecols=with_columns).dropna()
+
+    df_baseline = df_baseline.loc[(df_baseline['User Count'] != 0)]
+    # df = df.drop(data_frame.iloc[:warm_up_time].index)
+
+    result = df_baseline.groupby('User Count')[['Requests/s', 'Total Average Response Time']].mean().reset_index()
+
+    # result.to_excel(path.join(baseline_path, Path('aggregated_workload.xlsx')), index=False)
+
+    # get first 10 rows
+    result = result.head(5)
+
+    client_load = result['User Count'].values  # default x-axis values
+    # Baseline plot
+    df_baseline_rt = result['Total Average Response Time'].values  # y-axis values
+    plt.plot(client_load, df_baseline_rt, label='Baseline')
+
     # Middleware configurations and plot
     for c in mware_configurations:
-        df = pd.read_excel(workload_path(configuration=c), header=0, usecols=with_columns).dropna()
+        report_path = path.join(path.dirname(Path(__file__)), Path('response_time_increasing_clients'), Path(c),
+                                Path('test_report_stats_history.csv'))
+        df = pd.read_csv(report_path, header=0, usecols=with_columns).dropna()
 
-        df_avg_rt = df['Total Average Response Time'].values  # y-axis values
+        df = df.loc[(df['User Count'] != 0)]
+        # df = df.drop(data_frame.iloc[:warm_up_time].index)
+
+        result = df.groupby('User Count')[['Requests/s', 'Total Average Response Time']].mean().reset_index()
+
+        # result.to_excel(workload_path(configuration=c), index=False)
+
+        # get first 10 rows
+        result = result.head(5)
+
+        # df = pd.read_excel(workload_path(configuration=c), header=0, usecols=with_columns).dropna()
+        # client_load = result['User Count'].values  # default x-axis values
+        df_avg_rt = result['Total Average Response Time'].values  # y-axis values
         config_mware = [val for val in re.findall(r'\d+', c)][0]
         plt.plot(client_load, df_avg_rt, label=f'M:{config_mware}')
-"""
+
     # Plot configurations
     plt.xlabel(r'Number of Clients (Concurrent Client Load)')
     plt.ylabel('Average Response Time (ms)')
     plt.legend(framealpha=1, bbox_to_anchor=(1, 1), loc="upper left")
     plt.grid(True)
 
-    plt.savefig(path.join(vis_path(eval_type='Response_Time'), f'avg_response_time.pdf'), dpi=2400, bbox_inches="tight")
-    plt.savefig(path.join(vis_path(eval_type='Response_Time'), f'avg_response_time.svg'), dpi=2400, bbox_inches="tight")
+    ax = plt.gca()
+    yticks = np.arange(0, 450, 50)
+    ax.set_yticks(yticks)
+
+    plt.savefig(path.join(vis_path(eval_type='Response_Time_Combined'), f'avg_response_time_zoomed_5.pdf'), dpi=2400,
+                bbox_inches="tight")
+    plt.savefig(path.join(vis_path(eval_type='Response_Time_Combined'), f'avg_response_time_zoomed_5.svg'), dpi=2400,
+                bbox_inches="tight")
     plt.show()
 
 
@@ -305,8 +350,10 @@ if __name__ == '__main__':
     
     visualize_throughput_client_load(mware_configurations=['1_DB', '2_DB', '4_DB', '6_DB'])
     """
-    # response_time_load(mware_configurations=['1_DB', '2_DB', '4_DB', '6_DB'])
+    response_time_load(mware_configurations=['1_DB', '2_DB', '4_DB', '6_DB'])
 
+    """
     visualize_throughput(eval_type='Elapsed_Time', client_nr='1_Client',
                          configuration=['1_DB', '2_DB', '4_DB', '6_DB'],
                          warm_up_time=10, nth_value=5, results_from=13)
+    """

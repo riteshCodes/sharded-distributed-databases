@@ -1,5 +1,3 @@
-import random
-
 import grpc
 from protos.comm_pb2 import *
 from protos.comm_pb2_grpc import CommunicationServiceStub
@@ -18,7 +16,7 @@ def run(*, host_address='localhost', port='6379'):
     u_ids = []
     names = []
     emails = []
-    for i in range(1000):
+    for i in range(10):
         u_ids.append(i)
         names.append(f'N-:{str(i)}')
         emails.append(f'@Email-:{str(i)}')
@@ -32,14 +30,12 @@ def run(*, host_address='localhost', port='6379'):
             # latency_request(stub=stub, iterations=1000)
 
             # execution_time_set(stub=stub, set_function='single', iterations=10, data=data)
-            # execution_time_set(stub=stub, set_function='single', iterations=None, data=data)
-            # execution_time_set(stub=stub, set_function='multiple', iterations=None, data=data)
+            # execution_time_set(stub=stub, set_function='multiple', iterations=10, data=data)
 
             # latency_set(stub=stub, set_function='single', iterations=10, data=data)
             # latency_set(stub=stub, set_function='multiple', iterations=10, data=data)
 
-            # execution_time_get(stub=stub, get_function='range', iterations=None, start=0, end=999)
-            # latency_get(stub=stub, get_function='range', iterations=10, start=0, end=999)
+            # execution_time_get(stub=stub, get_function='single', iterations=10)
             # execution_time_get(stub=stub, get_function='multiple', iterations=10, keys=u_ids)
 
             # latency_get(stub=stub, get_function='single', iterations=10, keys=data.get('userID'))
@@ -49,20 +45,16 @@ def run(*, host_address='localhost', port='6379'):
             # latency_del(stub=stub, iterations=10, keys=data.get('userID'))
 
             # Connection Test
-            # test_connection(stub=stub, message="CONNECTION TEST")
+            test_connection(stub=stub, message="CONNECTION TEST")
 
-            # Get value from single key
-
-            """
-            print(get_single(stub=stub, key=0))
-             # Set values for single key
+            # Set values for single key
             set_single(stub=stub, userID=0, name="Ritesh", email="Gmail")
-            
+
             # Get value from single key
             print(get_single(stub=stub, key=9))
 
             # Set values to multiple keys
-            set_multiples(stub=stub, userIDList=u_ids, nameList=names, emailList=emails)
+            # set_multiples(stub=stub, userIDList=u_ids, nameList=names, emailList=emails)
 
             # Get values from multiple keys
             print(get_multiples(stub=stub, k_list=[9]))
@@ -75,7 +67,7 @@ def run(*, host_address='localhost', port='6379'):
 
             # Get values from given range of keys
             print(get_range(stub=stub, start=0, end=100))
-            
+            """
             # Site_Name:Total_Keys mapping
             keyspace_info = get_key_space_info(stub=stub)
             print("Total number of keys present in the sites :")
@@ -114,12 +106,6 @@ def run(*, host_address='localhost', port='6379'):
             print('del_multiples')
             print(execution_time(function=del_keys(stub=stub, k_list=u_ids), iterations=10))
             """
-
-            print('del_single_key')
-            print(execution_time(function=del_single(stub=stub, k=u_ids[random.randint(0, 999)]), iterations=10))
-
-            print('del_multiples')
-            print(execution_time(function=del_multiples(stub=stub, k_list=u_ids), iterations=10))
         except KeyboardInterrupt:
             print("KeyboardInterrupt")
             channel.unsubscribe(close)
@@ -143,7 +129,7 @@ def get_key_space_info(*, stub):
 
 
 def get_single(*, stub, key):
-    proto_data = stub.getSingle(Key(key=key))
+    proto_data = await stub.getSingle(Key(key=key))
     dict_data = MessageToDict(proto_data)
     return dict_data
 
@@ -217,9 +203,9 @@ def execution_time(*, function, iterations):
         the cumulative amount of time spent running the main statement.
         :param function: function for time profiling
         :param iterations:
-        :return: execution time
+        :return: execution time (in seconds)
         """
-    return timeit.timeit(lambda: function) * 1000
+    return timeit.timeit(lambda: function, number=iterations)
 
 
 def execution_time_request(*, stub, iterations):
@@ -234,14 +220,14 @@ def execution_time_set(*, stub, set_function, iterations, data):
         total_exec = execution_time(function=set_single(stub=stub,
                                                         userID=data['userID'][0], name=data['name'][0],
                                                         email=data['email'][0]),
-                                    iterations=iterations)
+                                    iterations=iterations) / iterations
 
     elif set_function == 'multiple':
         total_exec = execution_time(function=
                                     set_multiples(stub=stub,
                                                   userIDList=data['userID'], nameList=data['name'],
                                                   emailList=data['email']),
-                                    iterations=iterations)
+                                    iterations=iterations) / iterations
     else:
         print(f'{set_function} : function not defined')
 
@@ -270,16 +256,16 @@ def execution_time_get(*, stub, get_function, iterations, keys=None, start=0, en
     if get_function == 'single':
         total_exec = execution_time(function=
                                     get_single(stub=stub, key=1),
-                                    iterations=iterations)
+                                    iterations=iterations) / iterations
 
     elif get_function == 'multiple':
         total_exec = execution_time(function=
                                     get_multiples(stub=stub, k_list=keys),
-                                    iterations=iterations)
+                                    iterations=iterations) / iterations
     elif get_function == 'range':
         total_exec = execution_time(function=
                                     get_range(stub=stub, start=start, end=end),
-                                    iterations=iterations)
+                                    iterations=iterations) / iterations
     else:
         print(f'{get_function} : function not defined')
 
@@ -299,7 +285,7 @@ def execution_time_del(*, stub, iterations, keys=None):
     """
     total_exec = execution_time(function=
                                 del_multiples(stub=stub, k_list=keys),
-                                iterations=iterations)
+                                iterations=iterations) / iterations
     print(f'Execution time in seconds for deleting {len(keys)} key-value pairs :: {total_exec}')
     return total_exec
 
@@ -390,5 +376,5 @@ def latency_del(*, stub, iterations, keys=None):
 
 
 if __name__ == "__main__":
-    run(host_address='10.0.2.87')
-    # run(host_address='localhost')
+    # run(host_address='10.0.2.87')
+    run(host_address='localhost')
