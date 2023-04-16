@@ -35,7 +35,6 @@ def generate_summary(*, log_path, fct_list):
         # filtered_logs = [line for line, ts in zip(fct_logs, timestamps) if start_time <= ts <= end_time]
 
         filtered_logs = fct_logs
-        total_fct_times = 0
         # Save filtered logs in a file
         with open(f'{fct}.log', 'w') as log_file:
             log_file.writelines(filtered_logs)
@@ -54,9 +53,10 @@ def generate_summary(*, log_path, fct_list):
         print('-----------------------------------------------------')
 
 
-def get_file_path(*, log_from, mware_config, client_load):
-    return path.join(path.dirname(Path(__file__)), Path('middleware_logs'), Path(mware_config),
-                     Path(client_load), Path(f'middleware_{log_from}.log'))
+def get_file_path(*, log_from, mware_config=None, client_load=None):
+    return path.join(path.dirname(Path(__file__)), Path('middleware_logs'), Path('single_client'), Path(mware_config),
+                     Path(f'middleware_{log_from}.log'))
+    # return path.join(path.dirname(Path(__file__)), Path('middleware_logs'), Path(mware_config),  Path(client_load), Path(f'middleware_{log_from}.log'))
 
 
 if __name__ == '__main__':
@@ -86,7 +86,7 @@ if __name__ == '__main__':
                      fct_list=['set_to', 'set_multiples', 'del_keys', 'get_all', 'get_range'])
     
     """
-    test = '09-April'
+    test = '16-April'
     log_file_path = get_file_path(log_from=test, mware_config='6_DB', client_load='1_Client')
     if test == '08-April':
         generate_summary(log_path=log_file_path,

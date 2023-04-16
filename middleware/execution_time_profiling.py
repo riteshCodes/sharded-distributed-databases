@@ -29,7 +29,7 @@ def execution_time_set(data, set_function):
     elif set_function == 'multiple':
         start_time = time.time()
         m_ware.set_multiples(key_list=data['userID'], name_list=data['name'],
-                                          email_list=data['email'])
+                             email_list=data['email'])
         total_time = (time.time() - start_time) * 1000
         print(f'Total execution of set_{set_function}: {total_time} ms')
     else:
@@ -80,6 +80,12 @@ def execution_time_del(data, del_function):
         print(f'{del_function} : function not defined')
 
 
+def execution_time_sharding(*, data, iter_times):
+    random_key_list = random.sample(data['userID'], 1)
+    random_k = ['userID' + ':' + '{:04d}'.format(k) for k in random_key_list][0]
+    return timeit.timeit(lambda: m_ware.sharder.get_node_url(shard_key=random_k), number=iter_times) * 1000
+
+
 if __name__ == '__main__':
     test_data = read_data(data_code=1000)
     execution_time_set(data=test_data, set_function='single')
@@ -89,3 +95,5 @@ if __name__ == '__main__':
     execution_time_get(data=test_data, get_function='range')
     execution_time_del(data=test_data, del_function='single')
     execution_time_del(data=test_data, del_function='multiple')
+    print(f'Sharding processing time for 1000 keys = {execution_time_sharding(data=test_data, iter_times=1000)} ms')
+    print(f'Sharding processing time for 1 key = {execution_time_sharding(data=test_data, iter_times=1)} ms')
