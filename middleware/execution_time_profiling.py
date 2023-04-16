@@ -96,4 +96,5 @@ if __name__ == '__main__':
     execution_time_del(data=test_data, del_function='single')
     execution_time_del(data=test_data, del_function='multiple')
     print(f'Sharding processing time for 1000 keys = {execution_time_sharding(data=test_data, iter_times=1000)} ms')
+    print(f'Sharding processing time for 100 keys = {execution_time_sharding(data=test_data, iter_times=100)} ms')
     print(f'Sharding processing time for 1 key = {execution_time_sharding(data=test_data, iter_times=1)} ms')
