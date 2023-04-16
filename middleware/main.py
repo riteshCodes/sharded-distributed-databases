@@ -41,7 +41,11 @@ class MWare:
 
         node = self.sharder.get_node_url(shard_key=keys[0])
 
-        return [self.redis_db[node].hgetall(keys[0])]
+        start_time = time.time()
+        res = [self.redis_db[node].hgetall(keys[0])]
+        print(f'get_single, response time = {(time.time()-start_time)*1000} ms')
+
+        return res
 
     def get_multiple(self, *, key_list: list = None):
         """
@@ -56,14 +60,17 @@ class MWare:
         for node, pool in self.redis_db.items():
             pipe[node] = pool.pipeline(transaction=True)
 
+
         for k in keys:
             node = self.sharder.get_node_url(shard_key=k)
             pipe[node].hgetall(k)
 
+        start_time = time.time()
         for p in pipe.values():
             result += p.execute()
             p.close()
 
+        print(f'get_multiples, response time = {(time.time() - start_time) * 1000} ms')
         return result
 
     def get_fields(self, *, key_list: list = None, field_list: list = None):
@@ -111,9 +118,11 @@ class MWare:
             node = self.sharder.get_node_url(shard_key=k)
             pipe[node].hgetall(k)
 
+        start_time = time.time()
         for p in pipe.values():
             res += p.execute()
             p.close()
+        print(f'get_range, response time = {(time.time() - start_time) * 1000} ms')
         return res
 
     def set_to(self, *, key: int, **mapping):
@@ -128,7 +137,10 @@ class MWare:
 
         k = 'userID' + ':' + '{:04d}'.format(key)
         site_id = self.sharder.get_node_url(shard_key=k)
+
+        start_time = time.time()
         self.redis_db[site_id].hset(k, mapping=mapping)
+        print(f'set_to, response time = {(time.time() - start_time) * 1000} ms')
 
         return 'OK'
 
@@ -149,8 +161,10 @@ class MWare:
             node = self.sharder.get_node_url(shard_key=k)
             pipe[node].hset(k, mapping={'name': n, 'email': e})
 
+        start_time = time.time()
         for p in pipe.values():
             p.execute(), p.close()
+        print(f'set_multiples, response time = {(time.time() - start_time) * 1000} ms')
 
         return 'OK'
 
@@ -212,12 +226,15 @@ class MWare:
         for node, pool in self.redis_db.items():
             pipe[node] = pool.pipeline(transaction=True)
 
+
         for k in keys:
             node = self.sharder.get_node_url(shard_key=k)
             pipe[node].delete(k)
 
+        start_time = time.time()
         for p in pipe.values():
             p.execute(), p.close()
+        print(f'del_multiples, response time = {(time.time() - start_time) * 1000} ms')
 
         return 'OK'
 
@@ -232,7 +249,10 @@ class MWare:
         keys = uid(k_list=key_list)
 
         node = self.sharder.get_node_url(shard_key=keys[0])
+
+        start_time = time.time()
         self.redis_db[node].delete(keys[0])
+        print(f'del single, response time = {(time.time() - start_time) * 1000} ms')
 
         return 'OK'
 
