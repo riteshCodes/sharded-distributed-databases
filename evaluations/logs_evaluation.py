@@ -35,7 +35,7 @@ def generate_summary(*, log_path, fct_list):
         # filtered_logs = [line for line, ts in zip(fct_logs, timestamps) if start_time <= ts <= end_time]
 
         filtered_logs = fct_logs
-
+        total_fct_times = 0
         # Save filtered logs in a file
         with open(f'{fct}.log', 'w') as log_file:
             log_file.writelines(filtered_logs)
@@ -87,7 +87,7 @@ if __name__ == '__main__':
     
     """
     test = '09-April'
-    log_file_path = get_file_path(log_from=test, mware_config='6_DB', client_load='100_Client')
+    log_file_path = get_file_path(log_from=test, mware_config='6_DB', client_load='1_Client')
     if test == '08-April':
         generate_summary(log_path=log_file_path,
                          fct_list=['set_to', 'set_multiples', 'del_keys', 'get_all', 'get_range'])

@@ -1,3 +1,4 @@
+import time
 from os import path
 from pathlib import Path
 import logging
@@ -23,9 +24,9 @@ mware_logger.info('-------------------------------------------------------------
 
 def log_execution_time(func):
     def wrapper(*args, **kwargs):
-        start_time = perf_counter()
+        start_time = time.time()
         result = func(*args, **kwargs)
-        end_time = perf_counter()
+        end_time = time.time()
         execution_time = end_time - start_time
         mware_logger.info(f'{func.__name__}:{execution_time}')  # Response time is in seconds
         return result
