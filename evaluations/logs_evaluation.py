@@ -41,15 +41,16 @@ def generate_summary(*, log_path, fct_list):
 
         # Extract the response times using a regular expression
         fct_times = [float(re.findall(r":(\d+\.\d+)", line)[0]) for line in filtered_logs]
+        print(fct_times)
         fct_iter = len(fct_times)
         total_fct_times = sum(fct_times)
 
         # Calculate the average response times in milliseconds
-        avg_response_time = (total_fct_times / fct_iter) * 1000
+        avg_response_time = (total_fct_times / fct_iter)
 
         print(f'Average response time for {fct} function (milliseconds): {avg_response_time}')
         print(f'Total requests: {fct_iter}\n')
-        print(f'Total response time for {fct} function: {total_fct_times * 1000}')
+        print(f'Total response time for {fct} function: {total_fct_times}')
         print('-----------------------------------------------------')
 
 
@@ -90,7 +91,7 @@ if __name__ == '__main__':
     
     """
     test = '09-April'
-    log_file_path = get_file_path(log_from=test, mware_config='6_DB', client_load='1_Client')
+    log_file_path = get_file_path(log_from=test, mware_config='1_DB', client_load='1_Client')
     if test == '08-April':
         generate_summary(log_path=log_file_path,
                          fct_list=['set_to', 'set_multiples', 'del_keys', 'get_all', 'get_range'])
