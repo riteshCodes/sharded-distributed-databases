@@ -1,3 +1,5 @@
+import random
+
 import redis
 from configs import REDIS_DB_URL
 
@@ -72,7 +74,7 @@ class RedisClient:
 
         return result
 
-    def set_to(self, *, key: int, **mapping):
+    def set_to(self, *, key: int, mapping):
         """
         set_to (insertion) sets/updates the value to the given key in the database
         :param key: key where the mapping is stored
@@ -169,3 +171,14 @@ def uid(*, k_list: list):
 
     else:
         return ['userID' + ':' + '{:04d}'.format(k) for k in k_list]
+
+
+
+if __name__ == '__main__':
+    key = random.randint(0, 999)  # Random key-generation
+    mapping = {'name': 'single_test', 'email': 'single_test'}
+
+    test = RedisClient()
+
+    response = test.set_to(key=key, mapping=mapping)
+    print(response)

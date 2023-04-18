@@ -54,9 +54,12 @@ def generate_summary(*, log_path, fct_list):
 
 
 def get_file_path(*, log_from, mware_config=None, client_load=None):
+    """
     return path.join(path.dirname(Path(__file__)), Path('middleware_logs'), Path('single_client'), Path(mware_config),
+                     Path(f'middleware_{log_from}.log'))"""
+    return path.join(path.dirname(Path(__file__)), Path('middleware_logs'), Path(mware_config), Path(client_load),
                      Path(f'middleware_{log_from}.log'))
-    # return path.join(path.dirname(Path(__file__)), Path('middleware_logs'), Path(mware_config),  Path(client_load), Path(f'middleware_{log_from}.log'))
+
 
 
 if __name__ == '__main__':
@@ -86,7 +89,7 @@ if __name__ == '__main__':
                      fct_list=['set_to', 'set_multiples', 'del_keys', 'get_all', 'get_range'])
     
     """
-    test = '16-April'
+    test = '09-April'
     log_file_path = get_file_path(log_from=test, mware_config='6_DB', client_load='1_Client')
     if test == '08-April':
         generate_summary(log_path=log_file_path,

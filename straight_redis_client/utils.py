@@ -5,7 +5,7 @@ import json
 
 
 def get_file_path(*, data_code):
-    return path.join(path.dirname(Path(__file__)), Path('test_data'), Path(f'data-{data_code}-file.json'))
+    return path.join(path.dirname(Path(__file__)), Path('synthetic_data'), Path(f'data-{data_code}-file.json'))
 
 
 def synthesize_data(*, limit: int):

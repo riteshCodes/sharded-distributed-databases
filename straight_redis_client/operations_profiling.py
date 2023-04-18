@@ -1,8 +1,8 @@
-from normal_operations import RedisClient
+from baseline_operations import RedisClient
 from time import perf_counter
 import timeit
 
-client = RedisClient()
+client = RedisClient(hash_key='direct_client')
 
 
 def execution_time(*, function, iterations):
@@ -180,4 +180,4 @@ if __name__ == '__main__':
     # latency_get(get_function='range', iterations=10, start=0, end=len(u_ids) - 1)
 
     # execution_time_del(iterations=10, keys=[test_data['userID'][0]])
-    latency_del(iterations=10, keys=test_data['userID'])
+    #latency_del(iterations=10, keys=test_data['userID'])

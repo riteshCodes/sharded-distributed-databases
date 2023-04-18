@@ -331,6 +331,134 @@ def visualize_response_time(*, client_nr, configuration, warm_up_time, nth_value
     plt.show()
 
 
+def set_get_evaluation(client_load='1_Client'):
+    report_path_baseline = path.join(path.dirname(Path(__file__)), Path('test_reports/throughput/Elapsed_Time'),
+                                     Path(client_load), Path('client-env/1_DB/'),
+                                     Path('aggregated.csv'))
+    base_df = pd.read_csv(report_path_baseline, header=0, usecols=['Name', 'Average Response Time'])
+
+    # df = base_df[base_df['Name'].isin(['set_single', 'set_multiples', 'get_single', 'get_multiples'])]
+
+    df = base_df[base_df['Name'].isin(
+        ['/CommunicationService/setSingle', '/CommunicationService/setMultiple', '/CommunicationService/getSingle',
+         '/CommunicationService/getMultiple'])]
+    print(df)
+
+    # Extract values
+    set_single_value = df[df['Name'] == '/CommunicationService/setSingle']['Average Response Time'].values[0]
+    get_single_value = df[df['Name'] == '/CommunicationService/getSingle']['Average Response Time'].values[0]
+    set_multiple_value = df[df['Name'] == '/CommunicationService/setMultiple']['Average Response Time'].values[0]
+    get_multiple_value = df[df['Name'] == '/CommunicationService/getMultiple']['Average Response Time'].values[0]
+
+    operations = ('set', 'get')
+    data = {
+        'single key-value pair': (round(set_single_value, 4), round(get_single_value, 4)),
+        'multiple key-value pairs': (round(set_multiple_value, 4), round(get_multiple_value, 4))
+    }
+
+    x = np.arange(len(operations))  # the label locations
+    width = 0.25  # the width of the bars
+    multiplier = 0
+
+    fig, ax = plt.subplots()
+
+    for attribute, measurement in data.items():
+        offset = width * multiplier
+        rects = ax.bar(x + offset, measurement, width, label=attribute)
+        ax.bar_label(rects, padding=3)
+        multiplier += 1
+
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax.set_ylabel('Average Response Time (ms)')
+    ax.set_xlabel('Operations')
+    ax.set_xticks(x + width, operations)
+
+    ax = plt.gca()
+    yticks = np.arange(0, 75, 5)
+    ax.set_yticks(yticks)
+    ax.legend()
+
+    plt.savefig(path.join(TEST_REPORT_PATH, 'set_get_1_Client_M-1.pdf'), dpi=2400)
+    plt.savefig(path.join(TEST_REPORT_PATH, 'set_get_1_Client_M-1.svg'), dpi=2400)
+
+    plt.show()
+
+
+def set_get_evaluation_baseline(client_load='1_Client'):
+    report_path_baseline = path.join(path.dirname(Path(__file__)), Path('test_reports/throughput/Elapsed_Time'),
+                                     Path(client_load), Path('direct_client'),
+                                     Path('aggregated.csv'))
+    base_df = pd.read_csv(report_path_baseline, header=0, usecols=['Name', 'Average Response Time'])
+
+    single_df = base_df[base_df['Name'].isin(['set_single', 'get_single'])]
+
+    multiples_df = base_df[base_df['Name'].isin(['set_multiples', 'get_multiples'])]
+
+    print(single_df.values)
+    print(multiples_df.values)
+
+    single_get_set = [7.7534715334574384, 1.748488499568059]
+    multiple_get_set = [5248.124063014984, 6683.577720935528] # get, set
+
+    # Create the figure and subplots
+    fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(12, 6))
+
+    ax1.bar(['get_single', 'set_single'], single_get_set, label='single key-value pair', width = 0.4, color='C0')
+    ax1.legend()
+
+    ax2.bar(['get_multiples', 'set_multiples'], multiple_get_set, label='multiple key-value pairs', width = 0.4, color= 'C1')
+    ax2.legend(loc="upper right")
+
+
+    ax1.set(ylabel='Average Response Time Per Operation (milliseconds)')
+
+
+    plt.tight_layout()
+
+
+    plt.savefig(path.join(TEST_REPORT_PATH, 'get_set.pdf'), dpi=2400)
+    plt.savefig(path.join(TEST_REPORT_PATH, 'get_set.svg'), dpi=2400)
+
+    plt.show()
+
+
+"""
+    print(df)
+
+    grouped_df = df.copy()
+    grouped_df['Group'] = df['Name'].str[:3]
+
+    grouped_data = grouped_df.groupby('Group')
+
+    for key, item in grouped_data:
+        print(grouped_data.get_group(key), "\n\n")
+
+
+    # Create a bar plot
+    fig, ax = plt.subplots()
+
+    # Set bar width and positions
+    bar_width = 0.35
+    positions = [0, 1]
+    x_labels = ['set', 'get']
+
+    # Plot bars for each group
+    for index, (group, group_data) in enumerate(grouped_data):
+        ax.bar([p + index * bar_width for p in positions], group_data['Average Response Time'], width=bar_width,
+               label=group)
+
+    # Set labels, title, and legend
+    ax.set_xticks([p + bar_width / 2 for p in positions])
+    ax.set_xticklabels(x_labels)
+    ax.set_xlabel('Operation Type')
+    ax.set_ylabel('Average Response Time')
+    ax.set_title('Average Response Time (Set/Get) 1 Client')
+    ax.legend(df['Name'])
+
+    # Show the plot
+    plt.show()
+"""
+
 if __name__ == '__main__':
     """
     visualize_throughput(client_nr='client_stable_1',
@@ -349,11 +477,14 @@ if __name__ == '__main__':
                          warm_up_time=10, nth_value=5, results_from=13)
     
     visualize_throughput_client_load(mware_configurations=['1_DB', '2_DB', '4_DB', '6_DB'])
-    """
+ 
     response_time_load(mware_configurations=['1_DB', '2_DB', '4_DB', '6_DB'])
 
-    """
+    
     visualize_throughput(eval_type='Elapsed_Time', client_nr='1_Client',
                          configuration=['1_DB', '2_DB', '4_DB', '6_DB'],
                          warm_up_time=10, nth_value=5, results_from=13)
     """
+
+    # set_get_evaluation()
+    set_get_evaluation_baseline()
