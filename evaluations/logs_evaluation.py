@@ -41,7 +41,6 @@ def generate_summary(*, log_path, fct_list):
 
         # Extract the response times using a regular expression
         fct_times = [float(re.findall(r":(\d+\.\d+)", line)[0]) for line in filtered_logs]
-        print(fct_times)
         fct_iter = len(fct_times)
         total_fct_times = sum(fct_times)
 
@@ -90,7 +89,7 @@ if __name__ == '__main__':
                      fct_list=['set_to', 'set_multiples', 'del_keys', 'get_all', 'get_range'])
     
     """
-    test = '09-April'
+    test = '18-April'
     log_file_path = get_file_path(log_from=test, mware_config='1_DB', client_load='1_Client')
     if test == '08-April':
         generate_summary(log_path=log_file_path,
