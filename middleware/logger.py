@@ -26,6 +26,7 @@ def log_execution_time(func):
     def wrapper(*args, **kwargs):
         start_time = time.time()
         result = func(*args, **kwargs)
+        assert result is not None
         end_time = time.time()
         execution_time = (end_time - start_time) * 1000
         mware_logger.info(f'{func.__name__}:{execution_time}')  # Response time is in seconds
