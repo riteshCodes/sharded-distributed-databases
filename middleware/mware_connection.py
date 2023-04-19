@@ -145,7 +145,7 @@ def serve():
     The main serve function of the server.
     This opens the socket, and listens for incoming grpc conformant packets
     """
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=os.cpu_count()))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=64))
     add_CommunicationServiceServicer_to_server(Listener(), server)
     server.add_insecure_port("[::]:6379")
     server.start()
