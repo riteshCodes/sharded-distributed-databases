@@ -1,5 +1,9 @@
+import time
+
 import redis
 from locust import HttpUser, task
+
+import utils
 from configs import REDIS_DB_URL
 
 
@@ -159,3 +163,12 @@ def uid(*, k_list: list):
 
     else:
         return ['userID' + ':' + '{:04d}'.format(k) for k in k_list]
+
+
+if __name__ == '__main__':
+    large_content = utils.read_data(data_code=1000)
+    test = RedisClient()
+    start_time = time.time()
+    test.set_multiples(key_list=large_content['userID'], name_list=large_content['name'],
+                                email_list=large_content['email'])
+    print(f' time taken:  {(time.time() - start_time) * 1000} ms')

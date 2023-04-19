@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Test Report for load_generator.py</title>
+    <title>Test Report for load_generator_normal.py</title>
     <link rel="shortcut icon" href="../static/img/favicon.ico" type="image/x-icon"/>
     <style>
         body {
@@ -120,9 +120,9 @@ table.stats tr.total td {
 
         <div class="info">
             
-            <p>During: <span class="l10n datetime">2023-04-08 17:44:22</span> - <span class="l10n datetime">2023-04-08 17:47:20</span></p>
+            <p>During: <span class="l10n datetime">2023-04-18 12:57:55</span> - <span class="l10n datetime">2023-04-18 12:58:55</span></p>
             <p>Target Host: <span>10.0.2.81:6379</span></p>
-            <p>Script: <span>load_generator.py</span></p>
+            <p>Script: <span>load_generator_normal.py</span></p>
         </div>
 
         <div class="requests">
@@ -147,104 +147,104 @@ table.stats tr.total td {
                         <tr>
                             <td>direct_client</td>
                             <td>del_multiples</td>
-                            <td>17</td>
+                            <td>668</td>
                             <td>0</td>
-                            <td>2</td>
-                            <td>1</td>
                             <td>3</td>
+                            <td>1</td>
+                            <td>11</td>
                             <td>51</td>
-                            <td>0.1</td>
+                            <td>11.1</td>
                             <td>0.0</td>
                         </tr>
                     
                         <tr>
                             <td>direct_client</td>
                             <td>del_single</td>
-                            <td>15</td>
+                            <td>715</td>
                             <td>0</td>
                             <td>1</td>
                             <td>0</td>
-                            <td>2</td>
+                            <td>129</td>
                             <td>51</td>
-                            <td>0.1</td>
+                            <td>11.9</td>
                             <td>0.0</td>
                         </tr>
                     
                         <tr>
                             <td>direct_client</td>
                             <td>get_multiples</td>
-                            <td>16</td>
+                            <td>726</td>
                             <td>0</td>
-                            <td>5248</td>
-                            <td>11</td>
-                            <td>6047</td>
-                            <td>8856</td>
-                            <td>0.1</td>
+                            <td>21</td>
+                            <td>18</td>
+                            <td>77</td>
+                            <td>8056</td>
+                            <td>12.1</td>
                             <td>0.0</td>
                         </tr>
                     
                         <tr>
                             <td>direct_client</td>
                             <td>get_range</td>
-                            <td>13</td>
+                            <td>724</td>
                             <td>0</td>
-                            <td>526</td>
-                            <td>60</td>
-                            <td>618</td>
-                            <td>88</td>
-                            <td>0.1</td>
+                            <td>3</td>
+                            <td>1</td>
+                            <td>64</td>
+                            <td>872</td>
+                            <td>12.1</td>
                             <td>0.0</td>
                         </tr>
                     
                         <tr>
                             <td>direct_client</td>
                             <td>get_single</td>
-                            <td>12</td>
+                            <td>696</td>
                             <td>0</td>
-                            <td>7</td>
-                            <td>1</td>
-                            <td>10</td>
+                            <td>2</td>
+                            <td>0</td>
+                            <td>115</td>
                             <td>88</td>
-                            <td>0.1</td>
+                            <td>11.6</td>
                             <td>0.0</td>
                         </tr>
                     
                         <tr>
                             <td>direct_client</td>
                             <td>set_multiples</td>
-                            <td>13</td>
+                            <td>1440</td>
                             <td>0</td>
-                            <td>6683</td>
-                            <td>6625</td>
-                            <td>6760</td>
+                            <td>24</td>
+                            <td>20</td>
+                            <td>150</td>
                             <td>51</td>
-                            <td>0.1</td>
+                            <td>24.0</td>
                             <td>0.0</td>
                         </tr>
                     
                         <tr>
                             <td>direct_client</td>
                             <td>set_single</td>
-                            <td>13</td>
+                            <td>724</td>
                             <td>0</td>
                             <td>1</td>
-                            <td>1</td>
-                            <td>2</td>
+                            <td>0</td>
+                            <td>115</td>
                             <td>51</td>
-                            <td>0.1</td>
+                            <td>12.1</td>
                             <td>0.0</td>
                         </tr>
                     
                         <tr class="total">
                             <td></td>
                             <td>Aggregated</td>
-                            <td>99</td>
+                            <td>5693</td>
                             <td>0</td>
-                            <td>1796</td>
+                            <td>10</td>
                             <td>0</td>
-                            <td>6760</td>
-                            <td>1483</td>
-                            <td>0.6</td>
+                            <td>150</td>
+                            <td>1180</td>
+                            <td>94.9</td>
                             <td>0.0</td>
                         </tr>
                     
@@ -274,14 +274,14 @@ table.stats tr.total td {
                         <tr>
                             <td>direct_client</td>
                             <td>del_multiples</td>
-                            <td>2</td>
-                            <td>2</td>
-                            <td>2</td>
                             <td>3</td>
                             <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
-                            <td>3</td>
+                            <td>4</td>
+                            <td>4</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>6</td>
+                            <td>12</td>
                         </tr>
                     
                         <tr>
@@ -293,60 +293,60 @@ table.stats tr.total td {
                             <td>2</td>
                             <td>2</td>
                             <td>2</td>
-                            <td>2</td>
-                            <td>2</td>
+                            <td>3</td>
+                            <td>130</td>
                         </tr>
                     
                         <tr>
                             <td>direct_client</td>
                             <td>get_multiples</td>
-                            <td>5900</td>
-                            <td>5900</td>
-                            <td>5900</td>
-                            <td>6000</td>
-                            <td>6000</td>
-                            <td>6000</td>
-                            <td>6000</td>
-                            <td>6000</td>
+                            <td>21</td>
+                            <td>21</td>
+                            <td>22</td>
+                            <td>23</td>
+                            <td>25</td>
+                            <td>31</td>
+                            <td>36</td>
+                            <td>78</td>
                         </tr>
                     
                         <tr>
                             <td>direct_client</td>
                             <td>get_range</td>
-                            <td>550</td>
-                            <td>550</td>
-                            <td>600</td>
-                            <td>600</td>
-                            <td>600</td>
-                            <td>620</td>
-                            <td>620</td>
-                            <td>620</td>
+                            <td>3</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>4</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>8</td>
+                            <td>64</td>
                         </tr>
                     
                         <tr>
                             <td>direct_client</td>
                             <td>get_single</td>
-                            <td>8</td>
-                            <td>8</td>
-                            <td>8</td>
-                            <td>9</td>
-                            <td>9</td>
-                            <td>10</td>
-                            <td>10</td>
-                            <td>10</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>120</td>
                         </tr>
                     
                         <tr>
                             <td>direct_client</td>
                             <td>set_multiples</td>
-                            <td>6700</td>
-                            <td>6700</td>
-                            <td>6700</td>
-                            <td>6700</td>
-                            <td>6700</td>
-                            <td>6800</td>
-                            <td>6800</td>
-                            <td>6800</td>
+                            <td>22</td>
+                            <td>23</td>
+                            <td>23</td>
+                            <td>24</td>
+                            <td>27</td>
+                            <td>30</td>
+                            <td>41</td>
+                            <td>150</td>
                         </tr>
                     
                         <tr>
@@ -357,22 +357,22 @@ table.stats tr.total td {
                             <td>2</td>
                             <td>2</td>
                             <td>2</td>
-                            <td>2</td>
-                            <td>2</td>
-                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>120</td>
                         </tr>
                     
                         <tr class="total">
                             <td></td>
                             <td>Aggregated</td>
-                            <td>8</td>
-                            <td>530</td>
-                            <td>600</td>
-                            <td>5900</td>
-                            <td>6600</td>
-                            <td>6700</td>
-                            <td>6800</td>
-                            <td>6800</td>
+                            <td>3</td>
+                            <td>5</td>
+                            <td>21</td>
+                            <td>22</td>
+                            <td>23</td>
+                            <td>25</td>
+                            <td>35</td>
+                            <td>150</td>
                         </tr>
                     
                 </tbody>
@@ -391,7 +391,7 @@ table.stats tr.total td {
 
         <div id="tasks">
             <h2>Final ratio</h2>
-            <div class="tasks" data-tasks="{&quot;per_class&quot;: {&quot;RedisClientLoad&quot;: {&quot;ratio&quot;: 1.0, &quot;tasks&quot;: {&quot;get_single_task&quot;: {&quot;ratio&quot;: 0.14285714285714285}, &quot;get_multiples_task&quot;: {&quot;ratio&quot;: 0.14285714285714285}, &quot;get_range_task&quot;: {&quot;ratio&quot;: 0.14285714285714285}, &quot;set_single_task&quot;: {&quot;ratio&quot;: 0.14285714285714285}, &quot;set_multiples_task&quot;: {&quot;ratio&quot;: 0.14285714285714285}, &quot;del_multiples_task&quot;: {&quot;ratio&quot;: 0.14285714285714285}, &quot;del_single_task&quot;: {&quot;ratio&quot;: 0.14285714285714285}}}}, &quot;total&quot;: {&quot;RedisClientLoad&quot;: {&quot;ratio&quot;: 1.0, &quot;tasks&quot;: {&quot;get_single_task&quot;: {&quot;ratio&quot;: 0.14285714285714285}, &quot;get_multiples_task&quot;: {&quot;ratio&quot;: 0.14285714285714285}, &quot;get_range_task&quot;: {&quot;ratio&quot;: 0.14285714285714285}, &quot;set_single_task&quot;: {&quot;ratio&quot;: 0.14285714285714285}, &quot;set_multiples_task&quot;: {&quot;ratio&quot;: 0.14285714285714285}, &quot;del_multiples_task&quot;: {&quot;ratio&quot;: 0.14285714285714285}, &quot;del_single_task&quot;: {&quot;ratio&quot;: 0.14285714285714285}}}}}"></div>
+            <div class="tasks" data-tasks="{&quot;per_class&quot;: {&quot;RedisClientLoad&quot;: {&quot;ratio&quot;: 1.0, &quot;tasks&quot;: {&quot;get_single_task&quot;: {&quot;ratio&quot;: 0.125}, &quot;get_multiples_task&quot;: {&quot;ratio&quot;: 0.125}, &quot;get_range_task&quot;: {&quot;ratio&quot;: 0.125}, &quot;set_single_task&quot;: {&quot;ratio&quot;: 0.125}, &quot;set_multiples_task&quot;: {&quot;ratio&quot;: 0.25}, &quot;del_multiples_task&quot;: {&quot;ratio&quot;: 0.125}, &quot;del_single_task&quot;: {&quot;ratio&quot;: 0.125}}}}, &quot;total&quot;: {&quot;RedisClientLoad&quot;: {&quot;ratio&quot;: 1.0, &quot;tasks&quot;: {&quot;get_single_task&quot;: {&quot;ratio&quot;: 0.125}, &quot;get_multiples_task&quot;: {&quot;ratio&quot;: 0.125}, &quot;get_range_task&quot;: {&quot;ratio&quot;: 0.125}, &quot;set_single_task&quot;: {&quot;ratio&quot;: 0.125}, &quot;set_multiples_task&quot;: {&quot;ratio&quot;: 0.25}, &quot;del_multiples_task&quot;: {&quot;ratio&quot;: 0.125}, &quot;del_single_task&quot;: {&quot;ratio&quot;: 0.125}}}}}"></div>
         </div>
 
     </div>
@@ -668,12 +668,12 @@ function fillTasksFromRequest() {
     <script>
         
 var stats_history = {
-    "time": ["17:44:26", "17:44:31", "17:44:36", "17:44:41", "17:44:46", "17:44:51", "17:44:56", "17:45:01", "17:45:06", "17:45:11", "17:45:16", "17:45:21", "17:45:27", "17:45:32", "17:45:37", "17:45:42", "17:45:47", "17:45:52", "17:45:57", "17:46:02", "17:46:07", "17:46:12", "17:46:17", "17:46:22", "17:46:27", "17:46:32", "17:46:37", "17:46:42", "17:46:47", "17:46:52", "17:46:57", "17:47:02", "17:47:07", "17:47:12", "17:47:17", "17:47:22"].map(server_time => new Date(new Date().setUTCHours(...(server_time.split(":")))).toLocaleTimeString()),
-    "user_count": [{"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}],
-    "current_rps": [{"users": 1, "value": 0}, {"users": 1, "value": 0.2}, {"users": 1, "value": 0.2}, {"users": 1, "value": 0.2}, {"users": 1, "value": 1.2}, {"users": 1, "value": 1.2}, {"users": 1, "value": 0.4}, {"users": 1, "value": 0.1}, {"users": 1, "value": 0.1}, {"users": 1, "value": 0.8}, {"users": 1, "value": 0.3}, {"users": 1, "value": 0.2}, {"users": 1, "value": 0.4}, {"users": 1, "value": 0.4}, {"users": 1, "value": 0.4}, {"users": 1, "value": 0.3}, {"users": 1, "value": 0.4}, {"users": 1, "value": 1.0}, {"users": 1, "value": 1.5}, {"users": 1, "value": 0.8}, {"users": 1, "value": 0.8}, {"users": 1, "value": 0.3}, {"users": 1, "value": 0.5}, {"users": 1, "value": 0.2}, {"users": 1, "value": 0.2}, {"users": 1, "value": 0.2}, {"users": 1, "value": 0.2}, {"users": 1, "value": 0.3}, {"users": 1, "value": 0.3}, {"users": 1, "value": 0.1}, {"users": 1, "value": 0.7}, {"users": 1, "value": 0.2}, {"users": 1, "value": 0.2}, {"users": 1, "value": 0.3}, {"users": 1, "value": 0.5}, {"users": 1, "value": 0.4}],
-    "current_fail_per_sec": [{"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}],
-    "response_time_percentile_1": [{"users": 1, "value": 11}, {"users": 1, "value": 11}, {"users": 1, "value": 10}, {"users": 1, "value": 3}, {"users": 1, "value": 2}, {"users": 1, "value": 2}, {"users": 1, "value": 60}, {"users": 1, "value": 2}, {"users": 1, "value": 2}, {"users": 1, "value": 8}, {"users": 1, "value": 590.0}, {"users": 1, "value": 6000.0}, {"users": 1, "value": 5400.0}, {"users": 1, "value": 5400.0}, {"users": 1, "value": 3}, {"users": 1, "value": 5900.0}, {"users": 1, "value": 8}, {"users": 1, "value": 2}, {"users": 1, "value": 2}, {"users": 1, "value": 2}, {"users": 1, "value": 2}, {"users": 1, "value": 600.0}, {"users": 1, "value": 6000.0}, {"users": 1, "value": 6000.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6000.0}, {"users": 1, "value": 530.0}, {"users": 1, "value": 6600.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 8}, {"users": 1, "value": 8}, {"users": 1, "value": 5900.0}, {"users": 1, "value": 5900.0}, {"users": 1, "value": 7}, {"users": 1, "value": 530.0}, {"users": 1, "value": 550.0}],
-    "response_time_percentile_2": [{"users": 1, "value": 11}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 4800.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6800.0}, {"users": 1, "value": 6800.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6600.0}, {"users": 1, "value": 6600.0}, {"users": 1, "value": 5900.0}, {"users": 1, "value": 5900.0}, {"users": 1, "value": 5400.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6000.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6600.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6700.0}, {"users": 1, "value": 6600.0}, {"users": 1, "value": 6600.0}, {"users": 1, "value": 5400.0}],
+    "time": ["12:57:56", "12:58:01", "12:58:06", "12:58:11", "12:58:16", "12:58:21", "12:58:26", "12:58:31", "12:58:36", "12:58:41", "12:58:46", "12:58:51"].map(server_time => new Date(new Date().setUTCHours(...(server_time.split(":")))).toLocaleTimeString()),
+    "user_count": [{"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}, {"value": 1}],
+    "current_rps": [{"users": 1, "value": 0}, {"users": 1, "value": 96.75}, {"users": 1, "value": 98.11111111111111}, {"users": 1, "value": 99.4}, {"users": 1, "value": 97.2}, {"users": 1, "value": 94.9}, {"users": 1, "value": 96.3}, {"users": 1, "value": 100.1}, {"users": 1, "value": 97.5}, {"users": 1, "value": 95.2}, {"users": 1, "value": 99.9}, {"users": 1, "value": 98.0}],
+    "current_fail_per_sec": [{"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}, {"users": 1, "value": 0}],
+    "response_time_percentile_1": [{"users": 1, "value": 0}, {"users": 1, "value": 3}, {"users": 1, "value": 3}, {"users": 1, "value": 3}, {"users": 1, "value": 3}, {"users": 1, "value": 3}, {"users": 1, "value": 3}, {"users": 1, "value": 3}, {"users": 1, "value": 3}, {"users": 1, "value": 3}, {"users": 1, "value": 3}, {"users": 1, "value": 3}],
+    "response_time_percentile_2": [{"users": 1, "value": 0}, {"users": 1, "value": 24}, {"users": 1, "value": 25}, {"users": 1, "value": 26}, {"users": 1, "value": 26}, {"users": 1, "value": 25}, {"users": 1, "value": 24}, {"users": 1, "value": 25}, {"users": 1, "value": 24}, {"users": 1, "value": 24}, {"users": 1, "value": 26}, {"users": 1, "value": 28}],
     "markers": [],
 };
         var percentile1 = 0.5

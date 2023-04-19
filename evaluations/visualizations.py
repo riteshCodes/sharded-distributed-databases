@@ -74,10 +74,14 @@ def get_data(*, eval_type, client_nr, configuration, header_value=0, with_column
 
     data_frame = data_frame.drop(data_frame.iloc[:warm_up_time].index)
 
-    # Store extracted data
-    # data_frame.to_excel(save_file_to(client_folder=client_nr, configuration=configuration), index=False)
-    # data_frame.to_excel(saver(configuration), index=False)
-    # data_frame.to_excel(saver(configuration=configuration), index=False)
+    if configuration == 'direct_client':
+        data_frame.to_excel(path.join(TEST_REPORT_PATH, Path('throughput'), Path(eval_type), Path(client_nr),
+                                      Path('direct_client\extracted_stats.xlsx')), index=False)
+
+        # Store extracted data
+        # data_frame.to_excel(save_file_to(client_folder=client_nr, configuration=configuration), index=False)
+        # data_frame.to_excel(saver(configuration), index=False)
+        # data_frame.to_excel(saver(configuration=configuration), index=False)
 
     return data_frame
 
@@ -112,28 +116,35 @@ def get_data_client_load(*, configuration, header_value=0, with_columns=None):
 
 def throughput_client_load(mware_configurations):
     df_baseline = get_data_client_load(configuration='direct_client')
-    client_load = df_baseline['User Count'].values  # default x-axis values
+    client_load = df_baseline['User Count'].head(10).values  # default x-axis values
 
     # Baseline plot
-    df_baseline_rps = df_baseline['Requests/s'].values  # y-axis values
+    df_baseline_rps = df_baseline['Requests/s'].head(10).values  # y-axis values
     plt.plot(client_load, df_baseline_rps, label='Baseline')
 
     # Middleware configurations and plot
     for c in mware_configurations:
         df = get_data_client_load(configuration=c)
 
-        df_rps = df['Requests/s'].values  # y-axis values
+        df_rps = df['Requests/s'].head(10).values  # y-axis values
         config_mware = [val for val in re.findall(r'\d+', c)][0]
         plt.plot(client_load, df_rps, label=f'M:{config_mware}')
+
+    plt.axhline(y=80, color='brown', label='Maximum requests/sec (Middleware)')
+    plt.axhline(y=152, color='gold', label='Maximum requests/sec (Baseline)')
 
     plt.xlabel(r'Number of Clients (Concurrent Client Load)')
     plt.ylabel('Average Requests Per Second (requests/sec)')
 
+    ax = plt.gca()
+    yticks = np.arange(0, 180, 20)
+    ax.set_yticks(yticks)
+
     plt.legend(framealpha=1, bbox_to_anchor=(1, 1), loc="upper left")
     plt.grid(True)
 
-    plt.savefig(path.join(vis_path(eval_type='Throughput'), f'throughput(rps).pdf'), dpi=2400, bbox_inches="tight")
-    plt.savefig(path.join(vis_path(eval_type='Throughput'), f'throughput(rps).svg'), dpi=2400, bbox_inches="tight")
+    plt.savefig(path.join(vis_path(eval_type='Throughput'), f'throughput(rps)_10.pdf'), dpi=2400, bbox_inches="tight")
+    plt.savefig(path.join(vis_path(eval_type='Throughput'), f'throughput(rps)_10.svg'), dpi=2400, bbox_inches="tight")
     plt.show()
 
 
@@ -161,10 +172,10 @@ def response_time_load(mware_configurations=None, comparion=False):
 
     result = df_baseline.groupby('User Count')[['Requests/s', 'Total Average Response Time']].mean().reset_index()
 
-    # result.to_excel(path.join(baseline_path, Path('aggregated_workload.xlsx')), index=False)
+    result.to_excel(path.join(baseline_path, Path('aggregated_workload.xlsx')), index=False)
 
     # get first 10 rows
-    result = result.head(5)
+    result = result.head(10)
 
     client_load = result['User Count'].values  # default x-axis values
     # Baseline plot
@@ -185,7 +196,7 @@ def response_time_load(mware_configurations=None, comparion=False):
         # result.to_excel(workload_path(configuration=c), index=False)
 
         # get first 10 rows
-        result = result.head(5)
+        result = result.head(10)
 
         # df = pd.read_excel(workload_path(configuration=c), header=0, usecols=with_columns).dropna()
         # client_load = result['User Count'].values  # default x-axis values
@@ -199,13 +210,18 @@ def response_time_load(mware_configurations=None, comparion=False):
     plt.legend(framealpha=1, bbox_to_anchor=(1, 1), loc="upper left")
     plt.grid(True)
 
+    # ax = plt.gca()
+    # yticks = np.arange(0, 450, 50)
+    # ax.set_yticks(yticks)
     ax = plt.gca()
-    yticks = np.arange(0, 450, 50)
+    yticks = np.arange(0, 80, 10)
     ax.set_yticks(yticks)
+    xticks = np.arange(0, 11, 1)
+    ax.set_xticks(xticks)
 
-    plt.savefig(path.join(vis_path(eval_type='Response_Time_Combined'), f'avg_response_time_zoomed_5.pdf'), dpi=2400,
+    plt.savefig(path.join(vis_path(eval_type='Response_Time_Combined'), f'avg_response_time_NEW_10.pdf'), dpi=2400,
                 bbox_inches="tight")
-    plt.savefig(path.join(vis_path(eval_type='Response_Time_Combined'), f'avg_response_time_zoomed_5.svg'), dpi=2400,
+    plt.savefig(path.join(vis_path(eval_type='Response_Time_Combined'), f'avg_response_time_NEW_10.svg'), dpi=2400,
                 bbox_inches="tight")
     plt.show()
 
@@ -233,11 +249,6 @@ def visualize_throughput(*, eval_type, client_nr, configuration, warm_up_time, n
 
         config_mware = [val for val in re.findall(r'\d+', c)][0]
 
-        """
-        if config_mware == '4':
-            df_timestamps = df_timestamps[:-1]
-            df_rps = df_rps[:-1]
-        """
         plt.plot(df_timestamps, df_rps, label=f'M:{config_mware}')
 
         default_timestamps = df_timestamps
@@ -248,10 +259,14 @@ def visualize_throughput(*, eval_type, client_nr, configuration, warm_up_time, n
     # base_line = base_line.iloc[::nth_value]
 
     # base_line = base_line.iloc[::nth_value]
-    base_line = base_line[base_line['Timestamp'] % nth_value == 0]
+    # base_line = base_line[base_line['Timestamp'] % nth_value == 0]
+    base_line = base_line[base_line['Timestamp'] % 1 == 0]
 
     base_line_df = base_line.head(results_from)  # Get from 00:00 to 02:00
     df_baseline_rps = base_line_df['Requests/s'].values  # y-axis values
+    print(len(df_baseline_rps))
+    print(len(default_timestamps))
+    assert len(df_baseline_rps) == len(default_timestamps)
     # plt.plot(df_timestamps, df_baseline_rps, label='Baseline')
     plt.plot(default_timestamps, df_baseline_rps, label='Baseline')
 
@@ -262,7 +277,7 @@ def visualize_throughput(*, eval_type, client_nr, configuration, warm_up_time, n
     plt.ylabel('Requests Per Second (requests/sec)')
 
     # Limits ranges
-    # plt.ylim([0, 500])
+    plt.ylim([0, 180])
     # plt.gca().set_ylim(top=400)
 
     plt.xticks(rotation=60)
@@ -352,8 +367,8 @@ def set_get_evaluation(client_load='1_Client'):
 
     operations = ('set', 'get')
     data = {
-        'single key-value pair': (round(set_single_value, 4), round(get_single_value, 4)),
-        'multiple key-value pairs': (round(set_multiple_value, 4), round(get_multiple_value, 4))
+        'single key-value pair': (round(set_single_value, 2), round(get_single_value, 2)),
+        'multiple key-value pairs': (round(set_multiple_value, 2), round(get_multiple_value, 2))
     }
 
     x = np.arange(len(operations))  # the label locations
@@ -371,7 +386,7 @@ def set_get_evaluation(client_load='1_Client'):
     # Add some text for labels, title and custom x-axis tick labels, etc.
     ax.set_ylabel('Average Response Time (ms)')
     ax.set_xlabel('Operations')
-    ax.set_xticks(x + width, operations)
+    ax.set_xticks(x + width / 2, operations)
 
     ax = plt.gca()
     yticks = np.arange(0, 75, 5)
@@ -390,74 +405,66 @@ def set_get_evaluation_baseline(client_load='1_Client'):
                                      Path('aggregated.csv'))
     base_df = pd.read_csv(report_path_baseline, header=0, usecols=['Name', 'Average Response Time'])
 
-    single_df = base_df[base_df['Name'].isin(['set_single', 'get_single'])]
-
-    multiples_df = base_df[base_df['Name'].isin(['set_multiples', 'get_multiples'])]
-
-    print(single_df.values)
-    print(multiples_df.values)
-
-    single_get_set = [7.7534715334574384, 1.748488499568059]
-    multiple_get_set = [5248.124063014984, 6683.577720935528] # get, set
-
-    # Create the figure and subplots
-    fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(12, 6))
-
-    ax1.bar(['get_single', 'set_single'], single_get_set, label='single key-value pair', width = 0.4, color='C0')
-    ax1.legend()
-
-    ax2.bar(['get_multiples', 'set_multiples'], multiple_get_set, label='multiple key-value pairs', width = 0.4, color= 'C1')
-    ax2.legend(loc="upper right")
-
-
-    ax1.set(ylabel='Average Response Time Per Operation (milliseconds)')
-
-
-    plt.tight_layout()
-
-
-    plt.savefig(path.join(TEST_REPORT_PATH, 'get_set.pdf'), dpi=2400)
-    plt.savefig(path.join(TEST_REPORT_PATH, 'get_set.svg'), dpi=2400)
-
-    plt.show()
-
-
-"""
-    print(df)
+    df = base_df[base_df['Name'].isin(['set_single', 'set_multiples', 'get_single', 'get_multiples'])]
 
     grouped_df = df.copy()
     grouped_df['Group'] = df['Name'].str[:3]
 
-    grouped_data = grouped_df.groupby('Group')
+    # Prepare the data for the grouped bar chart
+    grouped_data = grouped_df.pivot_table(index='Group', columns='Name', values='Average Response Time')
 
-    for key, item in grouped_data:
-        print(grouped_data.get_group(key), "\n\n")
+    print(grouped_data)
 
+    # Plot the grouped bar chart
+    bar_width = 0.35
+    opacity = 0.8
 
-    # Create a bar plot
     fig, ax = plt.subplots()
 
-    # Set bar width and positions
-    bar_width = 0.35
-    positions = [0, 1]
-    x_labels = ['set', 'get']
+    x_labels = grouped_data.index.values
+    x = np.arange(len(x_labels))
 
-    # Plot bars for each group
-    for index, (group, group_data) in enumerate(grouped_data):
-        ax.bar([p + index * bar_width for p in positions], group_data['Average Response Time'], width=bar_width,
-               label=group)
+    bars1 = ax.bar(x - bar_width / 2, grouped_data['get_single'], bar_width, alpha=opacity, label='get_single',
+                   color='C0')
+    bars2 = ax.bar(x + bar_width / 2, grouped_data['get_multiples'], bar_width, alpha=opacity, label='get_multiples',
+                   color='C1')
+    bars3 = ax.bar(x - bar_width / 2, grouped_data['set_single'], bar_width, alpha=opacity, label='set_single',
+                   color='C0')
+    bars4 = ax.bar(x + bar_width / 2, grouped_data['set_multiples'], bar_width, alpha=opacity, label='set_multiples',
+                   color='C1')
 
-    # Set labels, title, and legend
-    ax.set_xticks([p + bar_width / 2 for p in positions])
+    # Add labels
+    ax.set_xlabel('Operations')
+    ax.set_ylabel('Average Response Time (ms)')
+    # ax.set_title('Set-Get Operation Overview')
+    ax.set_xticks(x)
     ax.set_xticklabels(x_labels)
-    ax.set_xlabel('Operation Type')
-    ax.set_ylabel('Average Response Time')
-    ax.set_title('Average Response Time (Set/Get) 1 Client')
-    ax.legend(df['Name'])
+    ax.legend()
 
-    # Show the plot
+    ax = plt.gca()
+    yticks = np.arange(0, 45, 2.5)
+    ax.set_yticks(yticks)
+    ax.legend()
+
+    autolabel(bars1, ax)
+    autolabel(bars2, ax)
+    autolabel(bars3, ax)
+    autolabel(bars4, ax)
+
+    plt.savefig(path.join(TEST_REPORT_PATH, 'set_get_baseline.pdf'), dpi=2400)
+    plt.savefig(path.join(TEST_REPORT_PATH, 'set_get_baseline.svg'), dpi=2400)
+
     plt.show()
-"""
+
+
+def autolabel(rects, ax):
+    for rect in rects:
+        height = round(rect.get_height(), 2)
+        ax.annotate('{}'.format(height), xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(0, 3),  # 3 points vertical offset
+                    textcoords="offset points",
+                    ha='center', va='bottom')
+
 
 if __name__ == '__main__':
     """
@@ -484,7 +491,14 @@ if __name__ == '__main__':
     visualize_throughput(eval_type='Elapsed_Time', client_nr='1_Client',
                          configuration=['1_DB', '2_DB', '4_DB', '6_DB'],
                          warm_up_time=10, nth_value=5, results_from=13)
-    """
+   
+    visualize_throughput(eval_type='Elapsed_Time', client_nr='1_Client',
+                         configuration=['1_DB', '2_DB', '4_DB', '6_DB'],
+                         warm_up_time=10, nth_value=1, results_from=13)
 
-    # set_get_evaluation()
-    set_get_evaluation_baseline()
+    throughput_client_load(['1_DB', '2_DB', '4_DB', '6_DB'])
+     """
+
+    # response_time_load(mware_configurations=['1_DB', '2_DB', '4_DB', '6_DB'])
+    set_get_evaluation()
+    # set_get_evaluation_baseline()

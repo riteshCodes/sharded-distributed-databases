@@ -27,14 +27,22 @@ class ConsistentHashSharder:
             for i in range(self.virtual_nodes):
                 v_node = node_url + ':' + str(i)
 
-                k = hash_md5(data=v_node) % MAX_NUMBER_16_BITS
+                # md5 Hash function
+                # k = hash_md5(data=v_node) % MAX_NUMBER_16_BITS
                 # k = hash_md5(data=v_node) % MAX_NUMBER_32_BITS
+
+                # FarmHash32 Function
+                # k = hash_func(data=v_node) % MAX_NUMBER_32_BITS
+                k = hash_func(data=v_node) % MAX_NUMBER_16_BITS
 
                 self.ring[k] = node_url
                 self.sorted_keys.append(k)
         else:
-            k = hash_md5(data=node_url + ':' + '0') % MAX_NUMBER_16_BITS
+            # k = hash_md5(data=node_url + ':' + '0') % MAX_NUMBER_16_BITS
             # k = hash_md5(data=node_url + ':' + '0') % MAX_NUMBER_32_BITS
+
+            # k = hash_func(data=node_url + ':' + '0') % MAX_NUMBER_32_BITS
+            k = hash_func(data=node_url + ':' + '0') % MAX_NUMBER_16_BITS
 
             self.ring[k] = node_url
             self.sorted_keys.append(k)
@@ -45,8 +53,11 @@ class ConsistentHashSharder:
         for i in range(self.virtual_nodes):
             v_node = node_url + ':' + str(i)
 
-            k = hash_md5(data=v_node) % MAX_NUMBER_16_BITS
+            # k = hash_md5(data=v_node) % MAX_NUMBER_16_BITS
             # k = hash_md5(data=v_node) % MAX_NUMBER_32_BITS
+
+            # k = hash_func(data=v_node) % MAX_NUMBER_32_BITS
+            k = hash_func(data=v_node) % MAX_NUMBER_16_BITS
 
             del self.ring[k]
             self.sorted_keys.remove(k)
@@ -55,8 +66,11 @@ class ConsistentHashSharder:
         if not self.ring:
             return None
 
-        k = hash_md5(data=shard_key) % MAX_NUMBER_16_BITS
+        # k = hash_md5(data=shard_key) % MAX_NUMBER_16_BITS
         # k = hash_md5(data=shard_key) % MAX_NUMBER_32_BITS
+
+        # k = hash_func(data=shard_key) % MAX_NUMBER_32_BITS
+        k = hash_func(data=shard_key) % MAX_NUMBER_16_BITS
 
         # index = _get_index(array=self.sorted_keys, value=k)
         index = find_next_position(sorted_array=self.sorted_keys, target=k)  # Efficient search
