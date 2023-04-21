@@ -6,7 +6,7 @@ from os import path
 from pathlib import Path
 from main import MWare
 
-m_ware = MWare()
+
 
 
 def get_file_path(*, data_code):
@@ -19,6 +19,7 @@ def read_data(*, data_code: int):
 
 
 def execution_time_set(data, set_function):
+    m_ware = MWare()
     if set_function == 'single':
         key = random.sample(data['userID'], 1)[0]
         start_time = time.time()
@@ -37,6 +38,7 @@ def execution_time_set(data, set_function):
 
 
 def execution_time_get(data, get_function):
+    m_ware = MWare()
     if get_function == 'single':
         key_list = random.sample(data['userID'], 1)
         start_time = time.time()
@@ -63,6 +65,7 @@ def execution_time_get(data, get_function):
 
 
 def execution_time_del(data, del_function):
+    m_ware = MWare()
     if del_function == 'single':
         key_list = random.sample(data['userID'], 1)
         start_time = time.time()
@@ -81,6 +84,7 @@ def execution_time_del(data, del_function):
 
 
 def execution_time_sharding(*, data, iter_times):
+    m_ware = MWare()
     random_key_list = random.sample(data['userID'], 1)
     random_k = ['userID' + ':' + '{:04d}'.format(k) for k in random_key_list][0]
     return timeit.timeit(lambda: m_ware.sharder.get_node_url(shard_key=random_k), number=iter_times) * 1000

@@ -3,6 +3,7 @@ from os import path
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 import pandas as pd
 import numpy as np
 
@@ -139,6 +140,9 @@ def throughput_client_load(mware_configurations):
     ax = plt.gca()
     yticks = np.arange(0, 180, 20)
     ax.set_yticks(yticks)
+
+    xticks = np.arange(0, 11, 1)
+    ax.set_xticks(xticks)
 
     plt.legend(framealpha=1, bbox_to_anchor=(1, 1), loc="upper left")
     plt.grid(True)
@@ -417,21 +421,24 @@ def set_get_evaluation_baseline(client_load='1_Client'):
 
     # Plot the grouped bar chart
     bar_width = 0.35
-    opacity = 0.8
 
     fig, ax = plt.subplots()
 
     x_labels = grouped_data.index.values
     x = np.arange(len(x_labels))
 
-    bars1 = ax.bar(x - bar_width / 2, grouped_data['get_single'], bar_width, alpha=opacity, label='get_single',
+    bars1 = ax.bar(x - bar_width / 2, grouped_data['get_single'], bar_width,
                    color='C0')
-    bars2 = ax.bar(x + bar_width / 2, grouped_data['get_multiples'], bar_width, alpha=opacity, label='get_multiples',
+    bars2 = ax.bar(x + bar_width / 2, grouped_data['get_multiples'], bar_width,
                    color='C1')
-    bars3 = ax.bar(x - bar_width / 2, grouped_data['set_single'], bar_width, alpha=opacity, label='set_single',
+    bars3 = ax.bar(x - bar_width / 2, grouped_data['set_single'], bar_width,
                    color='C0')
-    bars4 = ax.bar(x + bar_width / 2, grouped_data['set_multiples'], bar_width, alpha=opacity, label='set_multiples',
+    bars4 = ax.bar(x + bar_width / 2, grouped_data['set_multiples'], bar_width,
                    color='C1')
+
+    custom_labels = [Line2D([0], [0], color='C0', lw=4),
+                    Line2D([0], [0], color='C1', lw=4)]
+    ax.legend(custom_labels, ['Baseline: single key-value pair', 'Baseline: multiple key-value pairs'])
 
     # Add labels
     ax.set_xlabel('Operations')
@@ -439,12 +446,12 @@ def set_get_evaluation_baseline(client_load='1_Client'):
     # ax.set_title('Set-Get Operation Overview')
     ax.set_xticks(x)
     ax.set_xticklabels(x_labels)
-    ax.legend()
+
 
     ax = plt.gca()
     yticks = np.arange(0, 45, 2.5)
     ax.set_yticks(yticks)
-    ax.legend()
+    # ax.legend()
 
     autolabel(bars1, ax)
     autolabel(bars2, ax)
@@ -497,8 +504,12 @@ if __name__ == '__main__':
                          warm_up_time=10, nth_value=1, results_from=13)
 
     throughput_client_load(['1_DB', '2_DB', '4_DB', '6_DB'])
-     """
-
+     
+    visualize_throughput(eval_type='Elapsed_Time', client_nr='100_Client',
+                         configuration=['1_DB', '2_DB', '4_DB', '6_DB'],
+                         warm_up_time=35, nth_value=1, results_from=13)
+    """
     # response_time_load(mware_configurations=['1_DB', '2_DB', '4_DB', '6_DB'])
-    set_get_evaluation()
-    # set_get_evaluation_baseline()
+    # set_get_evaluation()
+    set_get_evaluation_baseline()
+    # throughput_client_load(['1_DB', '2_DB', '4_DB', '6_DB'])

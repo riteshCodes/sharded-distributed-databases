@@ -6,6 +6,7 @@ import random
 import matplotlib.pyplot as plt
 
 from main import MWare
+from configs import DB_NODES
 
 
 def get_file_path(*, data_code):
@@ -44,9 +45,9 @@ def visualize_data_distribution(m_ware, keys_limit):
     # Plot configurations
     fig, ax = plt.subplots()
 
-    # plt.title(f'Data Distribution Among Database-Sites')
-    plt.xlabel('Database-Nodes (Shards)')
-    plt.ylabel('Number of key-value pairs')  # milliseconds(ms), 1 second = 1000 milliseconds
+    plt.title(f'Distribution of {keys_limit} Key-Value Pairs Among {len(DB_NODES)} Redis DB')
+    plt.xlabel('Number of Database-Nodes (Shards)')
+    plt.ylabel('Number of Key-Value Pairs')  # milliseconds(ms), 1 second = 1000 milliseconds
 
     bar = None
 
@@ -74,6 +75,7 @@ def visualize_data_distribution(m_ware, keys_limit):
 
 def feed_data(m_ware, data):
     m_ware.flush_all()
+    print(m_ware.key_space_inf())
     m_ware.set_multiples(key_list=data['userID'], name_list=data['name'], email_list=data['email'])
     print(m_ware.key_space_inf())
 
@@ -90,5 +92,5 @@ def autolabel(rects, ax):
 if __name__ == '__main__':
     m_ware = MWare()
     # synthesize_data(limit=10000)
-    feed_data(m_ware, read_data(data_code=10))
-    visualize_data_distribution(m_ware, keys_limit=10)
+    feed_data(m_ware, read_data(data_code=1000))
+    visualize_data_distribution(m_ware, keys_limit=1000)
