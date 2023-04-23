@@ -31,15 +31,66 @@ A distributed database is a single logical database comprising of multiple inter
 
 
 %***************************************************************************
-\section{Distributed Data Distribution}
-\subsection{Data Partition and Sharding}
-\subsection{Data Replication}
-\subsection{Data Distribution}
+
+
+%***************************************************************************
+\section{Data Distribution}
+
+In distributed databases, the emphasis lies on distributing data across multiple databases. Upon securing the necessary hardware resources and server nodes for deploying distributed databases, it is essential to select an appropriate data distribution model \cite{ costa2015sharding, elmasri2000fundamentals}. Several data distribution techniques, such as fragmentation or partitioning and replication, are employed in distributed databases to manage and store data across multiple nodes. Data distribution encompasses two steps \cite{ramakrishnan2003database, rahimi2010distributed, ozsu1999principles, silberschatz2011database}, which are discussed in the following subsections. 
+
+
+\subsection{Data Partitioning (Data Fragmentation):}
+
+Data partitioning, also known as data fragmentation, divides a single large dataset into multiple segments, called partitions or fragments. Each partition can be stored at any database node within a computer network. In this process, data is not replicated, i.e., no copies of data are created. Consequently, data consistency concerns are eliminated, as there is only a single unique instance of data across database nodes. \\
+
+\noindent To prevent data loss, partitions must be created in a way that permits the reconstruction of the original dataset \cite{amiri2019sharding}. Three primary data partitioning strategies \cite{ramakrishnan2003database, rahimi2010distributed, ozsu1999principles, silberschatz2011database, venkateswaran2017simplified, coronel2016database, runceanu2008fragmentation}, which are prevalent in distributed databases are discussed below:
+
+\begin{enumerate}
+
+\item \emph{Horizontal Partitioning:} \\
+In horizontal partitioning, a relational table is divided into subsets of one or more rows (tuples) and is also referred to splitting by rows. For non-relational databases, collections of entries or documents are divided into smaller collections comprising constituent entries or documents. For instance, in a key-value store, a large dataset is partitioned into smaller groups of key-value pairs. \\
+Each partition, stored at a distinct node, contains unique data. However, all unique partitions share the same attributes (columns) or fields (sub-entries). In this context, each partition represents the equivalent of a selection operation applied to rows or tuples in relational databases and to entries or documents in non-relational databases. Common horizontal partitioning schemes \cite{runceanu2008fragmentation, elmasri2000fundamentals} are briefly discussed below: \\
+
+\begin{itemize}
+
+\item [-] \emph{Round-robin:} \\
+Round-robin partitioning is the simplest form of horizontal partitioning, where each entry or tuple is sequentially assigned to different partitions. Given n partitions, the i-th entry or tuple of data is allocated to the (i mod n) partition. This method is best suitable for evenly distributing data across all partitions without the need for complex analysis and calculations \cite{ozsu1999principles}.
+
+\item [-] \emph{Hash-partitioning:} \\
+Hash partitioning uses hash function to fields or attributes of the data that yields a partition number for the placement of the data. This approach ensures a more uniform distribution of data across partitions, regardless of the data's inherent characteristics and patterns \cite{liu1996hash}.
+
+\item [-] \emph{Range-partitioning:} \\
+In the range-partitioning approach, range predicates are defined for assigning data to fragments or partitions. This scheme divides data based on value intervals (ranges) of specific attributes or fields. Unlike hash partitioning, which relies on hash functions, range-partitioning requires maintaining the defined ranges in an index structure, such as a B-tree \cite{ozsu1999principles}.
+
+\end{itemize}
+
+
+\noindent Sharding is a way to scale out a database via horizontal partitioning \cite{runceanu2008fragmentation, rahimi2010distributed}. It enables horizontal scalability (scale-out) is supported by distributing distinct portions of the data across various database servers, a process referred to as sharding. The objective is to direct different requests to individual database nodes, thereby achieving load balancing among the nodes. Concepts and approaches of sharding in distributed databases is further explored in the subsection \ref{shardingDD}. \\
+
+
+
+\item	\emph{Vertical Partitioning:} \\
+Vertical partitioning uses the concept of a projection operator \cite{ozsu1999principles}. In relational database with this partitioning scheme, a relational table with large schema is divided into some more schemas of smaller sizes and is also referred to splitting by columns. For non-relational databases, data is partitioned based on the fields of documents or entries. A common candidate key, also shard key must be present in each partition to guarantee a lossless join between the partitions \cite{navathe1984vertical}. \\
+
+\item \emph{Hybrid Partitioning:} \\
+
+
+
+\end{enumerate}
+
+
+
+
+
+\subsection{Data Allocation with Replication}
+
+
 
 
 
 %***************************************************************************
 \section{Sharding in Distributed Databases}
+\label{shardingDD}
 A single machine, or database server, possesses a finite capacity for data storage and processing. When data volume grows too large and surpasses this capacity, the single database node becomes a bottleneck. Data sharding, a common scalability strategy, addresses this limitation by segmenting large dataset into smaller chunks, called shards, and storing them across multiple database nodes \cite{9411547, 9357711, 10.1145/2491245}. Each shard contains unique information, which enables parallel and independent processing across several database nodes. Although operating on distinct database nodes, the shards retain the original database's schema and design. By distributing the workload and reducing the risks associated with a single point of failure, this approach significantly enhances the system's performance, scalability, and resilience. \\
 
 \noindent The implementation of a sharding system in distributed databases requires the initial determination of an appropriate sharding strategy. Database architects must consider the optimal number of shards and the methods for data distribution across multiple servers. Decisions regarding the prioritization of specific requests and the management of bulk data updates and retrieval are vital. A system characterized by frequent data modifications demands a distinct architectural approach for sharding, as opposed to the one that predominantly processes read requests. Additionally, factors such as replication, reliability, and maintenance strategy should be considered. Based on these, sharded databases can be classified into one of the following architectural types: \\
@@ -67,7 +118,7 @@ This approach utilizes a directory service or lookup table to map data to their 
 
 
 \item \textbf{Multi-level Sharding} \\
-This method involves multiple levels of sharding based on data requirements, for instance, data may initially be sharded or partitioned by range, followed by the use of hashing on each key within each range \cite{chen2019sschain}. Multi-level sharding is suitable when scaling the system beyond the capabilities of a single sharding level is essential.%\cite{ChameleonDB}. 
+This method involves multiple levels of sharding based on data requirements, for instance, data may initially be sharded or partitioned by range, followed by the use of hashing on each key within each range \cite{chen2019sschain}. Multi-level sharding is suitable when scaling the system beyond the capabilities of a single sharding level is essential. 
 However, it also introduces added operational complexity and computational overhead. As a result, careful design and planning are essential when implementing this approach.
 
 \end{enumerate}
