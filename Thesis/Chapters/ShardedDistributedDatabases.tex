@@ -1,0 +1,49 @@
+% !TeX root = ../Thesis.tex
+
+%************************************************
+\chapter{Sharded Distributed Databases}\label{ch:ShardedDistributedDatabases}
+%************************************************
+%%\glsresetall % Resets all acronyms to not used
+\section{Sharding Strategies}
+
+Database sharding splits a large dataset from a single database node into multiple shards. Each shard contains unique information that one can store separately across multiple database sites. A single site can contain multiple shards. Although the shards are distributed over multiple sites, they share the original database’s schema or design. Before sharding, one should determine a shard key to partition the dataset. Shard key determines which data are grouped together. Shard key is, either selected from an existing key in the dataset or created based on the properties of the existing data. 
+
+Approaches for sharding databases:
+Database sharding methods apply different rules to the shard key to determine the correct site for a particular set of data.
+
+\begin{enumerate}
+\item Range-based Sharding (Dynamic sharding):
+
+In range-based sharding, data is partitioned based on a key range. For example, data for all users with user IDs between 1 and 1000 might be stored on one site, while data for users with IDs between 1001 and 2000 might be stored on another site. This type of sharding is useful when the data can be easily partitioned based on a specific key range. Depending on the data values, range-based sharding can result in the overloading of data on a single site, resulting an uneven distribution of data. In the preceding example, the first shard with user IDs between 1 and 1000, might contain a much larger amount of data than the second shard with user IDs between 1001 and 2000. However, this approach is easier to implement.
+
+\item Hashed-based Sharding (Algorithmic Sharding):
+
+In hash-based sharding, a hash function is used to determine which site, a piece of data (shard) should be stored in. The hash function takes a key (such as a user ID) as input and produces a hash value that is used to determine which site the data should be stored on. This type of sharding is useful when the data does not have a natural key range and when it is important to evenly distribute the data across the sites. Although hashed-based sharding results in even data distribution among physical shards, it does not partition the database based on the meaning of the information. Therefore, one might face difficulties reassigning the hash value when adding more physical shards to the computing environment.
+
+\item Geo Sharding (Zone-based sharding): 
+
+In zone-based sharding, data is partitioned based on geographic regions or other criteria related to locations. This type of sharding is useful when it is important to store data closer to the users or applications that will access it. If data access patterns are predominantly based on geography, then this works well. However, geo sharding can also result in uneven data distribution.
+
+\item Entity-/Relationship-based/Directory-based Sharding:
+
+In directory-based sharding, a central directory is used to map keys to nodes. When a client wants to store or retrieve data, it looks up the appropriate site in the directory based on the key. This type of sharding is useful when the number of sites or the data distribution is likely to change frequently. This approach also keeps related data together on a single physical shard.
+
+\item Multi-level sharding:
+
+In multi-level sharding, data is partitioned using multiple levels of sharding. For example, data might be first sharded by range and then further partitioned by hash within each range. This type of sharding can be useful when it is important to scale the system beyond what is possible with a single level of sharding.
+\end{enumerate}
+
+\section{Sharded Data Distribution}
+
+When a data overload occurs on specific physical shards although others remain underloaded, it results in database hotspots. Hotspots slow down the retrieval process on the database, defeating the purpose of data sharding. 
+Good shard-key selection can evenly distribute data across multiple shards. When choosing a shard key, database designers should consider the following factors:
+\begin{itemize}
+\item Cardinality: Cardinality describes the possible values of the shard key. It determines the maximum number of possible shards on separate column-oriented databases. For example, if the database designer chooses a yes/no data field as a shard key, the number of shards is restricted to two.
+\item Frequency: Frequency is the probability of storing specific information in a particular shard. For example, a database designer chooses age as a shard key for a fitness website. Most of the records might go into nodes for subscribers aged 30–45 and result in database hotspots.
+\item Monotonic change is the rate of change of the shard key. A monotonically increasing or decreasing shard key results in unbalanced shards.
+\end{itemize}
+
+\section{Distributed Transaction and Query Processing}
+\section{Distributed Concurrency Control}
+\section{Distributed Recovery}
+

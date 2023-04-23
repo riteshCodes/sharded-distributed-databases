@@ -1,0 +1,87 @@
+
+After a section there should always be text before the next section. The first
+paragraph is always without indentation. Starting from the second paragraph,
+there is an indentation.
+Middleware for distributed databases sits between multiple instances of databases and the applications that access the databases. Assuming homogeneous distributed databases, where all sites have a similar database schema and run similar database management software (redis), the middleware abstracts the differences between the databases and provides a uniform interface for the applications to access the data. The databases in the distributed system are autonomous, where each database functions independently.
+The middleware supports solely Online Transaction Processing (OLTP) as database workload. The middleware should handle set, get, update, and delete operations with single and multiple keys. The middleware ensures that insertions, updates, and deletions are atomic, meaning that they either all succeed or all fail, ensuring data consistency and integrity. Additionally, the middleware should be able to handle concurrent reads efficiently.
+Regarding performance, the middleware should be able to distribute the workload evenly across the nodes and minimize the number of network round trips (latency). Overall, the middleware should provide a simple and efficient interface for interacting with multiple database instances.
+Middleware for distributed databases sits between multiple instances of databases and the applications that access the databases. Assuming homogeneous distributed databases, where all sites have a similar database schema and run similar database management software (redis), the middleware abstracts the differences between the databases and provides a uniform interface for the applications to access the data. The databases in the distributed system are autonomous, where each database functions independently.
+The middleware supports solely Online Transaction Processing (OLTP) as database workload. The middleware should handle set, get, update, and delete operations with single and multiple keys. The middleware ensures that insertions, updates, and deletions are atomic, meaning that they either all succeed or all fail, ensuring data consistency and integrity. Additionally, the middleware should be able to handle concurrent reads efficiently.
+Regarding performance, the middleware should be able to distribute the workload evenly across the nodes and minimize the number of network round trips (latency). Overall, the middleware should provide a simple and efficient interface for interacting with multiple database instances.
+Middleware for distributed databases sits between multiple instances of databases and the applications that access the databases. Assuming homogeneous distributed databases, where all sites have a similar database schema and run similar database management software (redis), the middleware abstracts the differences between the databases and provides a uniform interface for the applications to access the data. The databases in the distributed system are autonomous, where each database functions independently.
+The middleware supports solely Online Transaction Processing (OLTP) as database workload. The middleware should handle set, get, update, and delete operations with single and multiple keys. The middleware ensures that insertions, updates, and deletions are atomic, meaning that they either all succeed or all fail, ensuring data consistency and integrity. Additionally, the middleware should be able to handle concurrent reads efficiently.
+Regarding performance, the middleware should be able to distribute the workload evenly across the nodes and minimize the number of network round trips (latency). Overall, the middleware should provide a simple and efficient interface for interacting with multiple database instances.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{} lclr @{}} % @{} removes white spaces
+	\toprule
+	\tableheadline{Disaster} & \tableheadline{Year} & \tableheadline{Country} & \tableheadline{Area (km\textsuperscript{2})} \\
+	\midrule
+	Nepal earthquake & 2015 & Nepal & 3\,610 \\
+	Cyclone Pam & 2015 & Vanuatu & 12\,190 \\
+	Ludian earthquake & 2014 & China & 1\,487 \\
+	Typhoon Haiyan & 2013 & Philippines & 71\,503 \\
+	Christchurch earthquake & 2011 & New Zealand & 1\,426 \\
+	East Africa drought & 2011 & East Africa & 2\,346\,466 \\
+	Tropical storm Washi & 2011 & Philippines & 104\,530 \\
+	Tohoku earthquake & 2011 & Japan & 83\,955 \\
+	Haiti earthquake & 2010 & Haiti & 27\,750 \\
+	Afghanistan blizzard & 2008 & Afghanistan & 652\,864 \\
+	Sichuan earthquake & 2008 & China & 485\,000 \\
+	Cyclone Nargis & 2008 & Myanmar & 676\,578 \\
+	\bottomrule
+\end{tabular}
+% Use alternative short title for table of contents
+\caption[Large-scale natural disasters]{Large-scale natural disasters in the last ten years}
+\label{tab:disasters}
+\end{table}
+Middleware for distributed databases sits between multiple instances of databases and the applications that access the databases. Assuming homogeneous distributed databases, where all sites have a similar database schema and run similar database management software (redis), the middleware abstracts the differences between the databases and provides a uniform interface for the applications to access the data. The databases in the distributed system are autonomous, where each database functions independently.
+The middleware supports solely Online Transaction Processing (OLTP) as database workload. The middleware should handle set, get, update, and delete operations with single and multiple keys. The middleware ensures that insertions, updates, and deletions are atomic, meaning that they either all succeed or all fail, ensuring data consistency and integrity. Additionally, the middleware should be able to handle concurrent reads efficiently.
+Regarding performance, the middleware should be able to distribute the workload evenly across the nodes and minimize the number of network round trips (latency). Overall, the middleware should provide a simple and efficient interface for interacting with multiple database instances.
+
+\section{Problem Statement}
+\label{sec:research_question_objective}
+\subsection{Acronyms}
+\begin{figure}
+%\begin{wide}
+\centering
+	\captionsetup{width=\linewidth}
+	\includegraphics[width=0.6\linewidth]{gfx/combined_visualization_no_middleware.eps}
+	\caption{Test of the \lstinline|wide| environment. Make sure to set the width of the figure/table to \lstinline|linewidth|. The environment is useful for more complex and especially full-page figures.}
+	\label{fig:wideexample}
+%\end{wide}
+\end{figure}
+We will be 
+\begin{comment}
+\newacronym{CRT}{CRT}{cathode ray tube}
+
+  I'm writing a web page using \gls{html}, \gls{css}, and \gls{js}.
+For acronyms you should use the \emph{glossaries} package and put your acronyms
+in the \emph{FrontBackmatter/acronyms.tex} file. The first acronym is always
+written in it's long form, the following\gls{CRT} occurrences are abbreviated: first
+occurrence \gls{SNR}, second occurrence \gls{SNR}, plural \glspl{SNR}.
+\end{comment}
+\subsection{Examples on Figures}
+
+
+
+\section{Research Question and Objectives}
+\label{sec:research_question_objective}
+\subsection{Examples on Tables}
+test
+\lipsum[3-6]
+
+ \begin{figure}[H]
+           \begin{floatrow}
+             \ffigbox{\includegraphics[scale = 0.5]{gfx/combined_visualization_no_middleware.eps}}{\caption{latency combined}\label{Test}}
+             \ffigbox{\includegraphics[scale = 0.5]{gfx/combined_visualization_no_middleware.eps}}{\caption{A zoom}\label{zoom}}
+           \end{floatrow}
+        \end{figure}
+        
+
+Especially in the standard SEEMOO template with wide margins, you are
+%\marginpar{Here you can add text to the margin. For example, to summarize the section next to it.}
+
+\section{Some Example Text HERE}
+ers

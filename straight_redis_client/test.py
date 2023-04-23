@@ -108,10 +108,10 @@ def response_time_del(*, del_function, iterations):
 
 
 if __name__ == '__main__':
-    response_time_set(set_function='single', iterations=100)
-    response_time_set(set_function='multiple', iterations=100)
-    response_time_get(get_function='single', iterations=100)
-    response_time_get(get_function='multiple', iterations=100)
-    response_time_get(get_function='range', iterations=100)
-    response_time_del(del_function='single', iterations=100)
-    response_time_del(del_function='multiple', iterations=100)
+    response_time_set(set_function='single', iterations=10)
+    response_time_set(set_function='multiple', iterations=10)
+    response_time_get(get_function='single', iterations=10)
+    response_time_get(get_function='multiple', iterations=10)
+    response_time_get(get_function='range', iterations=10)
+    response_time_del(del_function='single', iterations=10)
+    response_time_del(del_function='multiple', iterations=10)

@@ -1,0 +1,16 @@
+% !TeX root = ./Thesis.tex
+
+\newcommand{\ie}{i.\,e.}
+\newcommand{\Ie}{I.\,e.}
+\newcommand{\eg}{e.\,g.}
+\newcommand{\Eg}{E.\,g.}
+
+% for use in unnumbered chapters in the front and back matter that should appear in ToC
+\newcommand{\chapterExtra}[1]{
+	\phantomsection
+	\markboth{\spacedlowsmallcaps{#1}}{\spacedlowsmallcaps{#1}}%
+	\addcontentsline{toc}{chapter}{\tocEntry{#1}}%
+	\chapter*{#1}%
+}
+
+\newcommand{\shorturl}[2]{\href{#1}{\nolinkurl{#2}}} % useful for typesetting DOIs and URNs

@@ -1,0 +1,176 @@
+% Before `documentclass` as recommended by pdfx package
+\input{classicthesis-personal-info}
+\begin{filecontents*}{\jobname.xmpdata}
+\Title{\myTitle}
+\Author{\myName}
+\Copyright{Copyright \copyright\ \myYearPublication "\myName"}
+%\Keywords{Wi-Fi\sep Reverse Engineering\sep macOS}
+\Subject{\myAbstract} % Make sure to update your abstract!
+\end{filecontents*}
+
+\RequirePackage{silence} % :-\
+    \WarningFilter{scrreprt}{Usage of package `titlesec'}
+    %\WarningFilter{scrreprt}{Activating an ugly workaround}
+    \WarningFilter{titlesec}{Non standard sectioning command detected}
+\documentclass[ oneside,openright,titlepage,numbers=noenddot,%1headlines,
+                headinclude,footinclude,cleardoublepage=empty,abstract=on,
+                BCOR=5mm,paper=a4,fontsize=11pt
+                ]{scrreprt}
+
+%********************************************************************
+% PDF/A for TUbama
+%*******************************************************
+\PassOptionsToPackage{dvipsnames}{xcolor}
+\usepackage[a-1b]{pdfx}
+
+%********************************************************************
+% Note: Make all your adjustments in here
+%*******************************************************
+\usepackage{etoolbox}
+\newtoggle{adrianstyle}
+\toggletrue{adrianstyle} % uncomment this line to have smaller margins
+\PassOptionsToPackage{adrianstyle=\iftoggle{adrianstyle}{true}{false}}{classicthesis}
+\newtoggle{parts}
+%\toggletrue{parts} % uncomment to use parts (for long theses only!)
+\newtoggle{phd}
+%\toggletrue{phd} % uncomment to write a full-blown PhD thesis (with parts, author references, etc.)
+\iftoggle{phd}{\toggletrue{parts}}{}
+
+\input{classicthesis-config}
+\input{additional-packages}
+
+%********************************************************************
+% Bibliographies
+%*******************************************************
+\addbibresource{Bibliography.bib}
+%\addbibresource[label=own]{AuthorPublications.bib}
+
+%********************************************************************
+% Hyphenation
+%*******************************************************
+\input{Hyphenation}
+
+%********************************************************************
+% Acronyms
+%*******************************************************
+%\input{Acronyms}
+
+%********************************************************************
+% Macros
+%*******************************************************
+\input{Macros}
+
+% ********************************************************************
+% GO!GO!GO! MOVE IT!
+%*******************************************************
+\usepackage{comment}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{floatrow}%
+\usepackage{comment}
+\usepackage{multirow}
+%\usepackage{subfigure}
+%\usepackage{subfig}
+%\usepackage{glossaries}
+\PassOptionsToPackage{smaller}{acronym}
+\usepackage{acronym} % Nice macros for handling all acronyms in the thesis
+
+\begin{document}
+\frenchspacing
+\raggedbottom
+\selectlanguage{american} % american ngerman
+%\renewcommand*{\bibname}{new name}
+%\setbibpreamble{}
+\pagenumbering{roman}
+\pagestyle{plain}
+%********************************************************************
+% Frontmatter
+%*******************************************************
+\iftoggle{parts}{
+	\include{Parts/BackMatter}
+}{}
+\iftoggle{phd}{
+	\include{FrontBackmatter/TitlepagePhD}
+	\include{FrontBackmatter/TitlebackPhD}
+	\cleardoublepage\include{FrontBackmatter/Dedication}
+}{
+	\include{FrontBackmatter/Titlepage}
+	\include{FrontBackmatter/Titleback}	
+}
+%\cleardoublepage\include{FrontBackmatter/Foreword}
+\cleardoublepage\include{FrontBackmatter/Abstract}
+\cleardoublepage\include{FrontBackmatter/Acknowledgments}
+\cleardoublepage\include{FrontBackmatter/Contents}
+%\cleardoublepage\include{FrontBackmatter/Acronyms}
+\iftoggle{phd}{
+	\begin{refsection}[own] % use numbering of list of publications
+	\cleardoublepage\include{FrontBackmatter/Publications}
+	\cleardoublepage\include{FrontBackmatter/Collaborations}
+	\end{refsection}
+}{}
+%********************************************************************
+% Mainmatter
+%*******************************************************
+
+\addtocounter{table}{0} % otherwise starts counting from 2
+\cleardoublepage
+\pagestyle{scrheadings}
+\pagenumbering{arabic}
+%\setcounter{page}{90}
+% use \cleardoublepage here to avoid problems with pdfbookmark
+\cleardoublepage
+\iftoggle{parts}{
+	\ctparttext{The first chapter of this part gives an introduction and a motivation to this thesis, followed by a presentation of related work found in the area of physical layer security. In the third chapter, we present some definitions and background information to make it easier for the reader to quickly understand the subsequent parts of this thesis.}
+	\part{Introduction}
+}{}
+\include{Chapters/Introduction}
+\include{Chapters/RelatedWork}
+\iftoggle{parts}{
+	\cleardoublepage
+	\ctparttext{The contribution starts with a design chapter, where we mathematically describe the design of the physical layer security system, as well as the adaptive filter of the attacker. After the design follows the implementation on WARP nodes. Here we give an insight into the challenges of implementing the designed MIMO communication system. The last chapter concentrates on evaluating the performance of our proposed attack in simulation and practice.}
+	\part{Contribution}
+}{}
+%\include{Chapters/ShardedDistributedDatabases}
+\include{Chapters/Design}
+\include{Chapters/Implementation}
+\include{Chapters/Evaluation}
+\iftoggle{parts}{
+	\cleardoublepage
+	\ctparttext{After the evaluation, we further discuss the results and give an outlook. In addition, we finish this work with conclusions.}
+	\part{Discussion and Conclusions}
+}{}
+\include{Chapters/Discussion}
+\include{Chapters/Conclusions}
+% ********************************************************************
+% Backmatter
+%*******************************************************
+\iftoggle{parts}{}{
+	\addtocontents{toc}{\protect\vspace{\beforebibskip}} % add space between main chapters and appendix if we do not use parts
+}
+\appendix
+%\renewcommand{\thechapter}{\alph{chapter}}
+\cleardoublepage
+\iftoggle{parts}{
+	\part{Appendix}
+}{}
+
+\include{Appendices/SomeProof}
+%********************************************************************
+% Other Stuff in the Back
+%*******************************************************
+\iftoggle{parts}{
+	\include{Parts/BackMatter}
+}{}
+\cleardoublepage\include{FrontBackmatter/Bibliography}
+\iftoggle{phd}{
+	%\cleardoublepage\include{FrontBackmatter/CurriculumVitae} % not required in final submission
+	\cleardoublepage\include{FrontBackmatter/DeclarationPhD}
+}{
+	\cleardoublepage\include{FrontBackmatter/Declaration}
+}
+%\cleardoublepage\include{FrontBackmatter/Colophon}
+% ********************************************************************
+% Game Over: Restore, Restart, or Quit?
+%*******************************************************
+\end{document}
+% ********************************************************************

@@ -1,0 +1,138 @@
+%\begin{figure}
+%\centering
+% TODO: Does not compile on overleaf. 
+% \begin{tikzpicture}[node distance=6mm]
+% \node[dspsquare,minimum height=3.2em, minimum width=5em,text height=1em, fill=white]
+% 		(source) {Source};
+% \node[dspsquare,minimum height=3.2em, minimum width=5em,text height=1em, fill=white, right=of source]
+% 		(encoder) {Encoder};
+% \node[dspsquare,minimum height=3.2em, minimum width=7em,text height=2em, fill=white, right=of encoder]
+% 		(mainch) {Main Channel\\$Q_M$};
+% \node[dspnodefull, right=of mainch] (n1) {};
+% \node[dspsquare,minimum height=3.2em, minimum width=5em,text height=1em, fill=white, right=of n1]
+% 		(decoder) {Decoder};
+% \node[coordinate,right=of decoder] (n2) {};
+% \node[dspsquare,minimum height=3.2em, minimum width=10em,text height=2em, fill=white, below=1cm of n1]
+% 		(wiretapch) {Wiretap Channel\\$Q_W$};
+% \node[coordinate,below=of wiretapch] (n3) {};
+
+% \draw[dspconn] (source) -- node[midway,above] {$S^K$} (encoder);
+% \draw[dspconn] (encoder) -- node[midway,above] {$X^N$} (mainch);
+% \draw[dspconn] (mainch) -- node[midway,above] {$Y^N$} (decoder);
+% \draw[dspconn] (decoder) -- node[midway,above] {$S^K$} (n2);
+% \draw[dspconn] (n1) -- (wiretapch);
+% \draw[dspconn] (wiretapch) -- (n3) node[below] {$Z^N$};
+% \end{tikzpicture}
+%\caption[The wiretap channel]{The wiretap channel (source: \cite{1975:Wyner})}
+%\label{fig:wiretapchannel}
+%\end{figure}
+
+
+Equations:
+
+\begin{comment}
+Here is an equation without numbers for referencing:
+\begin{align*}
+\underbrace{\begin{pmatrix}\mathcal{B}_1\\\mathcal{B}_2\\\vdots\\\mathcal{B}_R\end{pmatrix}}_\mathcal{B} &= \underbrace{\begin{pmatrix}H_{1,1} & H_{1,2} & \hdots & H_{1,T}\\H_{2,1} & H_{2,2} & \hdots & H_{2,T}\\\vdots & \vdots & \ddots & \vdots\\H_{R,1} & H_{R,2} & \hdots & H_{R,T}\end{pmatrix}}_{H_{A\rightarrow B}}\cdot \underbrace{\begin{pmatrix}\mathcal{A}_1\\\mathcal{A}_2\\\vdots\\\mathcal{A}_T\end{pmatrix}}_\mathcal{A}
+\end{align*}
+
+Here is an equation that you can reference:
+\begin{align}
+\underbrace{\begin{pmatrix}\mathcal{B}_1\\\mathcal{B}_2\\\vdots\\\mathcal{B}_R\end{pmatrix}}_\mathcal{B} &= \underbrace{\begin{pmatrix}H_{1,1} & H_{1,2} & \hdots & H_{1,T}\\H_{2,1} & H_{2,2} & \hdots & H_{2,T}\\\vdots & \vdots & \ddots & \vdots\\H_{R,1} & H_{R,2} & \hdots & H_{R,T}\end{pmatrix}}_{H_{A\rightarrow B}}\cdot \underbrace{\begin{pmatrix}\mathcal{A}_1\\\mathcal{A}_2\\\vdots\\\mathcal{A}_T\end{pmatrix}}_\mathcal{A}\label{eqn:example}
+\end{align}
+
+\subsection{Referencing}
+
+Take a look in the following list to reference sections, figures and equations:
+\begin{itemize}
+  \item \Cref{sec:first_section}
+  \item \Cref{fig:wiretapchannel}
+  \item \Cref{eqn:example}
+\end{itemize}
+
+\end{comment}
+
+
+
+\begin{figure}
+\centering
+\begin{subfigure}{.5\linewidth}
+  \centering
+  \includegraphics[width=.5\linewidth]{gfx/combined_visualization_no_middleware.eps}
+  \caption{A subfigure}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\linewidth}
+  \centering
+  \includegraphics[width=.4\linewidth]{gfx/combined_visualization_no_middleware.eps}
+  \caption{A subfigure}
+  \label{fig:sub2}
+\end{subfigure}
+\caption{A figure with two subfigures}
+\label{fig:test}
+\end{figure}
+
+
+\begin{comment}
+\begin{figure}
+\centering
+\setlength\figureheight{5cm}
+\setlength\figurewidth{0.86\textwidth}
+% uncomment the following line to recompile the figure when it changes otherwise a cached version is used
+%\tikzset{external/remake next}
+%TODO: Does not compile on overleaf 
+% \input{gfx/matlab/tikz/example.tikz}
+\caption[Caption for list of figures]{Caption of figure}
+\label{fig:example}
+\end{figure}
+
+\lipsum[6-10]
+
+\begin{figure}
+\begin{wide}
+	\captionsetup{width=\linewidth}
+	\includegraphics[width=\linewidth]{gfx/seemoo_header.jpg}
+	\caption{Test of the \lstinline|wide| environment. Make sure to set the width of the figure/table to \lstinline|linewidth|. The environment is useful for more complex and especially full-page figures.}
+	\label{fig:wideexample}
+\end{wide}
+
+
+\begin{wide}
+\centering
+	\captionsetup{width=\linewidth}
+	\includegraphics[width=0.6\linewidth]{gfx/combined_visualization_no_middleware.eps}
+	\caption{Test of the \lstinline|wide| environment. Make sure to set the width of the figure/table to \lstinline|linewidth|. The environment is useful for more complex and especially full-page figures.}
+	\label{fig:wideexample}
+\end{wide}
+\end{figure}
+\end{comment}
+
+
+
+
+%You can find an example table in \cref{tab:disasters} using the \emph{tabular} environment. Note the use of horizontal lines from the \emph{booktabs} package (\lstinline|\toprule|, \lstinline|\midrule|, and \lstinline|\bottomrule|) and removed whitespace at both sides of the table (\lstinline|@{}|) as proposed by Markus Püschel.\footnote{\url{https://www.inf.ethz.ch/personal/markusp/teaching/guides/guide-tables.pdf}}
+%
+%\begin{table}
+%\centering
+%\begin{tabular}{@{} lclr @{}} % @{} removes white spaces
+%	\toprule
+%	\tableheadline{Disaster} & \tableheadline{Year} & \tableheadline{Country} & \tableheadline{Area (km\textsuperscript{2})} \\
+%	\midrule
+%	Nepal earthquake & 2015 & Nepal & 3\,610 \\
+%	Cyclone Pam & 2015 & Vanuatu & 12\,190 \\
+%	Ludian earthquake & 2014 & China & 1\,487 \\
+%	Typhoon Haiyan & 2013 & Philippines & 71\,503 \\
+%	Christchurch earthquake & 2011 & New Zealand & 1\,426 \\
+%	East Africa drought & 2011 & East Africa & 2\,346\,466 \\
+%	Tropical storm Washi & 2011 & Philippines & 104\,530 \\
+%	Tohoku earthquake & 2011 & Japan & 83\,955 \\
+%	Haiti earthquake & 2010 & Haiti & 27\,750 \\
+%	Afghanistan blizzard & 2008 & Afghanistan & 652\,864 \\
+%	Sichuan earthquake & 2008 & China & 485\,000 \\
+%	Cyclone Nargis & 2008 & Myanmar & 676\,578 \\
+%	\bottomrule
+%\end{tabular}
+% Use alternative short title for table of contents
+%\caption[Large-scale natural disasters]{Large-scale natural disasters in the last ten years}
+%\label{tab:disasters}
+%\end{table}
