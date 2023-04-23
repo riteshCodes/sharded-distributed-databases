@@ -27,13 +27,8 @@ A distributed database is a single logical database comprising of multiple inter
 
 \noindent Both architectures have their advantages and drawbacks, and the choice between them depends on system requirements, scalability needs, and the desired level of fault tolerance.
 
-
-
-
 %***************************************************************************
 
-
-%***************************************************************************
 \section{Data Distribution}
 
 In distributed databases, the emphasis lies on distributing data across multiple databases. Upon securing the necessary hardware resources and server nodes for deploying distributed databases, it is essential to select an appropriate data distribution model \cite{ costa2015sharding, elmasri2000fundamentals}. Several data distribution techniques, such as fragmentation or partitioning and replication, are employed in distributed databases to manage and store data across multiple nodes. Data distribution encompasses two steps \cite{ramakrishnan2003database, rahimi2010distributed, ozsu1999principles, silberschatz2011database}, which are discussed in the following subsections. 
@@ -73,16 +68,16 @@ In the range-partitioning approach, range predicates are defined for assigning d
 Vertical partitioning uses the concept of a projection operator \cite{ozsu1999principles}. In relational database with this partitioning scheme, a relational table with large schema is divided into some more schemas of smaller sizes and is also referred to splitting by columns. For non-relational databases, data is partitioned based on the fields of documents or entries. A common candidate key, also shard key must be present in each partition to guarantee a lossless join between the partitions \cite{navathe1984vertical}. \\
 
 \item \emph{Hybrid Partitioning:} \\
-
-
+Both horizontal and vertical partitioning can be nested and combined. The combination of both horizontal and vertical partition together is called hybrid partitioning \cite{6680961}.
 
 \end{enumerate}
 
-
-
-
-
 \subsection{Data Allocation with Replication}
+
+Deciding on which database server to store data partition is a crucial aspect of data allocation in distributed databases. Data allocation is a critical design issue that significantly impacts the operational efficiency of distributed databases \cite{apers1988data}. Both static and dynamic allocation policies should be carefully considered, and one such data allocation policy is Replication \cite{huang2001fragment, chandra2012dynamic}. 
+Replication is also considered a part of data allocation, as it involves assigning data partitions to multiple nodes. Replication entails storing data redundantly at two or more locations. Systems of distributed databases maintain multiple copies of the data due to replication, offering benefits such as increased data availability at numerous locations and parallel handling of data requests \cite{mazilu2010database}.
+However, replication also presents certain drawbacks. Data must be updated frequently, and any modifications made to one database server must be reflected at all nodes to prevent inconsistencies \cite{daudpota1998five}. This requirement increases operational and computational overhead. Moreover, concurrency control becomes more complex, as concurrent access must now be monitored across multiple database nodes.
+
 
 
 
