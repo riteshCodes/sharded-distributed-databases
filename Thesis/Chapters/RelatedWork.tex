@@ -13,12 +13,12 @@ A distributed database is a single logical database comprising of multiple inter
 
 \noindent Distributed databases can be broadly categorized into two types \cite{ozsu1999principles}, described as follows: 
 \begin{itemize}
-\item[-] \emph{Homogeneous Distributed Databases}: All database nodes in homogeneous distributed databases possess an identical database management system (DBMS) and adhere to a common global schema. This uniformity simplifies the management of the distributed databases as well as implementation of data distribution strategies. Furthermore, each node is aware of the other nodes’ existence, enabling direct communication and cooperation to process requests from users \cite{silberschatz2011database}.
+\item[-] \emph{Homogeneous Distributed Databases}: All database nodes in homogeneous distributed databases possess an identical DBMS and adhere to a common global schema. This uniformity simplifies the management of the distributed databases as well as implementation of data distribution strategies. Furthermore, each node is aware of the other nodes’ existence, enabling direct communication and cooperation to process requests from users \cite{silberschatz2011database}.
 
 \item[-] \emph{Heterogeneous Distributed Databases}: In a heterogeneous distributed database, each database node features distinct types of DDMS and operating systems. Heterogeneous distributed databases are more complex, as it requires data integration and management across different systems with varying data models, query languages, and storage structures.
 \end{itemize}
 
-\noindent Distributed databases can be further distinguished into two types, based on their architecture, which dictates how the nodes within the system interact and process data. Two common architectures of distributed database management systems (DDBMS) are as follows:
+\noindent Distributed databases can be further distinguished into two types, based on their architecture, which dictates how the nodes within the system interact and process data. Two common architectures of DDBMS are as follows:
 
 \begin{itemize}
 \item[-] \emph{Client-Server / Centralized}: In this architecture, one dedicated coordinator or master database node within the cluster compiles and optimizes requests or queries and manages data across the cluster \cite{silberschatz2011database}. Meanwhile, all other nodes run and process queries in parallel. This approach ensures efficient request handling, although it may introduce a single point of failure if the master database node becomes unavailable.
@@ -49,7 +49,7 @@ Each partition, stored at a distinct node, contains unique data. However, all un
 \begin{itemize}
 
 \item [-] \emph{Round-robin:} \\
-Round-robin partitioning is the simplest form of horizontal partitioning, where each entry or tuple is sequentially assigned to different partitions. Given n partitions, the i-th entry or tuple of data is allocated to the (i mod n) partition. This method is best suitable for evenly distributing data across all partitions without the need for complex analysis and calculations \cite{ozsu1999principles}.
+Round-robin partitioning is the simplest form of horizontal partitioning, where each entry or tuple is sequentially assigned to different partitions. Given n partitions, the i-th entry or tuple of data is allocated to the (i mod n)-th partition. This method is best suitable for evenly distributing data across all partitions without the need for complex analysis and calculations \cite{ozsu1999principles}.
 
 \item [-] \emph{Hash-partitioning:} \\
 Hash partitioning uses hash function to fields or attributes of the data that yields a partition number for the placement of the data. This approach ensures a more uniform distribution of data across partitions, regardless of the data's inherent characteristics and patterns \cite{liu1996hash}.
