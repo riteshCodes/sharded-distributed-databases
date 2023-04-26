@@ -12,6 +12,15 @@
 
 %***************************************************************************
 \section{Research Question and Objectives}
+\begin{itemize}
+\item RQ1: How does the performance of sharded distributed databases compare to traditional databases in terms of throughput, response time, and data distribution, and what key factors influence these performance aspects in both approaches?
+
+\item RQ2: How do consistent hashing and virtual nodes impact data distribution in sharded distributed databases, and how do different middleware configurations, such as the number of shards and virtual nodes, affect performance and scalability?
+
+\item RQ3: What are the challenges and potential bottlenecks in implementing middleware-assisted sharding in distributed databases, and how can they be addressed to ensure optimal scalability and performance?
+
+
+\end{itemize}
 
 
 
@@ -21,3 +30,19 @@
 
 %***************************************************************************
 \section{Thesis Outline}
+This thesis is focused on the study and evaluation of middleware-assisted system of sharded distributed databases through the design and implementation of a prototype and is structured into seven chapters, each of which serves a specific purpose in achieving the research objectives. \\
+
+\noindent \textbf{Chapter 1} is the introduction, which provides a brief overview for the motivation behind the research, the most important objectives, research questions followed by this section presenting the outline of the thesis providing a roadmap for the reader. \\
+
+\noindent \textbf{Chapter 2} focuses on the background of distributed databases, including their types and architectures. The chapter specifically explores data distribution and sharding approaches and provides an overview of related works in the area, with a particular emphasis on sharding.\\
+
+\noindent \textbf{Chapter 3} explores the design principles and considerations for implementing a middleware-assisted system of sharded distributed databases. This chapter describes the middleware’s design, its functionalities, and its interacting components, including distributed databases and clients. The chapter also addresses the scope and limitations of the middleware’s design. \\
+
+\noindent \textbf{Chapter 4} covers the implementation of the middleware-assisted system of sharded distributed databases. This chapter details the implementation process, including the infrastructures used to develop the middleware, the operations supported by the middleware, and concrete implementation of sharding in Redis databases. \\
+
+\noindent \textbf{Chapter 5} evaluates the middleware’s performance using defined performance metrics of throughput and response time, custom workload, and custom benchmarking process. This chapter provides a comprehensive assessment and analysis of the middleware’s performance across various test scenarios, featuring different middleware configurations. Additionally, this chapter presents a brief analysis of data distribution across the associated Redis databases, emphasizing uniform data distribution. \\
+
+\noindent \textbf{Chapter 6} provides a discussion of the research findings and their implications, including a critical evaluation of the research outcomes and a comparison with related works in the literature. \\
+
+\noindent Finally, \textbf{Chapter 7} concludes the thesis by summarizing the research outcomes, addressing the research questions, and presenting implications for future work in this area.
+

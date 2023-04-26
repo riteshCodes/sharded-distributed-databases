@@ -4,15 +4,13 @@
 \chapter{Design}\label{ch:design}
 %************************************************
 %%\glsresetall % Resets all acronyms to not used
-This section presents the design principles and considerations for implementing a middleware-assisted system of sharded distributed databases. The subsection \ref{sys_design} describes the middleware's design, detailing its functionalities and various interacting components, including associated distributed databases and clients. Meanwhile, the subsection \ref{sys_design_limits} addresses the scope and limitations of the middleware's design.
+This section presents the design principles and considerations for implementing a middleware-assisted system of sharded distributed databases. The section \ref{sys_design} describes the middleware's design, detailing its functionalities and various interacting components, including associated distributed databases and clients. Meanwhile, the subsection \ref{sys_design_limits} addresses the scope and limitations of the middleware's design.
 %##############################################
 \section{System Design of Sharded Distributed Database}
 \label{sys_design}
-In designing a system for sharded distributed databases, this thesis proposes the use of middleware as a software layer responsible for coordinating the execution of client requests across one or more independent database servers. The system comprises three types of components that interact with each other: clients, a single instance of the middleware, and multiple database servers.
-
-
+In designing a system for sharded distributed databases, this thesis proposes the use of middleware as a software layer responsible for coordinating the execution of client requests across one or more independent database servers. The system comprises three types of components that interact with each other: clients, a single instance of the middleware, and multiple database servers. \cref{m_design} shows an an abstract oveview of this system.
 \begin{figure}[H]
-             \ffigbox{\includegraphics[scale = 0.45]{gfx/design/mware_design.pdf}}{\caption{Middleware Design (Abstract Overview)}\label{m_design}}
+             \ffigbox{\includegraphics[scale = 0.45]{gfx/design/mware_design.pdf}}{\caption{Sharded Distributed Databases (Abstract Overview)}\label{m_design}}
 \end{figure}
 
 \subsection{Middleware’s Design and Components}
@@ -22,41 +20,68 @@ Considering the outlined requirements, the middleware is divided into the follow
 
 \begin{enumerate}
 
-\item Service Listener: \\
-The middleware 
+\item \textbf{Service Listener:} \\
+The middleware uses gRPC (Group Remote Procedure Call) \cite{grpc}, an open-source RPC (Remote Procedure Call) framework, for communication with clients. gRPC facilitates efficient communication between various services in a distributed system and uses Protocol Buffers (Proto) as the Interface Definition Language (IDL) and the underlying message interchange format \cite{wang1993grpc}. This provides a language-agnostic and platform-independent approach to define and call remote services from the middleware \cite{chamas2017comparing}.The middleware utilizes a gRPC Service Listener module for client communication, which includes the following communication interfaces: 
 
-\item Shard Management: \\
+\begin{itemize}
+\item[-] \emph{Client-to-Middleware:}  \\
+The service listener module of the middleware listens for incoming Proto-requests from client gRPC stubs and parses these requests (Proto messages) into Python native objects. These generated native objects are then used as arguments for further processing, including shard management and request routing.
+\item[-] \emph{Middleware-to-Client:} \\
+The module prepares the data format to generate corresponding responses from associated databases in the Proto message-defined format, ensuring compatibility with client gRPC stubs. Subsequently, it sends the Proto-response back to the client-side gRPC stubs, completing the remote procedure call.
+\end{itemize}
+
+
+\item \textbf{Shard Management:} \\
 This module implements the sharding algorithm, which manages data and query/request distribution. It retrieves the URLs (Uniform Resource Locator) of associated database nodes based on the hashed key (shard key) and sharding algorithm. Additionally, it determines the initial placement of shards on database nodes while considering uniform data load balancing.
 
-\item Database Communication Interface: \\
+\item \textbf{Database Communication Interface:} \\
 This interface serves as a vital connection between the middleware and the associated databases. It provides an interface for communication and manages the addition and removal of database nodes, also known as sites, as required during initial configuration. This component also initializes communication configurations with databases, including database identifiers, connection ports, and pools, and decodes responses received from the databases. Furthermore, it presents an interface for all database operation calls, such as set, get, update, and delete.
 
-\item Query /Request Routing and Result Compilation: \\
+\item \textbf{Query /Request Routing and Result Compilation:} \\
 This module is essential for processing client requests and generating appropriate responses. It breaks down a single client request into multiple sub-requests and sends them to the corresponding associated databases. This module then compiles and aggregates all partial results received from all associated databases and generates a single, valid response.
-
-
 \end{enumerate}
 
 %##############################################
 \subsection{Distributed Databases}
+This thesis adopts a bottom-up approach, in which the specifications of the databases at each physical site exist already \cite{ceri1987distributed}. Each associated database employs an identical Database Management System (DBMS), resulting in a homogeneous distributed database \cite{chamas2017comparing}. The data structure and schema of each database are the same, ensuring easy manageability. \\
+
+\noindent Each associated database node holds a unique portion of the large dataset, and these databases are interconnected via a proxy, i.e., the middleware. However, each database communicates solely with the middleware and has no knowledge of other databases. Only the middleware is aware of the existing database nodes. With these specifications, a middleware-assisted sharded distributed database system is designed, wherein the middleware is responsible for integrating and managing all databases nodes. \\
+
+\noindent To reduce complexity of determining a fixed schema of data, creating relations, and formulating complex queries, relational databases are omitted in this thesis. Instead, non-relational databases, specifically key-value type non-relational databases, are used for the implementation of middleware-assisted sharded distributed databases. These databases support the following simplified operations based on key-value pairs:
+\begin{itemize}
+\item[-]	Setting and updating values based on single or multiple keys
+\item[-] 	Getting values associated with either a single key or multiple keys, as requested by the client
+\item[-]	Getting range of values from given start and end indices, also referred to as scanning a range of values from the databases
+\item[-]	Deleting single or multiple key-value pairs from the dataset
+\end{itemize}
+
+
 
 %##############################################
 \subsection{Client}
 Client connects directly to the middleware, without knowing the specifications of underlying databases. The middleware exposes an Application Programming Interface (API) for setting, updating, retrieving/getting, scanning, and deleting single and multiple key-value pairs, which the client uses to send requests. Clients must perform all operations using the middleware's API. \\
 
-\noindent Communication between the client and the middleware is implemented via the gRPC protocol. As a result, clients must implement a gRPC stub responsible for packaging the request in a Proto message format (serialization), sending the request to the middleware, and unpacking the received response from the middleware (deserialization) and decoding the response into a client-supported data format.
+\noindent Communication between the client and the middleware is implemented via the gRPC protocol. As a result, clients must implement a gRPC stub responsible for packaging the request in a Proto message format (serialization), sending the request to the middleware, and unpacking the received response from the middleware (deserialization) and decoding the response into a client-supported data format. \\
 
+\noindent \cref{communication} presents a conceptual representation of the communication interfaces within the middleware-supported sharded distributed database systems.
 
 \begin{figure}[H]
-             \ffigbox{\includegraphics[scale = 0.45]{gfx/design/communication.pdf}}{\caption{Middleware Communication Overview}\label{communication}}
+             \ffigbox{\includegraphics[scale = 0.45]{gfx/design/communication.pdf}}{\caption{System Communication Overview}\label{communication}}
 \end{figure}
-
-
-
-
 
 %***************************************************************************
 \section{Design Limitations}
 \label{sys_design_limits}
+
+With the system design discussed in section \ref{sys_design}, the middleware-assisted sharded distributed database system features a client-server type architecture \cite{geihs2001middleware}. Multiple clients connect to a single instance of the middleware, which acts as a server for the connected clients and handles all their requests. The middleware, on the contrary, connects with multiple databases, functioning as a single client for these database servers. This results in a many-to-one relationship between the clients and the middleware, where multiple clients can connect to a single middleware instance. Consequently, there is an architectural pattern of multiple-clients-single-server between clients and the middleware. Similarly, there is a single-to-many relationship between the middleware and the distributed databases, leading to a single-client-multiple-servers architecture. In this thesis, the use of multiple middleware instances is omitted to reduce additional operational complexities. However, this approach creates a potential bottleneck for scalability due to the use of a single middleware instance \cite{geihs2001middleware}. As the number of clients increases, the middleware may become overloaded, with its computing resources being fully utilized. At some point, client requests might stall, and the middleware may become incapable of handling additional requests. Since the middleware is responsible for managing all client requests, data sharding, and handling responses from all associated databases, a middleware failure results in the entire system's failure, which introduces a single point of failure. \\
+
+\noindent The current design does not take data replication into account. As a result, the benefits of data replication in a distributed system, such as improved system availability, performance gain, and scalability, cannot be realized with this middleware implementation \cite{ozsu1999principles}. When no replication scheme is used with the associated databases, each data item in the database nodes is unique and stored at only one site, i.e., one database node. As a result, if one database node fails, the data is permanently lost. This is a scenario, which is not addressed in the system design. \\
+
+\noindent Replication can also facilitate data localization, allowing frequently accessed data to be placed closer to their access points \cite{ozsu1999principles}. However, without replication, the cost of the middleware interacting with every database and retrieving both frequently and infrequently accessed data would not differ significantly \cite{9004233}. In situations with geographically distant multiple databases, the communication overhead between the middleware and the database nodes increases, leading to longer response times \cite{5635187}. This negatively affects the system's scalability; as the number of clients grows, each data item can be accessed only from a fixed database. \\
+
+\noindent The middleware used in this design is an RPC middleware \cite{5635187} and is synchronous in its communication type. This means the middleware blocks the execution of the system until the resource or request is completed, and the results are returned to the middleware \cite{ramakrishnan2003database}. Consequently, all the middleware functions associated with the databases are blocking, when initiated and remain idle until the results of the operations from the associated databases are returned. This reduces the middleware's performance and furthermore impacts the system's scalability, because as the number of client requests to the middleware increases, the waiting time for the middleware also increases, given that the middleware processes requests sequentially. The design does not incorporate multi-threading, which is a limitation; as a result, the middleware is single-threaded and synchronous software layer, which will need further optimizations. \\
+
+\noindent The primary objective of this design is to create a prototype of a middleware-assisted sharded distributed database system that implements sharding and supports database CRUD (create, read, update, and delete) operations. The focus is on data sharding and understanding the operational complexities and issues that may arise in a system of sharded distributed databases.
+
 
 %***************************************************************************
