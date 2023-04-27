@@ -5,6 +5,14 @@
 %************************************************
 %%\glsresetall % Resets all acronyms to not used
 This section presents the design principles and considerations for implementing a middleware-assisted system of sharded distributed databases. The section \ref{sys_design} describes the middleware's design, detailing its functionalities and various interacting components, including associated distributed databases and clients. Meanwhile, the subsection \ref{sys_design_limits} addresses the scope and limitations of the middleware's design.
+
+
+%##############################################
+\section{Design Goals}
+\label{goals}
+% TODO
+
+
 %##############################################
 \section{System Design of Sharded Distributed Database}
 \label{sys_design}
@@ -61,13 +69,7 @@ This thesis adopts a bottom-up approach, in which the specifications of the data
 \subsection{Client}
 Client connects directly to the middleware, without knowing the specifications of underlying databases. The middleware exposes an Application Programming Interface (API) for setting, updating, retrieving/getting, scanning, and deleting single and multiple key-value pairs, which the client uses to send requests. Clients must perform all operations using the middleware's API. \\
 
-\noindent Communication between the client and the middleware is implemented via the gRPC protocol. As a result, clients must implement a gRPC stub responsible for packaging the request in a Proto message format (serialization), sending the request to the middleware, and unpacking the received response from the middleware (deserialization) and decoding the response into a client-supported data format. \\
-
-\noindent \cref{communication} presents a conceptual representation of the communication interfaces within the middleware-supported sharded distributed database systems.
-
-\begin{figure}[H]
-             \ffigbox{\includegraphics[scale = 0.45]{gfx/design/communication.pdf}}{\caption{System Communication Overview}\label{communication}}
-\end{figure}
+\noindent Communication between the client and the middleware is implemented via the gRPC protocol. As a result, clients must implement a gRPC stub responsible for packaging the request in a Proto message format (serialization), sending the request to the middleware, and unpacking the received response from the middleware (deserialization) and decoding the response into a client-supported data format.
 
 %***************************************************************************
 \section{Design Limitations}

@@ -17,7 +17,7 @@ This chapter provides a comprehensive assessment and analysis of the middlewareâ
 \label{performanceMetrics}
 
 \begin{figure}[H]
-             \ffigbox{\includegraphics[scale = 0.45]{gfx/figures/Baseline_Response_Latency.pdf}}{\caption[Illustration of latency, processing time and response time observed in baseline]{Illustration of latency, processing time and response time measured in the baseline for comparison}\label{latency_response_baseline}}
+             \ffigbox{\includegraphics[scale = 0.4]{gfx/figures/Baseline_Response_Latency.pdf}}{\caption[Illustration of latency, processing time and response time observed in baseline]{Illustration of latency, processing time and response time measured in the baseline for comparison}\label{latency_response_baseline}}
 \end{figure}
 
 \textbf{Latency} is the time duration between the initiation of a request transmission by a source and the reception of the corresponding message by the destination. Such latency manifests as the time in which the request is held in a waiting state prior to processing. Round-trip latency, whereas, is defined as time elapsed between the transmission of a request and the receipt of the corresponding response. It does not account for the processing time incurred at the destination. In the system architecture examined in this thesis, two types of latency require consideration. The first latency type involves round-trip latency occurring throughout the communication between the client and the middleware, while the second type pertains to round-trip latency in the interaction between the middleware and the associated Redis database instances. Both latencies are crucial for comprehending the overall performance of the proposed middleware and are measured in milliseconds (ms). \\
@@ -32,7 +32,7 @@ The workload employed for evaluating response time and throughput is interpreted
 \noindent The observed latencies, processing times, and response times in the baseline for comparison are illustrated in \cref{latency_response_baseline}, while those for the middleware-assisted sharded distributed databases are depicted in \cref{latency_response}.
 
 \begin{figure}[H]
-             \ffigbox{\includegraphics[scale = 0.45]{gfx/figures/Latency_Response_M.pdf}}{\caption[Illustration of observed latencies, processing time and response times in middleware-assisted sharded distributed databases]{Comprehensive illustration of latencies, processing time and response times measured in the proposed system of middleware-assisted sharded distributed databases}\label{latency_response}}
+             \ffigbox{\includegraphics[scale = 0.4]{gfx/figures/Latency_Response_M.pdf}}{\caption[Illustration of observed latencies, processing time and response times in middleware-assisted sharded distributed databases]{Comprehensive illustration of latencies, processing time and response times measured in the proposed system of middleware-assisted sharded distributed databases}\label{latency_response}}
 \end{figure}
 
 %\begin{figure}[H]
@@ -73,7 +73,7 @@ In this section custom workload and benchmarking process are devised to conduct 
 This study uses a custom workload consisting of two distinct datasets, $Dataset_{1}$ and $Dataset_{2}$, to evaluate the performance of the middleware-assisted sharded distributed databases. $Dataset_{1}$, the larger of the two, comprises 1000 key-value pairs, whereas the smaller dataset, $Dataset_{2}$ contains 100 key-value pairs. Each key within these datasets is a randomly generated 4-digit integer, which is associated with a value holding 3 distinct key-value pairs. The associated values consist of the key identifiers: $UserID$, $Name$, and $Email$. Among these key identifiers, $UserID$ serves as the shard key. The schema used in the datasets is exemplified with \cref{key-value-schema}. \\
 
 \begin{figure}[H]
-             \ffigbox{\includegraphics[scale = 0.25]{gfx/figures/workload_schema.pdf}}{\caption{Workload Schema}\label{key-value-schema}}
+             \ffigbox{\includegraphics[scale = 0.2]{gfx/figures/workload_schema.pdf}}{\caption{Workload Schema}\label{key-value-schema}}
 \end{figure}
 
 \noindent    The custom benchmarking process evaluates the performance of various operations supported by the middleware using both $Dataset_{1}$ and $Dataset_{2}$. All operations use either single or multiple key-value pairs. To differentiate between the two, $Dataset_{1}$ is used for $set$, $get$, $get$-$range$, and $delete$ operations involving multiple key-value pairs, while $Dataset_{2}$ is used for $set$ and $get$ operations with single key-value pair. To simulate real-world scenarios with read-heavy and write-heavy operations, all 1000 key-value pairs from $Dataset_{1}$ are used for $set$ and $get$ operations with multiples key-value pairs. In contrast, only 100 keys are used for $get$-$range$ and $delete$ operations. For $set$, $get$, and $delete$ operations with single key-value pair, 1 randomly chosen key-value pair from $Dataset_{2}$ is employed. \\
@@ -264,7 +264,7 @@ In the constant client-load condition, there are 3 test scenarios (Test Scenario
 %%%%%%%%%%%%
 \subsection*{\textbf{Average Response Time}}
 
-To measure the average response time of the middleware with different configurations, a progressively increasing client-load ranging from 1 to 50 is considered, as defined in \textbf{Test Scenario: 4} within section \ref{testScenario}. For the baseline, the average response time of a single Redis database connected to a single client is measured. As depicted in \cref{average_res_50}, the baseline exhibits a consistent and linear increase of the average response time, with the growing number of concurrent clients. The average response time begins at approximately 11.88 milliseconds (ms) for 1 client and peaks at around 94.48 ms for 50 concurrent clients, executing all operations ($set$, $get$, $get$-$range$, $delete$) with $Dataset_{1}$ and $Dataset_{2}$, as defined in section \ref{workloadBenchmark}. The observed response time for the baseline shows a linear growth of about 1.70 ms. \\
+To measure the average response time of the middleware with different configurations, a progressively increasing client-load ranging from 1 to 50 is considered, as defined in \textbf{Test Scenario: 4} within section \ref{testScenario}. For the baseline, the average response time of a single Redis database connected to a single client is measured. As depicted in \cref{average_res_50}, the baseline exhibits a consistent and linear increase of the average response time, with the growing number of concurrent clients. The average response time begins at approximately 11.88 milliseconds (ms) for 1 client and peaks at around 94.48 ms for 50 concurrent clients, executing all operations ($SET$, $GET$, $GET$-$RANGE$, $DELETE$) with $Dataset_{1}$ and $Dataset_{2}$, as defined in section \ref{workloadBenchmark}. The observed response time for the baseline shows a linear growth of about 1.70 ms. \\
 
 \noindent For assessing the average response time of the middleware as perceived by the connected client, it is essential to consider factors, directly or indirectly influencing the response time. These factors include:
 \begin{itemize}
@@ -278,7 +278,7 @@ To measure the average response time of the middleware with different configurat
              \ffigbox{\includegraphics[width=\textwidth]{gfx/reports/response_time/avg_response_time_50.pdf}}{\caption{Average response time with respect to steadily increasing client-load from 1 to 50}\label{average_res_50}}
 \end{figure}
 
-\noindent Both network latencies and processing times are dynamic factors that change with time and scenarios, making it difficult to obtain concrete and accurate measurements. Due to these factors, the response time may include some noise and unintentional delays. Hence, the outcomes from the load-test executions should be considered approximate values. \cref{tab:response_time_average} states the observed average response times of the baseline and all the middleware configurations with constant client-load of 1, 10, and 100. 
+\noindent Both network latencies and processing times are dynamic factors that change with time and scenarios, making it difficult to obtain concrete and accurate measurements. Due to these factors, the response time may include some noise and unintentional delays. Hence, the outcomes from the load-test executions should be considered approximate values. \cref{tab:response_time_average} states the observed average response times of the baseline and all the middleware configurations performing all operations ($SET$, $GET$, $GET$-$RANGE$, $DELETE$) with constant client-load of 1, 10, and 100.
 
 \begin{table} [H]
 \centering
@@ -292,7 +292,7 @@ To measure the average response time of the middleware with different configurat
 	100 &	327.32 ms &	1297.37 ms &	 1353.55 ms &	1360.46 ms & 1372.55 ms \\
 	\bottomrule
 \end{tabular}
-\caption{Observed average response time of the middleware and the baseline with different client-load}
+\caption{Average response time of the middleware and the baseline for performing all operations with different client-load}
 \label{tab:response_time_average}
 \end{table}
 
@@ -321,7 +321,7 @@ To measure the average response time of the middleware with different configurat
 \label{tab:linear_growth_rate}
 \end{table}
 
-\noindent To obtain meaningful comparisons between the middleware and the baseline, set and get operations involving single and multiple key-value pairs are thoroughly analyzed, focusing on a single client connected to one middleware instance, as illustrated in \cref{set_get_m1}, \cref{set_get_m2}, \cref{set_get_m4}, and \cref{set_get_m6}. The middleware with 1 Redis database (M:1), providing an interface to a single client, has an average response time of approximately 3.89 ms for storing or setting 1 key-value pair in the database, whereas it has an average response time of around 4.01 ms for retrieving the 1 key-value pair from the database. In the case of 1000 key-value pairs, M:1 has an average response time of around 41.85 ms for setting all the key-value pairs and 38.36 ms for retrieving all of them. The average response time observed in the baseline for setting 1 key-value pair is around 1.89 ms, while for getting 1 key-value pair, it is around 2.11 ms. Meanwhile, for the 1000 key-value pairs, the average response times for setting and getting multiple key-value pairs are around 24.03 ms and 21.91 ms, respectively, which is nearly half of the average response time observed from M:1. \\
+\noindent To obtain meaningful comparisons between the middleware and the baseline, only $SET$ and $GET$ operations involving single and multiple key-value pairs are thoroughly analyzed, focusing on a single client connected to one middleware instance, as illustrated in \cref{set_get_m1}, \cref{set_get_m2}, \cref{set_get_m4}, and \cref{set_get_m6}. The middleware with 1 Redis database (M:1), providing an interface to a single client, has an average response time of approximately 3.89 ms for storing or setting 1 key-value pair in the database, whereas it has an average response time of around 4.01 ms for retrieving the 1 key-value pair from the database. In the case of 1000 key-value pairs, M:1 has an average response time of around 41.85 ms for setting all the key-value pairs and 38.36 ms for retrieving all of them. The average response time observed in the baseline for setting 1 key-value pair is around 1.89 ms, while for getting 1 key-value pair, it is around 2.11 ms. Meanwhile, for the 1000 key-value pairs, the average response times for setting and getting multiple key-value pairs are around 24.03 ms and 21.91 ms, respectively, which is nearly half of the average response time observed from M:1. \\
 
 \begin{figure}[H]
 	\begin{floatrow}
@@ -353,7 +353,7 @@ For the simplification of performance analysis, the average response time is con
 
 $Total\:RT$ $\approx$ $Internal\:DB$-$RT$ + ($Service\:Time$ and $Wait\:Time$ ) \\
 
-\noindent \cref{overview_rt} provides detailed information about the total response time, internal response time within the middleware, and the waiting and processing time of the middleware with various configurations. As observed in \cref{set_get_baseline} and the results outlined in \cref{overview_rt}, the $Internal\:DB$-$RT$ for set and get operations for a single key-value pair is smaller than the observed response time in the baseline. This difference can be attributed to the connection setup time of the Redis database in the baseline, while in the middleware, the connection to the Redis database is already established during the middleware's startup. However, the $Total\:RT$ of the middleware is slower than the baseline due to the $Service\:Time$ of the middleware for the requests and the $Wait\:Time$ of the responses from the associated databases. Consequently, this result indicates that the baseline is almost twice as responsive as the M:1 configuration. \\
+\noindent \cref{overview_rt} provides detailed information about the total response time, internal response time within the middleware, and the waiting and processing time of the middleware with various configurations. As observed in \cref{set_get_baseline} and the results outlined in \cref{overview_rt}, the $Internal\:DB$-$RT$ for $SET$ and $GET$ operations for a single key-value pair is smaller than the observed response time in the baseline. This difference can be attributed to the connection setup time of the Redis database in the baseline, while in the middleware, the connection to the Redis database is already established during the middleware's startup. However, the $Total\:RT$ of the middleware is slower than the baseline due to the $Service\:Time$ of the middleware for the requests and the $Wait\:Time$ of the responses from the associated databases. Consequently, this result indicates that the baseline is almost twice as responsive as the M:1 configuration. \\
 
 \begin{table} [H]
 \centering
@@ -369,7 +369,8 @@ $Total\:RT$ $\approx$ $Internal\:DB$-$RT$ + ($Service\:Time$ and $Wait\:Time$ ) 
     &	get\textunderscore range  & 7.9164   & 1.6844 & 6.2319 \\
     &	del\textunderscore single  & 4.0209 & 0.3221 & 3.6988  \\
     &	del\textunderscore multiple  & 6.9168  & 1.6909 & 5.2259   \\ \midrule
-
+	Average RT	&	  & 15.1046	&  &    \\ \midrule
+	
      \multirow{7}{*}{M:2} & set\textunderscore single  & 4.0261 & 1.7490 & 2.277  \\
     &	set\textunderscore multiple  & 45.7991  & 19.1634 & 26.6358   \\
     &	get\textunderscore single  & 4.1628  & 0.5383 & 3.6245  \\
@@ -377,6 +378,7 @@ $Total\:RT$ $\approx$ $Internal\:DB$-$RT$ + ($Service\:Time$ and $Wait\:Time$ ) 
     &	get\textunderscore range  & 8.8411   & 2.7823 & 6.0588 \\
     &	del\textunderscore single  & 4.1352  & 0.3929 & 3.7423   \\
     &	del\textunderscore multiple  & 7.6919  & 2.1648 & 5.5271    \\ \midrule
+    Average RT	&	  & 16.4670	&  &    \\ \midrule
     
      \multirow{7}{*}{M:4} & set\textunderscore single  & 4.0353		& 	1.7843		&	2.2510 \\
     &	set\textunderscore multiple  &  48.6758	&	20.7641	&	27.9117 \\
@@ -385,6 +387,7 @@ $Total\:RT$ $\approx$ $Internal\:DB$-$RT$ + ($Service\:Time$ and $Wait\:Time$ ) 
     &	get\textunderscore range  & 	 9.8087		&	 3.6182		&	6.1904 \\
     &	del\textunderscore single  & 	4.0891		& 	0.3047		&	3.7844 \\
     &	del\textunderscore multiple  & 8.6419		& 	3.221		& 	5.4208 \\ \midrule
+    Average RT	&	  & 17.6235	&  &    \\ \midrule
 
      \multirow{7}{*}{M:6} & set\textunderscore single  &	4.0051 & 	1.7750 	& 2.2301		\\
     &	set\textunderscore multiple  &		54.5115 	& 	22.8808 	& 	31.6307		\\
@@ -392,7 +395,8 @@ $Total\:RT$ $\approx$ $Internal\:DB$-$RT$ + ($Service\:Time$ and $Wait\:Time$ ) 
     &	get\textunderscore multiple  &		47.1893 	& 15.4793 	& 	31.7100		\\
     &	get\textunderscore range   &	11.2084	 & 	3.7737 	& 	7.4347		\\
     &	del\textunderscore single  &	4.1074 	& 	0.1915 	&	 3.9160		\\
-    &	del\textunderscore multiple  &		9.8391 	& 	3.9923 	& 	5.8468		\\
+    &	del\textunderscore multiple  &		9.8391 	& 	3.9923 	& 	5.8468		\\ \midrule
+    Average RT	&	  & 18.6264	&  &    \\ 
  	\bottomrule
 \end{tabular}
 \caption[Comprehensive overview of average response time and processing overhead of middleware]{Comprehensive overview of average response time and processing overhead of the system with a single client connected to the middleware}
