@@ -44,7 +44,7 @@ Upon receiving requests with their respective arguments or datasets from clients
 \begin{itemize}
 
 \item[-] $SET:$ \\
-This operation writes or updates to single or multiple key-value pairs in the Redis databases. The $SET$ operation accepts either a single key and its corresponding value or a list of key-value pairs as input parameters, depending on if the operation is a single insertion or a bulk insertion in the Redis database. Keys in the Redis databases are unique identifiers \cite{da2015redis}. If the key does not exist, the operation will insert a new entry with the given key-value pair and if the key already exists in Redis, the set operation will update the key’s associated value. Both variations of $SET$ utilize $HSET$ function provided by Redis, which assigns or updates the specified fields to their corresponding values in the hash stored at a key. The result of the operation is either a string ‘OK’ message, indicating successful insertion or update in the Redis database or an error code (‘Key Error’). Two implementations of $SET$ are as follows: 
+This operation writes or updates to single or multiple key-value pairs in the Redis databases. The $SET$ operation accepts either a single key and its corresponding value or a list of key-value pairs as input parameters, depending on if the operation is a single insertion or a bulk insertion in the Redis database. Keys in the Redis databases are unique identifiers \cite{da2015redis}. If the key does not exist, the operation will insert a new entry with the given key-value pair and if the key already exists in Redis, the set operation will update the key’s associated value. Both variations of $SET$ utilize $HSET$ function provided by Redis, which assigns or updates the specified fields to their corresponding values in the hash stored at a key. The result of the operation is either a string ‘OK’ message, indicating successful insertion or update in the Redis database or an error code (‘Key Error’). Two implementations of $SET$ are described in \cref{set_op} as follows: 
 \begin{table} [H]
 \centering
 \begin{tabular}{@{} lcr @{}} % @{} removes white spaces
@@ -65,7 +65,7 @@ Value (V)	$\rightarrow$ Either single primitive value or a mapping of single or 
 \end{comment}
 
 \item[-] $GET:$ \\
-This operation takes as input parameters a key or a list of keys and returns a list of associated values for every found key in the database. It returns a ‘Key Error’ message, if no any requested key is found in getting multiple key-value pairs. Error is not thrown if at least one associated key is found in the database. $GET$ is built on top of $HGETALL$ function provided by Redis, which returns all fields and values associated with the key. Two implementations of $GET$ are as follows: 
+This operation takes as input parameters a key or a list of keys and returns a list of associated values for every found key in the database. It returns a ‘Key Error’ message, if no any requested key is found in getting multiple key-value pairs. Error is not thrown if at least one associated key is found in the database. $GET$ is built on top of $HGETALL$ function provided by Redis, which returns all fields and values associated with the key.  \cref{get_op} describes two implementations of $GET$ as follows: 
 \begin{table} [H]
 \centering
 \begin{tabular}{@{} lcr @{}} % @{} removes white spaces
@@ -81,7 +81,7 @@ This operation takes as input parameters a key or a list of keys and returns a l
 \end{table}
 
 \item[-] $GET$-$RANGE:$ \\
-This operation scans and returns a list of key-value pairs found within the range of given input parameters, start and end (both inclusive). It returns a ‘Key Error’ message, if the no any requested key is not found in the Redis database. Error is not thrown if at least one key-value pair is retrieved from the database. The operation is based on top of $HGETALL$ function provided by Redis. The implementation is specified below: 
+This operation scans and returns a list of key-value pairs found within the range of given input parameters, start and end (both inclusive). It returns a ‘Key Error’ message, if the no any requested key is not found in the Redis database. Error is not thrown if at least one key-value pair is retrieved from the database. The operation is based on top of $HGETALL$ function provided by Redis. The implementation is specified below in \cref{get_range_op}: 
 \begin{table} [H]
 \centering
 \begin{tabular}{@{} lcr @{}} % @{} removes white spaces
@@ -98,7 +98,7 @@ This operation scans and returns a list of key-value pairs found within the rang
 
 \item[-] $DELETE:$ \\
 This operation takes single key or multiples keys as parameters and deletes the entries associated with them from the Redis database. Both variations of $DELETE$ use $DEL$ function provided by Redis, which deletes the specified keys from the database. 
-Two implementations of $DELETE$ are as follows:
+Two implementations of $DELETE$ are \cref{del_op} as follows:
 \begin{table} [H]
 \centering
 \begin{tabular}{@{} lcr @{}} % @{} removes white spaces
