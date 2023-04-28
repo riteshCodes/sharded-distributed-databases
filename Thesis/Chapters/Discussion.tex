@@ -18,3 +18,20 @@ To address the three research questions introduced in chapter \ref{ch:introducti
 
 %************************************************
 \section{Limitations and Future Work}
+While this thesis contributes valuable insights into the design, implementation, and evaluation of middleware-assisted sharded distributed databases, certain limitations exist, which must be acknowledged. These limitations provide opportunities for future work in the field of middleware-assisted sharded distributed databases. The following are the limitations of the study and evaluation of sharded distributed databases in this thesis, along with their potential avenues for future works: 
+
+\begin{itemize}
+
+\item []{\textit{Single Instance of Middleware:}} Employing a single instance of middleware for communicating with multiple instances of Redis databases created a scalability bottleneck in the system. Future research could explore the implementation of a multi-instance middleware architecture with a uniform interface. These instances would communicate and cooperate with each other in data distribution, management, and synchronization, functioning as a unified proxy for clients to enhance the system's scalability and ensure optimal throughput. This approach could also incorporate caching and load balancing mechanisms to provide better performance.
+
+\item []{\textit{Synchronous Behavior of Middleware:}} The middleware's synchronous behavior led to limitations in managing multiple client requests. There were waiting times within the middleware for every response from the associated Redis database, during which the middleware remained idle. This issue resulted in significantly high waiting times during bulk read and write operations. Future work should emphasize integrating asynchronous processing into the middleware to minimize waiting times for getting better response times and efficiently utilizing all computing resources.
+
+\item []{\textit{Middleware Concurrency Control:}} The prototype middleware was designed without provisions for concurrent request execution, limiting its ability to manage multiple client requests simultaneously. Future work should address this limitation by implementing concurrency control mechanisms in the middleware along with synchronization between the processes, for enabling parallel execution of requests and improving overall system performance.
+
+\item []{\textit{Middleware Adaptability with Heterogeneity of Databases:}} This thesis solely focused on the use of Redis databases, enabling a system of homogeneous distributed databases. Future research could investigate the middleware's adaptability to other types of databases and explore a system of heterogeneous distributed databases. Investigating the middleware's compatibility with different vendors of databases and leveraging the benefits of each database, could broaden its applicability and offer more comprehensive insights into its performance characteristics.
+
+\item []{\textit{Middleware-Database Additional Network Hops:}} The increased network latencies due to added communication between the middleware and multiple Redis databases had an impact on achieving optimal response times because of the extra network hops. Future research should investigate methods to optimize this communication and reduce latencies, such as leveraging connection pooling for multiple databases.
+\end{itemize}
+
+\noindent In summary, this study has offered valuable insights into the performance of a middleware-assisted sharded distributed database system. However, addressing the identified limitations and exploring the suggested future works would lead to further optimization and improvement in the middleware’s functionalities, contributing to more efficient and scalable system of sharded distributed databases.
+
