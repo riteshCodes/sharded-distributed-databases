@@ -4,7 +4,7 @@
 \chapter{Background}\label{ch:relatedwork}
 %*****************************************
 %%\glsresetall % Resets all acronyms to not used
-This chapter aims to provide an understanding of distributed databases, their types, architectures, and data distribution approaches of data sharding and replication. Section \ref{2.1} introduces the concept of distributed databases, differentiates between homogeneous and heterogeneous types, and describes two common architectures, client-server/centralized and peer-to-peer. In section \ref{2.2}, data distribution in distributed databases is discussed in detail, including approaches for data partitioning or fragmentation and replication. Section \ref{shardingDD} discusses the concept of sharding in distributed databases, introducing common five architectural types of sharding. The last section \ref{2.4} of this chapter provides an overview of the related works in distributed databases, specifically in the context of sharding. It discusses the evolution of sharded distributed databases, sharding algorithms, and notable examples of sharded distributed databases in the modern world of big data and blockchain technology.
+This chapter provides an understanding of distributed databases, their types, architectures, and data distribution approaches of data sharding and replication. Section \ref{2.1} introduces the concept of distributed databases, differentiates between homogeneous and heterogeneous types, and describes two common architectures, client-server/centralized and peer-to-peer. In section \ref{2.2}, data distribution in distributed databases is discussed in detail, including approaches for data partitioning or fragmentation and replication. Section \ref{shardingDD} discusses the concept of sharding in distributed databases, introducing common five architectural types of sharding. The last section \ref{2.4} of this chapter gives an overview of the related works in distributed databases, specifically in the context of sharding. It discusses the evolution of sharded distributed databases, sharding algorithms, and notable examples of sharded distributed databases in the modern world of big data and blockchain technology.
 
 %***************************************************************************
 \section{Distributed Databases}
@@ -88,7 +88,7 @@ A single machine, or database server, possesses a finite capacity for data stora
 
 \begin{enumerate}
 
-\item \textbf{Range-based Sharding / Dynamic Sharding} \\
+\item \textit{Range-based Sharding / Dynamic Sharding} \\
 This approach involves distributing data based on specified value ranges of shard keys, ensuring that each shard encompasses a continuous segment of the data. For instance, data for users with names starting from A to E could be stored on one database node, while data for users with names between F to J might be stored on another. Range-based sharding, also known as dynamic sharding, is beneficial when data can be readily partitioned based on a distinct key range. It yields good performance, if only a small number of shards are involved to process the request. However, if a request engages multiple shards and requires aggregating the results, the performance would degrade. Nevertheless, the range-scans of data from the databases is efficient \cite{7370983}. \cref{range-shard} illustrates an example of range-based sharding approach. 
 
 \begin{figure}[H]
@@ -98,7 +98,7 @@ This approach involves distributing data based on specified value ranges of shar
 \noindent This sharding may result in uneven data distribution and overload on a single database node, depending on the data values \cite{Harrison2021, 10.14778/2556549.2556572}. 
 In the prior example, the range of values with usernames starting from A to E might have much larger entries than the usernames from F to J. Despite these potential drawbacks, this method is relatively straightforward to implement.
 
-\item \textbf{Hash-based Sharding / Algorithmic Sharding} \\
+\item \textit{Hash-based Sharding / Algorithmic Sharding} \\
 In hash-based sharding, also referred to as algorithmic sharding, a hash function is employed to determine the database node for storing a specific data shard. The hash function accepts a key and generates a hash value (digest), and subsequently determines the data allocation node \cite{costa2015sharding, venkateswaran2017simplified}. \cref{hash-shard} shows an example of hash-based sharding approach. 
 
 \begin{figure}[H]
@@ -107,7 +107,7 @@ In hash-based sharding, also referred to as algorithmic sharding, a hash functio
 
 \noindent Hash-based sharding is favorable when the data lacks a natural key range, and even distribution across sites is crucial. Although this approach ensures uniform data distribution among associated database nodes, it does not shard the data according to any semantically meaningful attributes.
 
-\item \textbf{Geo Sharding / Zone-based Sharding} \\
+\item \textit{Geo Sharding / Zone-based Sharding} \\
 Geo-based sharding or zone-based sharding is a location-aware sharding approach, where data is partitioned based on a user-defined criteria that maps range of data to specific geographical regions and database nodes within those regions. The primary motivation for geo-based sharding is to place data closer in perimeter, both in terms of location and network proximity, to the users and the applications requiring that data \cite{10.1145/2433396.2433424}. Essentially, this method constitutes a range-based sharding, wherein the shard key contains geographic information and the shards themselves are geolocated. For instance, in a dataset feature a "location" field for each entry, performance and system latency can be enhanced by creating a shard for each country or region and storing the corresponding data on that shard \cite{9989965}. \cref{zone-shard} gives an overview of zone-based sharding approach. 
 
 \begin{figure}[H]
@@ -116,14 +116,14 @@ Geo-based sharding or zone-based sharding is a location-aware sharding approach,
 
 \noindent Geo-based sharding proves particularly effective when data access patterns are predominantly based on geography. By partitioning data according to geographic regions or other location-related criteria, this approach offers advantages when it is crucial to store data closer to the users or applications that access it. Nevertheless, geographic-based sharding may lead to imbalanced data distribution across the system, as certain locations may have a higher concentration of users and data flow than others.
 
-\item \textbf{Entity-/Relationship-/Directory-based Sharding} \\
+\item \textit{Entity-/Relationship-/Directory-based Sharding} \\
 This approach utilizes a directory service or lookup table to map data to their corresponding shards, offering flexibility in data distribution and the potential for re-sharding with minimal impact \cite{9357711}. A lookup table holds information about where specific data can be found and, in this context, it uses a shard key to track which shard holds which data. Upon receiving a request for specific data, the appropriate site, i.e., the entry for associated database node in the directory is retrieved based on the shard key. This approach is useful when the number of sites or data distribution is expected to change frequently and when related data must be consolidated within a single physical shard. \cref{directory-shard} illustrates an example of the range-based sharding employed in database systems.
 
 \begin{figure}[H]
              \ffigbox{\includegraphics[scale = 0.4]{gfx/design/directory_sharding.pdf}}{\caption{Directory-based Sharding}\label{directory-shard}}
 \end{figure}
 
-\item \textbf{Multi-level Sharding} \\
+\item \textit{Multi-level Sharding} \\
 This method involves multiple levels of sharding based on data requirements, for instance, data may initially be sharded or partitioned by range, followed by the use of hashing on each key within each range \cite{chen2019sschain}. Multi-level sharding is suitable when scaling the system beyond the capabilities of a single sharding level is essential. 
 However, it also introduces added operational complexity and computational overhead. As a result, careful design and planning are essential when implementing this approach.
 

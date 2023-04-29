@@ -87,15 +87,15 @@ This study uses a custom workload consisting of two distinct datasets, $Dataset_
 	\toprule
 	\tableheadlineL{Operations} & \tableheadline{Requests} & \tableheadline{Dataset} & \tableheadlineR{Tested Workload} \\ 
 	\midrule
-	\multirow{2}{*}{set} & set\textunderscore single & Dataset\textsubscript{2} & 1 Key-Value Pair \\
+	\multirow{2}{*}{$SET$} & set\textunderscore single & Dataset\textsubscript{2} & 1 Key-Value Pair \\
 		& set\textunderscore multiple & Dataset\textsubscript{1} & 1000 Key-Value Pairs \\
 	 \midrule
-	\multirow{2}{*}{get} & get\textunderscore single & Dataset\textsubscript{2} & 1 Key-Value Pair \\
+	\multirow{2}{*}{$GET$} & get\textunderscore single & Dataset\textsubscript{2} & 1 Key-Value Pair \\
 		& get\textunderscore multiple & Dataset\textsubscript{1} & 1000 Key-Value Pairs \\
 	 \midrule
-	get-range & get\textunderscore range & Dataset\textsubscript{1} & 100 Key-Value Pairs \\
+	$GET$-$RANGE$ & get\textunderscore range & Dataset\textsubscript{1} & 100 Key-Value Pairs \\
 	\midrule
-	\multirow{2}{*}{delete} & del\textunderscore single & Dataset\textsubscript{2} & 1 Key-Value Pair \\
+	\multirow{2}{*}{$DELETE$} & del\textunderscore single & Dataset\textsubscript{2} & 1 Key-Value Pair \\
 		& del\textunderscore multiple & Dataset\textsubscript{1} & 100 Key-Value Pair \\
 	\bottomrule
 \end{tabular}
