@@ -13,7 +13,10 @@
 
 \chapter*{Abstract}
 %\myAbstract{}
+\begin{comment}
 [WORK IN PROGRESS] Sharded distributed databases have gained significant attention due to the limitations of traditional databases in handling large-scale data. These limitations of traditional databases in handling large-scale data are addressed through sharding, which distributes data across multiple database nodes, allowing for better performance, increased scalability, and improved fault tolerance. This study conducts an analysis of existing literature and implements a prototype system using a middleware approach to enable a system of distributed databases. The prototype system is evaluated using custom benchmarking techniques, considering factors such as performance and data management. The results show that sharding can effectively scale databases horizontally, but its implementation requires careful design and management to ensure optimal performance and data consistency. The impact of this research and implementation is demonstrating the effectiveness of consistent hash sharding in Redis key-value stores as a scalable solution for large-scale data handling.
+\end{comment}
+Sharded distributed databases have gained significant attention due to the limitations of traditional single centralized database in handling large volumes of data for storage and processing. These limitations of centralized database are addressed through sharding, which partitions large dataset into small manageable chunks, called shards. These shards are distributed across multiple database nodes at different physical sites, allowing better performance and increased scalability, and thus resulting in the formation of sharded distributed databases. This thesis studies and analyzes existing approaches for sharding in distributed databases and implements a prototype of middleware, using consistent hash-based approach, leveraging Redis key-value store as underlying databases to facilitate sharding. The prototype system is evaluated using custom benchmarking techniques, considering performance factors such as throughput, response time, and data distribution. The results show that sharding can effectively scale databases horizontally, but its implementation requires careful design and management to ensure optimal performance for large-scale data handling. This thesis further examines the influence of various middleware configurations on performance, along with the role of consistent hashing in data distribution and proposes potential solutions to address the challenges and bottlenecks in implementing middleware-assisted sharding. Findings from this thesis contribute to a deeper understanding of sharded distributed databases, offering valuable insights for designing and managing efficient and scalable distributed databases in data-intensive environments.
 %Short summary of the contents in English\dots a great guide by
 %Kent Beck how to write good abstracts can be found here:
 %\begin{center}
@@ -24,13 +27,18 @@
 %\url{https://www.easterbrook.ca/steve/2010/01/how-to-write-a-scientific-abstract-in-six-easy-steps/}
 %\end{center}
 
+
 \vfill
+
+\begin{comment}
 
 \begin{otherlanguage}{ngerman}
 \pdfbookmark[0]{Zusammenfassung}{Zusammenfassung}
 \chapter*{Zusammenfassung}
 %Kurze Zusammenfassung des Inhaltes in deutscher Sprache\dots
 \end{otherlanguage}
+\end{comment}
+
 
 \endgroup
 
