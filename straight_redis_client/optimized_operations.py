@@ -171,14 +171,3 @@ def uid(*, k_list: list):
 
     else:
         return ['userID' + ':' + '{:04d}'.format(k) for k in k_list]
-
-
-
-if __name__ == '__main__':
-    key = random.randint(0, 999)  # Random key-generation
-    mapping = {'name': 'single_test', 'email': 'single_test'}
-
-    test = RedisClient()
-
-    response = test.set_to(key=key, mapping=mapping)
-    print(response)

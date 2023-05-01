@@ -148,36 +148,3 @@ def latency_del(*, iterations, keys=None):
     total_latency = lat / iterations
     print(f'Wall time in seconds (del_keys for deleting {len(keys)} keys: {total_latency}')
     return total_latency
-
-
-if __name__ == '__main__':
-    # Test data
-    u_ids = []
-    names = []
-    emails = []
-    for i in range(1000):
-        u_ids.append(i)
-        names.append(f'N-:{str(i)}')
-        emails.append(f'@Email-:{str(i)}')
-
-    test_data = {'userID': u_ids, 'name': names, 'email': emails}
-
-    ###################################################################################################################
-    # Test
-    # latency_ping(iterations=10, ping_calls=1000)
-
-    # execution_time_set(set_function='single', iterations=10, data=test_data)
-    # execution_time_set(set_function='multiple', iterations=10, data=test_data)
-    # latency_set(set_function='single', iterations=10, data=test_data)
-    # latency_set(set_function='multiple', iterations=10, data=test_data)
-
-    # execution_time_get(get_function='single', iterations=10, keys=u_ids)
-    # execution_time_get(get_function='multiple', iterations=10, keys=u_ids)
-    # latency_get(get_function='single', iterations=10, keys=u_ids)
-    # latency_get(get_function='multiple', iterations=10, keys=u_ids)
-
-    # execution_time_get(get_function='range', iterations=10, start=0, end=len(u_ids) - 1)
-    # latency_get(get_function='range', iterations=10, start=0, end=len(u_ids) - 1)
-
-    # execution_time_del(iterations=10, keys=[test_data['userID'][0]])
-    #latency_del(iterations=10, keys=test_data['userID'])
