@@ -409,13 +409,7 @@ This section provides a brief evaluation of the middleware's consistent hash sha
 
 \noindent The middleware employs consistent hashing for sharding large datasets, which ensures that the load is evenly distributed among the database nodes. Moreover, this approach guarantees that adding a new database node does not necessitate rehashing all data items \cite{1372064}. However, the addition and removal of database nodes in the system are beyond the scope of this thesis. In this section, a synthetic workload of 100 and 1000 key-value pairs as mentioned in the section \ref{workloadBenchmark}, is utilized to assess the data distribution across Redis databases using the consistent hashing approach. \\
 
-\noindent The test executions employ middleware configurations, M:2 (2 shards), M:4 (4 shards), and M:6 (6 shards), as detailed in the section \ref{config}. The middleware with 1 Redis database (1 shard), i.e., M:1 is excluded from this test, as data distribution is not applicable with a 1 shard and all data is stored in 1 Redis database node. The ideal data distribution across all Redis databases would involve each database having an equal number of key-value pairs. However, achieving perfect data distribution and maintaining an equal number of key-value pairs in each Redis database is challenging. \\
-
-\noindent In the middleware connected to 2 Redis databases (M:2), ideal data distribution for 100 key-value pairs would involve splitting them evenly, with 50 allocated to each Redis database. Similarly, for 1000 key-value pairs, each of the 2 Redis databases should store 500 key-value pairs. The middleware distributes 100 key-value pairs as follows: 61 in the first Redis database and 39 in the second. Although not perfect, the difference of these 22 key-value pairs is not substantial. Compared to the ideal distribution of 50 key-value pairs each, the first Redis database stores 11 more, while the second stores 11 fewer. For 1000 key-value pairs, the distribution results in 526 stored in the first Redis database and 474 in the second. These findings are illustrated in \cref{data_2_db}. \\
-
-\noindent The middleware with 4 Redis databases (M:4) distributes the 100 key-value pairs as follows: 32 in the first Redis database node, 23 in the second, 30 in the third, and 15 in the fourth. Ideally, each database node should have 25 key-value pairs. However, the current data distribution ensures that no database experiences a data hotspot, as a maximum of only 32 key-value pairs are allocated to a single Redis database. This data distribution trend continues for 1000 key-value pairs, where a maximum of 291 key-value pairs are assigned to a single Redis database. The detailed result of data distribution in M:4 is illustrated in \cref{data_4_db}. \\
-
-\noindent Data distribution in the middleware with 6 Redis databases (M:6) appears more uniform compared to previous middleware configurations. For 100 key-value pairs, the data is divided among the 6 databases or shards, with an ideal scenario of approximately 16 to 17 key-value pairs in a single database. For 1000 key-value pairs, the ideal distribution would be 166 to 167 key-value pairs per database. \cref{data_6_db} presents the optimal data distribution results achieved by M:6.
+\noindent The test executions employ middleware configurations, M:2 (2 shards), M:4 (4 shards), and M:6 (6 shards), as detailed in the section \ref{config}. The middleware with 1 Redis database (1 shard), i.e., M:1 is excluded from this test, as data distribution is not applicable with a 1 shard and all data is stored in 1 Redis database node. The ideal data distribution across all Redis databases would involve each database having an equal number of key-value pairs. However, achieving perfect data distribution and maintaining an equal number of key-value pairs in each Redis database is challenging.
 
 \begin{figure} [H]
     \centering
@@ -431,6 +425,7 @@ This section provides a brief evaluation of the middleware's consistent hash sha
     \label{data_2_db}
 \end{figure}
 
+\noindent In the middleware connected to 2 Redis databases (M:2), ideal data distribution for 100 key-value pairs would involve splitting them evenly, with 50 allocated to each Redis database. Similarly, for 1000 key-value pairs, each of the 2 Redis databases should store 500 key-value pairs. The middleware distributes 100 key-value pairs as follows: 61 in the first Redis database and 39 in the second. Although not perfect, the difference of these 22 key-value pairs is not substantial. Compared to the ideal distribution of 50 key-value pairs each, the first Redis database stores 11 more, while the second stores 11 fewer. For 1000 key-value pairs, the distribution results in 526 stored in the first Redis database and 474 in the second. These findings are illustrated in \cref{data_2_db}. 
 \begin{figure} [H]
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
@@ -445,6 +440,8 @@ This section provides a brief evaluation of the middleware's consistent hash sha
     \label{data_4_db}
 \end{figure}
 
+\noindent The middleware with 4 Redis databases (M:4) distributes the 100 key-value pairs as follows: 32 in the first Redis database node, 23 in the second, 30 in the third, and 15 in the fourth. Ideally, each database node should have 25 key-value pairs. However, the current data distribution ensures that no database experiences a data hotspot, as a maximum of only 32 key-value pairs are allocated to a single Redis database. This data distribution trend continues for 1000 key-value pairs, where a maximum of 291 key-value pairs are assigned to a single Redis database. The detailed result of data distribution in M:4 is illustrated in \cref{data_4_db}. \\
+
 \begin{figure} [H]
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
@@ -458,6 +455,11 @@ This section provides a brief evaluation of the middleware's consistent hash sha
     \caption{Data distribution among 6 Redis databases (6 Shards)}
     \label{data_6_db}
 \end{figure}
+
+\noindent Data distribution in the middleware with 6 Redis databases (M:6) appears more uniform compared to previous middleware configurations. For 100 key-value pairs, the data is divided among the 6 databases or shards, with an ideal scenario of approximately 16 to 17 key-value pairs in a single database. For 1000 key-value pairs, the ideal distribution would be 166 to 167 key-value pairs per database. \cref{data_6_db} presents the optimal data distribution results achieved by M:6.
+
+
+
 
 
 
